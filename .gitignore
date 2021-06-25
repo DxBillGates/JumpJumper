@@ -1,0 +1,41 @@
+# Files built by Visual Studio
+#*_i.c
+#*_p.c
+#*_h.h
+#*.ilk
+#*.meta
+#*.iobj
+#*.pch
+#*.pdb
+#*.ipdb
+#*.pgc
+#*.pgd
+#*.rsp
+#*.sbr
+#*.tlb
+#*.tli
+#*.tlh
+#*.tmp
+#*.tmp_proj
+#*_wpftmp.csproj
+#*.log
+#*.vspscc
+#*.vssscc
+#.builds
+#*.pidb
+#*.svclog
+#*.scc
+
+# ビルドデータは不要
+.vs/
+x64/
+x86/
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# リソースファイルは必要
+!/Resources/
