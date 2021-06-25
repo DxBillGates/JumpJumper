@@ -1,0 +1,4 @@
+C:\Users\K019G1234\Desktop\GatesEngine\x64\Debug\GatesEngine.pdb
+C:\Users\K019G1234\Desktop\GatesEngine\GatesEngine\x64\Debug\GatesEngine.pdb
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\GatesEngine.pdb
+C:\Users\K019G1234\Desktop\就職作品\GatesEngine\x64\Debug\GatesEngine.pdb
