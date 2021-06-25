@@ -31,6 +31,31 @@ void GatesEngine::GameObjectManager::Update()
 	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
 	{
 		(*itr)->Update();
+
+		for (auto other_itr = gameObjects.begin(); other_itr != gameObjects.end(); ++other_itr)
+		{
+			if (itr != other_itr)
+			{
+				Collider* mCollider = (*itr)->GetCollider();
+				Collider* oCollider = (*other_itr)->GetCollider();
+
+				if (mCollider && oCollider)
+				{
+					ColliderType mColliderType = mCollider->GetType();
+					ColliderType oColliderType = oCollider->GetType();
+
+					if (mColliderType == ColliderType::SPHERE && oColliderType == ColliderType::SPHERE)
+					{
+						float distance = Math::Vector3::Distance((*itr)->GetTransform()->position, (*other_itr)->GetTransform()->position);
+						float r = (*itr)->GetCollider()->GetSize().x;
+						if (distance * distance <= r * r)
+						{
+							(*itr)->Collision((*other_itr));
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

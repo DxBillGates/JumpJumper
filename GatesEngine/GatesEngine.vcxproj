@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Header\Application\Application.h" />
     <ClInclude Include="Header\Component\Behaviour.h" />
+    <ClInclude Include="Header\Component\Collider.h" />
     <ClInclude Include="Header\Component\Component.h" />
     <ClInclude Include="Header\GameObject\GameObject.h" />
     <ClInclude Include="Header\GameObject\GameObjectManager.h" />
@@ -68,6 +69,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Application\Application.cpp" />
     <ClCompile Include="Source\Component\Behaviour.cpp" />
+    <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\Component.cpp" />
     <ClCompile Include="Source\GameObject\GameObject.cpp" />
     <ClCompile Include="Source\GameObject\GameObjectManager.cpp" />

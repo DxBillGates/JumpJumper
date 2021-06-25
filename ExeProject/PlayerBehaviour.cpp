@@ -4,18 +4,12 @@
 
 void PlayerBehaviour::Start()
 {
-	pos = GatesEngine::Math::Vector3();
 	input = GatesEngine::Input::GetInstance();
 }
 
 void PlayerBehaviour::Update()
 {
 	vel -= GatesEngine::Math::Vector3(0,0.981f/2,0);
-	if (pos.y <= 0)
-	{
-		vel = {};
-		pos.y = 0;
-	}
 	if(input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::SPACE))
 	{
 		vel = GatesEngine::Math::Vector3(0,20,0);
@@ -48,7 +42,13 @@ void PlayerBehaviour::Update()
 		const float SPEED = 10;
 		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
 	}
-	pos += vel;
+	gameObject->GetTransform()->position += vel;
+
+	if (gameObject->GetTransform()->position.y <= 0)
+	{
+		vel = {};
+		gameObject->GetTransform()->position.y = 0;
+	}
 
 	GatesEngine::Math::Vector3 a = mainCamera->GetRotation()->GetAxis().z;
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
@@ -60,6 +60,12 @@ void PlayerBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0,gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 
+}
+
+void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
+{
+	printf("!!\n");
+	vel = GatesEngine::Math::Vector3(0, 20, 0);
 }
 
 void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)

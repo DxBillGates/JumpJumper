@@ -2,6 +2,7 @@
 #include "SampleScene.h"
 #include "Header/Graphics/Graphics.h"
 #include "PlayerBehaviour.h"
+#include "Header/Component/Collider.h"
 
 Game::Game() :Application()
 {
@@ -87,6 +88,17 @@ bool Game::LoadContents()
 	g->SetGraphicsDevice(&graphicsDevice);
 	g->AddBehavior<PlayerBehaviour>();
 	g->GetComponent<PlayerBehaviour>()->SetCamera(&mainCamera);
+	g->AddComponent<Collider>();
+	g->SetCollider();
+	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	g->GetCollider()->SetSize({ 1,1,1 });
+
+	auto* e = gameObjectManager.Add(new GameObject());
+	e->SetGraphicsDevice(&graphicsDevice);
+	e->AddComponent<Collider>();
+	e->SetCollider();
+	e->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	e->GetCollider()->SetSize({ 1,1,1 });
 
 	return true;
 }
@@ -95,7 +107,7 @@ bool Game::Initialize()
 {
 	gameObjectManager.Start();
 	timer.SetFrameRate(144);
-	timer.SetIsShow(true);
+	timer.SetIsShow(false);
 	return true;
 }
 

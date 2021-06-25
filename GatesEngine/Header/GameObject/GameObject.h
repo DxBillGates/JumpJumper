@@ -1,6 +1,7 @@
 #pragma once
 #include "..\Component\Behaviour.h"
 #include "..\Math\Transform.h"
+#include "..\Component\Collider.h"
 #include <vector>
 
 namespace GatesEngine
@@ -15,6 +16,7 @@ namespace GatesEngine
 		const char* tag;
 		GraphicsDevice* graphicsDevice;
 		Transform transform;
+		Collider* collider;
 	public:
 		GameObject();
 		GameObject(const char* name, const char* tag = "none");
@@ -22,9 +24,12 @@ namespace GatesEngine
 		void Start();
 		void Update();
 		void Draw();
+		void Collision(GameObject* other);
 		void SetGraphicsDevice(GraphicsDevice* pGraphicsDevice);
+		void SetCollider();
 		GraphicsDevice* GetGraphicsDevice();
 		Transform* GetTransform();
+		Collider* GetCollider();
 
 		template <typename T>
 		T* AddComponent();

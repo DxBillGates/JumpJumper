@@ -21,6 +21,10 @@ void GatesEngine::Component::OnDraw()
 {
 }
 
+void GatesEngine::Component::OnCollision(GameObject* other)
+{
+}
+
 void GatesEngine::Component::SetGameObject(GameObject* gameObject)
 {
 	this->gameObject = gameObject;

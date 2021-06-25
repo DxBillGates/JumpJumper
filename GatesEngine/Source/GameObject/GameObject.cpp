@@ -60,9 +60,26 @@ void GatesEngine::GameObject::Draw()
 	}
 }
 
+void GatesEngine::GameObject::Collision(GameObject* other)
+{
+	for (auto itr = components.begin(); itr != components.end(); ++itr)
+	{
+		(*itr)->OnCollision(other);
+	}
+	for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+	{
+		(*itr)->OnCollision(other);
+	}
+}
+
 void GatesEngine::GameObject::SetGraphicsDevice(GraphicsDevice* pGraphicsDevice)
 {
 	graphicsDevice = pGraphicsDevice;
+}
+
+void GatesEngine::GameObject::SetCollider()
+{
+	collider = GetComponent<Collider>();
 }
 
 GatesEngine::GraphicsDevice* GatesEngine::GameObject::GetGraphicsDevice()
@@ -73,4 +90,9 @@ GatesEngine::GraphicsDevice* GatesEngine::GameObject::GetGraphicsDevice()
 GatesEngine::Transform* GatesEngine::GameObject::GetTransform()
 {
 	return &transform;
+}
+
+GatesEngine::Collider* GatesEngine::GameObject::GetCollider()
+{
+	return collider;
 }
