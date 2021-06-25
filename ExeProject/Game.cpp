@@ -2,6 +2,7 @@
 #include "SampleScene.h"
 #include "Header/Graphics/Graphics.h"
 #include "PlayerBehaviour.h"
+#include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
 
 Game::Game() :Application()
@@ -91,14 +92,15 @@ bool Game::LoadContents()
 	g->AddComponent<Collider>();
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	g->GetCollider()->SetSize({ 1,1,1 });
+	g->GetCollider()->SetSize({ 50 });
 
 	auto* e = gameObjectManager.Add(new GameObject());
 	e->SetGraphicsDevice(&graphicsDevice);
+	e->AddBehavior<NormalEnemyBehaviour>();
 	e->AddComponent<Collider>();
 	e->SetCollider();
 	e->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e->GetCollider()->SetSize({ 1,1,1 });
+	e->GetCollider()->SetSize({ 50 });
 
 	return true;
 }

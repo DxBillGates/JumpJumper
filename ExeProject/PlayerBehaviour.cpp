@@ -64,7 +64,6 @@ void PlayerBehaviour::OnDraw()
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 {
-	printf("!!\n");
 	vel = GatesEngine::Math::Vector3(0, 20, 0);
 }
 
