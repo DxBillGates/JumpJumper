@@ -135,6 +135,7 @@
     <ClCompile Include="PlayerBehaviour.cpp" />
     <ClCompile Include="PlayerSceneTransAnimation.cpp" />
     <ClCompile Include="SampleScene.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GatesEngine\GatesEngine.vcxproj">
@@ -147,6 +148,7 @@
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerSceneTransAnimation.h" />
     <ClInclude Include="SampleScene.h" />
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BloomPS.hlsl">

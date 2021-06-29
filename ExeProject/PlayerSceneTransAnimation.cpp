@@ -1,10 +1,17 @@
 #include "PlayerSceneTransAnimation.h"
 #include "Header/GameObject/GameObject.h"
+#include "Header/Graphics/Graphics.h"
+
+void PlayerSceneTransAnimation::Jump(GatesEngine::Math::Vector3 vec, bool flag)
+{
+	if (flag)vel = vec;
+	vel -= GatesEngine::Math::Vector3(0, 0.981f / 2, 0);
+
+	gameObject->GetTransform()->position += vel;
+}
 
 void PlayerSceneTransAnimation::Start()
 {
-	playerBehaviour = nullptr;
-	mainCamera = nullptr;
 	isAnimation = false;
 	isCameraAnimation = false;
 	cameraAnimationTime = 0;
@@ -14,20 +21,10 @@ void PlayerSceneTransAnimation::Start()
 
 void PlayerSceneTransAnimation::Update()
 {
-	if (!mainCamera)
-	{
-		playerBehaviour = gameObject->GetComponent<PlayerBehaviour>();
-		if (playerBehaviour)
-		{
-			mainCamera = playerBehaviour->GetSetCamera();
-		}
-	}
-
-	if (!onceFlag && playerBehaviour->GetSceneTransFlag() && GatesEngine::Math::Vector3::Distance({},gameObject->GetTransform()->position) <= 100)
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::SPACE))
 	{
 		onceFlag = true;
 		isCameraAnimation = true;
-		playerBehaviour->SetEnabled(false);
 		oldCameraPos = mainCamera->GetPosition();
 		oldCameraDir = mainCamera->GetYawPitchRow();
 	}
@@ -41,7 +38,10 @@ void PlayerSceneTransAnimation::Update()
 		using namespace GatesEngine;
 		Math::Vector3 pos = gameObject->GetTransform()->position + Math::Vector3(0,100,-300);
 		mainCamera->SetPosition(Math::Vector3::Lerp(oldCameraPos, pos,(cameraAnimationTime)));
-		mainCamera->SetYawPitch(Math::Vector2::Lerp({ oldCameraDir.x,oldCameraDir.y }, { Math::ConvertToRadian(-10),Math::ConvertToRadian(10)}, Math::Easing::EaseInCirc(cameraAnimationTime)));
+
+		float yaw = 0;
+		yaw = gameObject->GetTransform()->position.x < 0 ? 10 : -10;
+		mainCamera->SetYawPitch(Math::Vector2::Lerp({ oldCameraDir.x,oldCameraDir.y }, { Math::ConvertToRadian(yaw),Math::ConvertToRadian(10)}, Math::Easing::EaseInCirc(cameraAnimationTime)));
 
 		if (cameraAnimationTime >= 1)
 		{
@@ -59,12 +59,29 @@ void PlayerSceneTransAnimation::Update()
 			Math::Vector3 vec = Math::Vector3() - gameObject->GetTransform()->position;
 			vec = vec.Normalize() * 3;
 			vec.y = 10;
-			playerBehaviour->Jump(vec, true);
+			Jump(vec, true);
 		}
 	}
 
 	if (isAnimation)
 	{
-		playerBehaviour->Jump({}, false);
+		Jump({}, false);
 	}
+}
+
+void PlayerSceneTransAnimation::OnDraw()
+{
+	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
+
+	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
+	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
+}
+
+void PlayerSceneTransAnimation::SetCamera(GatesEngine::Camera* sCamera)
+{
+	mainCamera = sCamera;
 }

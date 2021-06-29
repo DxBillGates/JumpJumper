@@ -5,9 +5,10 @@
 void PlayerBehaviour::Start()
 {
 	input = GatesEngine::Input::GetInstance();
-	isJump = false;
+	isJump = true;
 	combo = 0;
 	isAnimation = false;
+	gameObject->GetTransform()->position = { 0,10000,0 };
 }
 
 void PlayerBehaviour::Update()
@@ -85,6 +86,7 @@ void PlayerBehaviour::Update()
 		const float SPEED = 5;
 		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
 	}
+	if (vel.y <= -50)vel.y = -50;
 	gameObject->GetTransform()->position += vel;
 
 	if (gameObject->GetTransform()->position.y <= 0)
@@ -146,14 +148,6 @@ void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)
 GatesEngine::Camera* PlayerBehaviour::GetSetCamera()
 {
 	return mainCamera;
-}
-
-void PlayerBehaviour::Jump(GatesEngine::Math::Vector3 dir, bool flag)
-{
-	if (flag)vel = dir;
-	vel -= GatesEngine::Math::Vector3(0, 0.981f / 2, 0);
-
-	gameObject->GetTransform()->position += vel;
 }
 
 bool PlayerBehaviour::GetSceneTransFlag()

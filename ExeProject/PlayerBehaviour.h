@@ -22,6 +22,5 @@ public:
 	void OnCollision(GatesEngine::GameObject* other) override;
 	void SetCamera(GatesEngine::Camera* pCamera);
 	GatesEngine::Camera* GetSetCamera();
-	void Jump(GatesEngine::Math::Vector3 dir,bool flag);
 	bool GetSceneTransFlag();
 };

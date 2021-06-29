@@ -61,30 +61,37 @@ void GatesEngine::Camera::Update()
 		if (pitch > minMaxPitch)pitch = minMaxPitch;
 		if (pitch < -minMaxPitch)pitch = -minMaxPitch;
 
+		Math::Vector3 moveVector;
+
 		if (input->GetKeyboard()->CheckHitKey(Keys::W))
 		{
-			position += axis.z * moveSpeed;
+			moveVector += axis.z;
 		}
 		if (input->GetKeyboard()->CheckHitKey(Keys::S))
 		{
-			position -= axis.z * moveSpeed;
+			moveVector -= axis.z;
 		}
 		if (input->GetKeyboard()->CheckHitKey(Keys::D))
 		{
-			position += axis.x * moveSpeed;
+			moveVector += axis.x;
 		}
 		if (input->GetKeyboard()->CheckHitKey(Keys::A))
 		{
-			position -= axis.x * moveSpeed;
+			moveVector -= axis.x;
 		}
 		if (input->GetKeyboard()->CheckHitKey(Keys::E))
 		{
-			position += axis.y * moveSpeed;
+			moveVector += axis.y;
 		}
 		if (input->GetKeyboard()->CheckHitKey(Keys::Q))
 		{
-			position -= axis.y * moveSpeed;
+			moveVector -= axis.y;
 		}
+
+		moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10 : 1;
+
+		moveVector = moveVector.Normalize();
+		position += moveVector * moveSpeed;
 	}
 
 	direction = Math::Vector3(0, 0, 1);
