@@ -133,6 +133,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalEnemyBehaviour.cpp" />
     <ClCompile Include="PlayerBehaviour.cpp" />
+    <ClCompile Include="PlayerSceneTransAnimation.cpp" />
     <ClCompile Include="SampleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="NormalEnemyBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
+    <ClInclude Include="PlayerSceneTransAnimation.h" />
     <ClInclude Include="SampleScene.h" />
   </ItemGroup>
   <ItemGroup>

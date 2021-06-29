@@ -134,11 +134,33 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 		vel = GatesEngine::Math::Vector3(0, 20, 0);
 		gameObject->GetTransform()->position.y += other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
 		gameObject->GetTransform()->position += vel;
-
+		killedValue++;
 	}
 }
 
 void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)
 {
 	mainCamera = pCamera;
+}
+
+GatesEngine::Camera* PlayerBehaviour::GetSetCamera()
+{
+	return mainCamera;
+}
+
+void PlayerBehaviour::Jump(GatesEngine::Math::Vector3 dir, bool flag)
+{
+	if (flag)vel = dir;
+	vel -= GatesEngine::Math::Vector3(0, 0.981f / 2, 0);
+
+	gameObject->GetTransform()->position += vel;
+}
+
+bool PlayerBehaviour::GetSceneTransFlag()
+{
+	if (killedValue >= 4)
+	{
+		return true;
+	}
+	return false;
 }

@@ -1,7 +1,7 @@
 #include "..\..\Header\Component\Component.h"
 #include "..\..\Header\GameObject\GameObject.h"
 
-GatesEngine::Component::Component() :name("none"), tag("none"), gameObject(nullptr)
+GatesEngine::Component::Component() :name("none"), tag("none"),isEnabled(true), gameObject(nullptr)
 {
 }
 
@@ -34,4 +34,14 @@ void GatesEngine::Component::SetNameAndTag(const char* name, const char* tag)
 {
 	this->name = name;
 	this->tag = tag;
+}
+
+void GatesEngine::Component::SetEnabled(bool flag)
+{
+	isEnabled = flag;
+}
+
+bool GatesEngine::Component::GetEnabled()
+{
+	return isEnabled;
 }

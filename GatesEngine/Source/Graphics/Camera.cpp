@@ -143,3 +143,13 @@ GatesEngine::Math::Matrix4x4* GatesEngine::Camera::GetRotation()
 {
 	return &rotation;
 }
+
+GatesEngine::Math::Vector3 GatesEngine::Camera::GetPosition()
+{
+	return position;
+}
+
+GatesEngine::Math::Vector3 GatesEngine::Camera::GetYawPitchRow()
+{
+	return {yaw,pitch,0};
+}

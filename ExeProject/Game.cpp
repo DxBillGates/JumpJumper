@@ -4,6 +4,7 @@
 #include "PlayerBehaviour.h"
 #include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
+#include "PlayerSceneTransAnimation.h"
 
 Game::Game() :Application()
 {
@@ -93,6 +94,7 @@ bool Game::LoadContents()
 	g->SetGraphicsDevice(&graphicsDevice);
 	g->AddBehavior<PlayerBehaviour>();
 	g->GetComponent<PlayerBehaviour>()->SetCamera(&mainCamera);
+	g->AddBehavior<PlayerSceneTransAnimation>();
 	g->AddComponent<Collider>();
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);

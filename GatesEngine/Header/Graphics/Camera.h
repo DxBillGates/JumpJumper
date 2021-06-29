@@ -41,5 +41,7 @@ namespace GatesEngine
 		void SetYawPitch(const Math::Vector2& value);
 		B2 GetData();
 		Math::Matrix4x4* GetRotation();
+		Math::Vector3 GetPosition();
+		Math::Vector3 GetYawPitchRow();
 	};
 }

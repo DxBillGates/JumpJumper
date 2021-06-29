@@ -6,7 +6,7 @@ GatesEngine::GameObject::GameObject() :GameObject("none", "none")
 {
 }
 
-GatesEngine::GameObject::GameObject(const char* name, const char* tag):name(name),tag(tag), graphicsDevice(nullptr), transform({}), collider(nullptr)
+GatesEngine::GameObject::GameObject(const char* name, const char* tag) : name(name), tag(tag), graphicsDevice(nullptr), transform({}), collider(nullptr)
 {
 }
 
@@ -43,11 +43,11 @@ void GatesEngine::GameObject::Update()
 	{
 		for (auto itr = components.begin(); itr != components.end(); ++itr)
 		{
-			(*itr)->Update();
+			if ((*itr)->GetEnabled())(*itr)->Update();
 		}
 		for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
 		{
-			(*itr)->Update();
+			if ((*itr)->GetEnabled())(*itr)->Update();
 		}
 	}
 }

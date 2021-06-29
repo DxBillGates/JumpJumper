@@ -14,10 +14,14 @@ private:
 	GatesEngine::Camera* mainCamera;
 	bool isAnimation;
 	float animationTime;
+	int killedValue;
 public:
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
 	void SetCamera(GatesEngine::Camera* pCamera);
+	GatesEngine::Camera* GetSetCamera();
+	void Jump(GatesEngine::Math::Vector3 dir,bool flag);
+	bool GetSceneTransFlag();
 };

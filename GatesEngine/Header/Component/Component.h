@@ -9,6 +9,7 @@ namespace GatesEngine
 	protected:
 		const char* name;
 		const char* tag;
+		bool isEnabled;
 		GameObject* gameObject;
 	public:
 		Component();
@@ -19,5 +20,7 @@ namespace GatesEngine
 		virtual void OnCollision(GameObject* other);
 		void SetGameObject(GameObject* gameObject);
 		void SetNameAndTag(const char* name, const char* tag);
+		void SetEnabled(bool flag);
+		bool GetEnabled();
 	};
 }
