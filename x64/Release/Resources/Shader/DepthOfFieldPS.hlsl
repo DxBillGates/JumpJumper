@@ -11,7 +11,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 gaussTexColor = gaussTex.Sample(smp, input.uv);
 	float4 depthTexColor = depthTex.Sample(smp, input.uv);
 
-	float t = saturate((pow(depthTexColor.r,20) - 0.85f) * 4);
+	float t = saturate((pow(abs(depthTexColor.r),20) - dofValue.r) * 3);
 
 	float4 result = lerp(texColor,gaussTexColor,t);
 	return result;

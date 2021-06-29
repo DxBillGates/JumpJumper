@@ -13,5 +13,6 @@ namespace GatesEngine
 		const float PI = 3.14159265f;
 
 		float ConvertToRadian(float value);
+		float Lerp(float s, float e, float t);
 	}
 }

@@ -8,6 +8,11 @@ cbuffer Orthograph : register(b1)
 	matrix projMatrix;
 }
 
+cbuffer DOFInfo : register(b2)
+{
+	float4 dofValue;
+};
+
 struct VSInput
 {
 	float4 pos : POSITION;

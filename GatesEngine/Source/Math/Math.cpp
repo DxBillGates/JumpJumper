@@ -6,3 +6,8 @@ float GatesEngine::Math::ConvertToRadian(float value)
 	float result = PI / 180.0f * value;
 	return result;
 }
+
+float GatesEngine::Math::Lerp(float s, float e, float t)
+{
+	return s * (1.0f - t) + e * t;
+}

@@ -36,6 +36,9 @@ namespace GatesEngine
 		void Set();
 		void SetGraphicsDevice(GraphicsDevice* device);
 		void SetMainWindow(Window* mainWindow);
+		void SetPosition(const Math::Vector3& pos);
+		void SetDirection(const Math::Vector3& dir);
+		void SetYawPitch(const Math::Vector2& value);
 		B2 GetData();
 		Math::Matrix4x4* GetRotation();
 	};

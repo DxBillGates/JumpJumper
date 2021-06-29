@@ -5,6 +5,8 @@
 class NormalEnemyBehaviour : public GatesEngine::Behaviour
 {
 private:
+	float time;
+	float delay;
 public:
 	void Start() override;
 	void Update() override;

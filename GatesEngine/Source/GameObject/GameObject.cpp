@@ -2,11 +2,11 @@
 #include "..\..\Header\Component\Component.h"
 #include "..\..\Header\Component\Behaviour.h"
 
-GatesEngine::GameObject::GameObject():name("none"),tag("none")
+GatesEngine::GameObject::GameObject() :GameObject("none", "none")
 {
 }
 
-GatesEngine::GameObject::GameObject(const char* name, const char* tag):name(name),tag(tag)
+GatesEngine::GameObject::GameObject(const char* name, const char* tag):name(name),tag(tag), graphicsDevice(nullptr), transform({}), collider(nullptr)
 {
 }
 
@@ -26,6 +26,7 @@ GatesEngine::GameObject::~GameObject()
 
 void GatesEngine::GameObject::Start()
 {
+	enabled = true;
 	for (auto itr = components.begin(); itr != components.end(); ++itr)
 	{
 		(*itr)->Start();
@@ -38,25 +39,31 @@ void GatesEngine::GameObject::Start()
 
 void GatesEngine::GameObject::Update()
 {
-	for (auto itr = components.begin(); itr != components.end(); ++itr)
+	if (enabled)
 	{
-		(*itr)->Update();
-	}
-	for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
-	{
-		(*itr)->Update();
+		for (auto itr = components.begin(); itr != components.end(); ++itr)
+		{
+			(*itr)->Update();
+		}
+		for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+		{
+			(*itr)->Update();
+		}
 	}
 }
 
 void GatesEngine::GameObject::Draw()
 {
-	for (auto itr = components.begin(); itr != components.end(); ++itr)
+	if (enabled)
 	{
-		(*itr)->OnDraw();
-	}
-	for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
-	{
-		(*itr)->OnDraw();
+		for (auto itr = components.begin(); itr != components.end(); ++itr)
+		{
+			(*itr)->OnDraw();
+		}
+		for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+		{
+			(*itr)->OnDraw();
+		}
 	}
 }
 
@@ -82,6 +89,26 @@ void GatesEngine::GameObject::SetCollider()
 	collider = GetComponent<Collider>();
 }
 
+void GatesEngine::GameObject::SetName(const char* sName)
+{
+	name = sName;
+}
+
+void GatesEngine::GameObject::SetTag(const char* sTag)
+{
+	tag = sTag;
+}
+
+const char* GatesEngine::GameObject::GetName()
+{
+	return name;
+}
+
+const char* GatesEngine::GameObject::GetTag()
+{
+	return tag;
+}
+
 GatesEngine::GraphicsDevice* GatesEngine::GameObject::GetGraphicsDevice()
 {
 	return graphicsDevice;
@@ -95,4 +122,14 @@ GatesEngine::Transform* GatesEngine::GameObject::GetTransform()
 GatesEngine::Collider* GatesEngine::GameObject::GetCollider()
 {
 	return collider;
+}
+
+void GatesEngine::GameObject::SetEnabled(bool flag)
+{
+	enabled = flag;
+}
+
+bool GatesEngine::GameObject::GetEnabled()
+{
+	return enabled;
 }

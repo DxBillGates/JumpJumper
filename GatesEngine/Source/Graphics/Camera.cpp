@@ -26,7 +26,7 @@ GatesEngine::Camera::~Camera()
 void GatesEngine::Camera::Initialize()
 {
 	viewMatrix = Math::Matrix4x4::Identity();
-	projectionMatrix = Math::Matrix4x4::GetPerspectiveMatrix(90, pMainWindow->GetWindowAspect());
+	projectionMatrix = Math::Matrix4x4::GetPerspectiveMatrix(90, pMainWindow->GetWindowAspect(),1,10000);
 
 	position = Math::Vector3(0, 10, -200);
 	direction = Math::Vector3(0, 0, 1);
@@ -115,6 +115,22 @@ void GatesEngine::Camera::SetGraphicsDevice(GraphicsDevice* device)
 void GatesEngine::Camera::SetMainWindow(Window* mainWindow)
 {
 	pMainWindow = mainWindow;
+}
+
+void GatesEngine::Camera::SetPosition(const Math::Vector3& pos)
+{
+	position = pos;
+}
+
+void GatesEngine::Camera::SetDirection(const Math::Vector3& dir)
+{
+	direction = dir;
+}
+
+void GatesEngine::Camera::SetYawPitch(const Math::Vector2& value)
+{
+	yaw = value.x;
+	pitch = value.y;
 }
 
 GatesEngine::B2 GatesEngine::Camera::GetData()

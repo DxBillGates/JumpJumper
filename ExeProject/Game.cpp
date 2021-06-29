@@ -68,7 +68,7 @@ bool Game::LoadContents()
 	graphicsDevice.GetMeshManager()->Add("ScreenPlane")->Create(&graphicsDevice, testMeshData2);
 
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData3;
-	MeshCreater::Create2DQuad({ 1920,1080 }, { 1,1 }, testMeshData3);
+	MeshCreater::Create2DQuad({ 192,108 }, { 1,1 }, testMeshData3);
 	graphicsDevice.GetMeshManager()->Add("2DPlane")->Create(&graphicsDevice, testMeshData3);
 
 	//ƒOƒŠƒbƒh¶¬
@@ -85,6 +85,10 @@ bool Game::LoadContents()
 	MeshCreater::CreateSphere({ 50,50,50 },16,16, testMeshData5);
 	graphicsDevice.GetMeshManager()->Add("Sphere")->Create(&graphicsDevice, testMeshData5);
 
+	MeshData<VertexInfo::Vertex_Color> testLineMeshData6;
+	MeshCreater::CreateLineCube({55,55,55},Math::Vector4(0.5f,1,0,1),testLineMeshData6);
+	graphicsDevice.GetMeshManager()->Add("LineCube")->Create(&graphicsDevice, testLineMeshData6);
+
 	auto* g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(&graphicsDevice);
 	g->AddBehavior<PlayerBehaviour>();
@@ -94,13 +98,49 @@ bool Game::LoadContents()
 	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
 	g->GetCollider()->SetSize({ 50 });
 
-	auto* e = gameObjectManager.Add(new GameObject());
-	e->SetGraphicsDevice(&graphicsDevice);
-	e->AddBehavior<NormalEnemyBehaviour>();
-	e->AddComponent<Collider>();
-	e->SetCollider();
-	e->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e->GetCollider()->SetSize({ 50 });
+	auto* e1 = gameObjectManager.Add(new GameObject());
+	e1->SetGraphicsDevice(&graphicsDevice);
+	e1->AddBehavior<NormalEnemyBehaviour>();
+	e1->AddComponent<Collider>();
+	e1->SetCollider();
+	e1->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	e1->GetCollider()->SetSize({ 50 });
+	e1->SetName("enemy1");
+	e1->SetTag("enemy");
+	e1->GetTransform()->position = {-300,0,300};
+
+	auto* e2 = gameObjectManager.Add(new GameObject());
+	e2->SetGraphicsDevice(&graphicsDevice);
+	e2->AddBehavior<NormalEnemyBehaviour>();
+	e2->AddComponent<Collider>();
+	e2->SetCollider();
+	e2->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	e2->GetCollider()->SetSize({ 50 });
+	e2->SetName("enemy2");
+	e2->SetTag("enemy");
+	e2->GetTransform()->position = {300,0,300};
+
+	auto* e3 = gameObjectManager.Add(new GameObject());
+	e3->SetGraphicsDevice(&graphicsDevice);
+	e3->AddBehavior<NormalEnemyBehaviour>();
+	e3->AddComponent<Collider>();
+	e3->SetCollider();
+	e3->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	e3->GetCollider()->SetSize({ 50 });
+	e3->SetName("enemy3");
+	e3->SetTag("enemy");
+	e3->GetTransform()->position = {300,0,-300};
+
+	auto* e4 = gameObjectManager.Add(new GameObject());
+	e4->SetGraphicsDevice(&graphicsDevice);
+	e4->AddBehavior<NormalEnemyBehaviour>();
+	e4->AddComponent<Collider>();
+	e4->SetCollider();
+	e4->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	e4->GetCollider()->SetSize({ 50 });
+	e4->SetName("enemy4");
+	e4->SetTag("enemy");
+	e4->GetTransform()->position = {-300,0,-300};
 
 	return true;
 }

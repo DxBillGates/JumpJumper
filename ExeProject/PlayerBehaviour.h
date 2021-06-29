@@ -8,8 +8,12 @@ class PlayerBehaviour : public GatesEngine::Behaviour
 {
 private:
 	GatesEngine::Math::Vector3 vel;
+	bool isJump;
+	int combo;
 	GatesEngine::Input* input;
 	GatesEngine::Camera* mainCamera;
+	bool isAnimation;
+	float animationTime;
 public:
 	void Start() override;
 	void Update() override;

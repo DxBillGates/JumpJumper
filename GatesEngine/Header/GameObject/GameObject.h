@@ -17,6 +17,7 @@ namespace GatesEngine
 		GraphicsDevice* graphicsDevice;
 		Transform transform;
 		Collider* collider;
+		bool enabled;
 	public:
 		GameObject();
 		GameObject(const char* name, const char* tag = "none");
@@ -27,9 +28,15 @@ namespace GatesEngine
 		void Collision(GameObject* other);
 		void SetGraphicsDevice(GraphicsDevice* pGraphicsDevice);
 		void SetCollider();
+		void SetName(const char* sName);
+		void SetTag(const char* sTag);
+		const char* GetName();
+		const char* GetTag();
 		GraphicsDevice* GetGraphicsDevice();
 		Transform* GetTransform();
 		Collider* GetCollider();
+		void SetEnabled(bool flag);
+		bool GetEnabled();
 
 		template <typename T>
 		T* AddComponent();

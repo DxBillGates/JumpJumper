@@ -39,4 +39,11 @@ void SampleScene::Draw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Identity());
 	graphicsDevice->GetMeshManager()->GetMesh("Grid")->Draw();
+
+	for (int i = 0; i < 5; ++i)
+	{
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({0,-20000.0f * i,0}));
+		graphicsDevice->GetMeshManager()->GetMesh("Grid")->Draw();
+	}
+
 }
