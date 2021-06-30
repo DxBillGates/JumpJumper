@@ -30,7 +30,7 @@ void TitleScene::Initialize()
 	gameObjectManager.Start();
 	GatesEngine::Camera* camera = app->GetMainCamera();
 	camera->SetPosition({ 0,1000,0 });
-	camera->SetYawPitch({0, GatesEngine::Math::ConvertToRadian(70)});
+	camera->SetYawPitch({0, GatesEngine::Math::ConvertToRadian(0)});
 }
 
 void TitleScene::Update()

@@ -83,7 +83,6 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 	e5->SetName("enemy4");
 	e5->SetTag("enemy");
 	e5->GetTransform()->position = { 0,0,0 };
-
 }
 
 SampleScene::~SampleScene()
