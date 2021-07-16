@@ -23,4 +23,6 @@ public:
 	void SetCamera(GatesEngine::Camera* pCamera);
 	GatesEngine::Camera* GetSetCamera();
 	bool GetSceneTransFlag();
+	void ResetKillCount();
+	int GetKillCount();
 };

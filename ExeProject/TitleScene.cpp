@@ -6,15 +6,19 @@
 #include "PlayerSceneTransAnimation.h"
 #include <stdio.h>
 
-TitleScene::TitleScene() :Scene()
+TitleScene::TitleScene() :TitleScene("TitleScene", nullptr)
 {
 }
 
-TitleScene::TitleScene(const char* sceneName) : Scene(sceneName)
+TitleScene::TitleScene(const char* sceneName) : TitleScene(sceneName, nullptr)
 {
 }
 
-TitleScene::TitleScene(const char* sceneName, GatesEngine::Application* app) : Scene(sceneName, app)
+TitleScene::TitleScene(const char* sceneName, GatesEngine::Application* app)
+	: Scene(sceneName, app)
+	, titlePos(0, 1000, 500)
+	, sceneTrasFlag(false)
+	, sceneTrasTime(0)
 {
 	auto* g = gameObjectManager.Add(new GatesEngine::GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
@@ -28,9 +32,11 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	gameObjectManager.Start();
+	sceneTrasFlag = false;
+	sceneTrasTime = 0;
 	GatesEngine::Camera* camera = app->GetMainCamera();
 	camera->SetPosition({ 0,1000,0 });
-	camera->SetYawPitch({0, GatesEngine::Math::ConvertToRadian(0)});
+	camera->SetYawPitch({ 0, GatesEngine::Math::ConvertToRadian(0) });
 }
 
 void TitleScene::Update()
@@ -46,7 +52,7 @@ void TitleScene::Update()
 	if (sceneTrasTime >= 2)
 	{
 		app->GetSceneManager()->ChangeScene("SampleScene");
-		app->GetMainCamera()->SetPosition(GatesEngine::Math::Vector3(0,10000,0) + +GatesEngine::Math::Vector3(0, 1000, -70));
+		app->GetMainCamera()->SetPosition(GatesEngine::Math::Vector3(0, 10000, 0) + GatesEngine::Math::Vector3(0, 1000, -70));
 		app->GetMainCamera()->Update();
 	}
 }
@@ -54,4 +60,13 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 	gameObjectManager.Draw();
+
+	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+	GatesEngine::Math::Matrix4x4 titleMatrix = GatesEngine::Math::Matrix4x4::Scale({10,1,1}) * GatesEngine::Math::Matrix4x4::Translate(titlePos);
+	graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, titleMatrix);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2,app->GetMainCamera()->GetData());
+	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 }

@@ -17,6 +17,7 @@ void PlayerSceneTransAnimation::Start()
 	cameraAnimationTime = 0;
 	waitTime = 0;
 	onceFlag = false;
+	gameObject->GetTransform()->position = {10,0,-10};
 }
 
 void PlayerSceneTransAnimation::Update()

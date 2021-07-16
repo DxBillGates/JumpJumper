@@ -101,7 +101,13 @@ void PlayerBehaviour::Update()
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	mainCamera->SetPosition({ GatesEngine::Math::Vector3{pos.x,pos.y,pos.z} + GatesEngine::Math::Vector3(0,1000,-70) });
+
+	//ƒJƒƒ‰‚Ìˆ—
+	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
+	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) + GatesEngine::Math::Vector3(0, 1000, -70) });
+	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
+
+	mainCamera->SetPosition(GatesEngine::Math::Vector3::Lerp(oldCameraPos, newCameraPos, 0.025f));
 	mainCamera->SetYawPitch({ 0,GatesEngine::Math::ConvertToRadian(70) });
 }
 
@@ -157,4 +163,14 @@ bool PlayerBehaviour::GetSceneTransFlag()
 		return true;
 	}
 	return false;
+}
+
+void PlayerBehaviour::ResetKillCount()
+{
+	killedValue = 0;
+}
+
+int PlayerBehaviour::GetKillCount()
+{
+	return killedValue;
 }

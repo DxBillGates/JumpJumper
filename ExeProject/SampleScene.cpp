@@ -7,6 +7,8 @@
 #include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
 #include "PlayerSceneTransAnimation.h"
+#include "Stage1.h"
+#include "Stage2.h"
 #include <stdio.h>
 
 SampleScene::SampleScene() :Scene()
@@ -28,6 +30,7 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
 	g->GetCollider()->SetSize({ 50 });
+	g->SetName("player");
 
 	auto* e1 = gameObjectManager.Add(new GameObject());
 	e1->SetGraphicsDevice(graphicsDevice);
@@ -83,6 +86,11 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 	e5->SetName("enemy4");
 	e5->SetTag("enemy");
 	e5->GetTransform()->position = { 0,0,0 };
+
+	stageManager.Add(new Stage1());
+	stageManager.Add(new Stage2());
+	stageManager.ChangeStage(0);
+	stageManager.SetPlayer(gameObjectManager.Find("player")->GetComponent<PlayerBehaviour>());
 }
 
 SampleScene::~SampleScene()
@@ -97,6 +105,7 @@ void SampleScene::Initialize()
 void SampleScene::Update()
 {
 	gameObjectManager.Update();
+	stageManager.Update();
 }
 
 void SampleScene::Draw()

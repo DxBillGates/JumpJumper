@@ -3,6 +3,7 @@
 class TitleScene : public GatesEngine::Scene
 {
 private:
+	const GatesEngine::Math::Vector3 titlePos;
 	bool sceneTrasFlag;
 	float sceneTrasTime;
 public:

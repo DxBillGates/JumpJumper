@@ -135,6 +135,10 @@
     <ClCompile Include="PlayerBehaviour.cpp" />
     <ClCompile Include="PlayerSceneTransAnimation.cpp" />
     <ClCompile Include="SampleScene.cpp" />
+    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="Stage1.cpp" />
+    <ClCompile Include="Stage2.cpp" />
+    <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +152,10 @@
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerSceneTransAnimation.h" />
     <ClInclude Include="SampleScene.h" />
+    <ClInclude Include="Stage.h" />
+    <ClInclude Include="Stage1.h" />
+    <ClInclude Include="Stage2.h" />
+    <ClInclude Include="StageManager.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
