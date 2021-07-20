@@ -14,6 +14,7 @@ namespace GatesEngine
 		static SceneManager* GetInstance();
 		void AddScene(Scene* newScene);
 		void ChangeScene(const char* sceneName);
+		void ChangeSceneWithoutInitialize(const char* sceneName);
 		Scene* GetCurrentScene();
 		Scene* GetBeforeScene();
 		Scene* GetScene(const char* sceneName);

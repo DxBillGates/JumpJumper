@@ -45,3 +45,8 @@ bool GatesEngine::Component::GetEnabled()
 {
 	return isEnabled;
 }
+
+GatesEngine::GameObject* GatesEngine::Component::GetGameObject()
+{
+	return gameObject;
+}

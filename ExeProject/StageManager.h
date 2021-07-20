@@ -9,6 +9,7 @@ private:
 	std::vector<Stage*> stages;
 	Stage* currentStage;
 	PlayerBehaviour* player;
+	bool isChangeScene;
 public:
 	StageManager();
 	~StageManager();
@@ -18,4 +19,5 @@ public:
 	void ChangeStage(int stageNumber);
 	void ChangeNextStage();
 	void SetPlayer(PlayerBehaviour* playerBehaviour);
+	bool IsChangeStage();
 };

@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "TitleScene.h"
 #include "SampleScene.h"
+#include "SelectScene.h"
 #include "Header/Graphics/Graphics.h"
 
 Game::Game() :Application()
@@ -19,6 +20,7 @@ bool Game::LoadContents()
 {
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
+	sceneManager->AddScene(new SelectScene("SelectScene", this));
 	sceneManager->ChangeScene("TitleScene");
 
 	using namespace GatesEngine;

@@ -37,6 +37,20 @@ void TitleScene::Initialize()
 	GatesEngine::Camera* camera = app->GetMainCamera();
 	camera->SetPosition({ 0,1000,0 });
 	camera->SetYawPitch({ 0, GatesEngine::Math::ConvertToRadian(0) });
+
+	GatesEngine::Scene* beforeScene = app->GetSceneManager()->GetBeforeScene();
+	if (beforeScene)
+	{
+		if (beforeScene->GetSceneName() == "SelectScene")
+		{
+			sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::DOWN);
+			sceneTranslater.StartSceneTranslate(1);
+		}
+	}
+	else
+	{
+		sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::NONE);
+	}
 }
 
 void TitleScene::Update()
@@ -50,6 +64,15 @@ void TitleScene::Update()
 
 	if (sceneTrasFlag)sceneTrasTime += app->GetTimer()->GetElapsedTime();
 	if (sceneTrasTime >= 2)
+	{
+		sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::UP);
+		sceneTranslater.StartSceneTranslate(1);
+		sceneTrasFlag = false;
+		sceneTrasTime = 0;
+	}
+	SceneTranslater::TranslateState oldSceneTranslaterState = sceneTranslater.GetTranslateState();
+	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
+	if (oldSceneTranslaterState == SceneTranslater::TranslateState::UP && oldSceneTranslaterState != sceneTranslater.GetTranslateState())
 	{
 		app->GetSceneManager()->ChangeScene("SampleScene");
 		app->GetMainCamera()->SetPosition(GatesEngine::Math::Vector3(0, 10000, 0) + GatesEngine::Math::Vector3(0, 1000, -70));
@@ -69,4 +92,6 @@ void TitleScene::Draw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, titleMatrix);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2,app->GetMainCamera()->GetData());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
+
+	sceneTranslater.Draw(graphicsDevice);
 }

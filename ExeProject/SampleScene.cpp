@@ -9,6 +9,7 @@
 #include "PlayerSceneTransAnimation.h"
 #include "Stage1.h"
 #include "Stage2.h"
+#include "Stage3.h"
 #include <stdio.h>
 
 SampleScene::SampleScene() :Scene()
@@ -89,6 +90,7 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 
 	stageManager.Add(new Stage1());
 	stageManager.Add(new Stage2());
+	stageManager.Add(new Stage3());
 	stageManager.ChangeStage(0);
 	stageManager.SetPlayer(gameObjectManager.Find("player")->GetComponent<PlayerBehaviour>());
 }
@@ -100,12 +102,30 @@ SampleScene::~SampleScene()
 void SampleScene::Initialize()
 {
 	gameObjectManager.Start();
+	if (app->GetSceneManager()->GetBeforeScene()->GetSceneName() == "TitleScene")
+	{
+		stageManager.ChangeStage(0);
+	}
+	sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::DOWN);
+	sceneTranslater.StartSceneTranslate(1);
 }
 
 void SampleScene::Update()
 {
 	gameObjectManager.Update();
 	stageManager.Update();
+	if (stageManager.IsChangeStage())
+	{
+		sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::UP);
+		sceneTranslater.StartSceneTranslate(1);
+	}
+
+	SceneTranslater::TranslateState oldSceneTranslaterState = sceneTranslater.GetTranslateState();
+	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
+	if (oldSceneTranslaterState == SceneTranslater::TranslateState::UP && oldSceneTranslaterState != sceneTranslater.GetTranslateState())
+	{
+		app->GetSceneManager()->ChangeScene("SelectScene");
+	}
 }
 
 void SampleScene::Draw()
@@ -125,5 +145,5 @@ void SampleScene::Draw()
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({0,-20000.0f * i,0}));
 		graphicsDevice->GetMeshManager()->GetMesh("Grid")->Draw();
 	}
-
+	sceneTranslater.Draw(graphicsDevice);
 }

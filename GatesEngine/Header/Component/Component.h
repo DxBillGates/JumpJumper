@@ -22,5 +22,6 @@ namespace GatesEngine
 		void SetNameAndTag(const char* name, const char* tag);
 		void SetEnabled(bool flag);
 		bool GetEnabled();
+		GameObject* GetGameObject();
 	};
 }

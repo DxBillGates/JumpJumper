@@ -14,6 +14,7 @@ StageManager::~StageManager()
 
 void StageManager::Update()
 {
+	isChangeScene = false;
 	if (player && currentStage)
 	{
 		if (player->GetKillCount() >= currentStage->GetNeedKillCount())
@@ -39,6 +40,7 @@ void StageManager::ChangeStage(int stageNumber)
 	if (stageNumber >= stages.size())return;
 
 	currentStage = stages[stageNumber];
+	isChangeScene = true;
 }
 
 void StageManager::ChangeNextStage()
@@ -49,6 +51,7 @@ void StageManager::ChangeNextStage()
 		{
 			if (i + 1 >= (int)stages.size())return;
 			currentStage = stages[i + 1];
+			isChangeScene = true;
 			break;
 		}
 	}
@@ -57,4 +60,9 @@ void StageManager::ChangeNextStage()
 void StageManager::SetPlayer(PlayerBehaviour* playerBehaviour)
 {
 	player = playerBehaviour;
+}
+
+bool StageManager::IsChangeStage()
+{
+	return isChangeScene;
 }

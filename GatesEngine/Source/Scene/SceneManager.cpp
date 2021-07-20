@@ -25,6 +25,19 @@ void GatesEngine::SceneManager::ChangeScene(const char* sceneName)
 	}
 }
 
+void GatesEngine::SceneManager::ChangeSceneWithoutInitialize(const char* sceneName)
+{
+	for (auto itr = scenes.begin(); itr != scenes.end(); ++itr)
+	{
+		if ((*itr)->GetSceneName() == sceneName)
+		{
+			beforeScene = currentScene;
+			currentScene = (*itr);
+			break;
+		}
+	}
+}
+
 GatesEngine::Scene* GatesEngine::SceneManager::GetCurrentScene()
 {
 	return currentScene;
