@@ -2,7 +2,7 @@
 
 Stage1::Stage1()
 {
-	needKillCount = 1;
+	needKillCount = 10;
 }
 
 Stage1::~Stage1()

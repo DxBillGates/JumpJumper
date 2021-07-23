@@ -11,7 +11,7 @@ void NormalEnemyBehaviour::Start()
 
 void NormalEnemyBehaviour::Update()
 {
-	gameObject->GetTransform()->position.y = sinf(time + delay * 0.16f) * 100;
+	//gameObject->GetTransform()->position.y = sinf(time + delay * 0.16f) * 100;
 
 	if (gameObject->GetTransform()->position.y < 0)time = 0;
 	time += 0.016f;

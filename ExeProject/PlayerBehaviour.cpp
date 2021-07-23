@@ -105,11 +105,11 @@ void PlayerBehaviour::Update()
 
 	//ƒJƒƒ‰‚Ìˆ—
 	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
-	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) + GatesEngine::Math::Vector3(0, 1000, -70) });
+	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) + GatesEngine::Math::Vector3(0, 1000, -1000) });
 	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
 
 	mainCamera->SetPosition(GatesEngine::Math::Vector3::Lerp(oldCameraPos, newCameraPos, 0.025f));
-	mainCamera->SetYawPitch({ 0,GatesEngine::Math::ConvertToRadian(70) });
+	mainCamera->SetYawPitch({ 0,GatesEngine::Math::ConvertToRadian(45) });
 }
 
 void PlayerBehaviour::OnDraw()
@@ -141,9 +141,16 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 		combo++;
 		other->SetEnabled(false);
 		vel = GatesEngine::Math::Vector3(0, 20, 0);
-		gameObject->GetTransform()->position.y += other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
+		vel.y += (combo * combo) / 10;
+		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
 		gameObject->GetTransform()->position += vel;
 		killedValue++;
+	}
+	if (other->GetTag() == "block")
+	{
+		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + 50;
+		vel = {};
+		isJump = false;
 	}
 }
 
