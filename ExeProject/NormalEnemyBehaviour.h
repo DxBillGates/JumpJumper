@@ -8,10 +8,16 @@ class NormalEnemyBehaviour : public GatesEngine::Behaviour
 private:
 	float time;
 	float delay;
-	GatesEngine::Camera* mainCamera;
+	float hp;
+	float r;
+	float y;
 public:
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
+	void Damage(float value = 1);
+	float GetHP();
+	void SetR(float value);
+	void SetY(float value);
 };

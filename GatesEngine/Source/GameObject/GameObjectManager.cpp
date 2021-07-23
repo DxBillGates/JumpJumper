@@ -71,6 +71,7 @@ void GatesEngine::GameObjectManager::Update()
 						ColliderType mColliderType = mCollider->GetType();
 						ColliderType oColliderType = oCollider->GetType();
 
+						//‹…‚Æ‹…
 						if (mColliderType == ColliderType::SPHERE && oColliderType == ColliderType::SPHERE)
 						{
 							float distance = Math::Vector3::Distance((*itr)->GetTransform()->position, (*other_itr)->GetTransform()->position);
@@ -79,6 +80,25 @@ void GatesEngine::GameObjectManager::Update()
 							{
 								(*itr)->Collision((*other_itr));
 							}
+						}
+
+						//AABB
+						if (mColliderType == ColliderType::CUBE && oColliderType == ColliderType::CUBE)
+						{
+							Math::Vector3 min1,min2,max1,max2;
+							min1 = (*itr)->GetTransform()->position - mCollider->GetSize() / 2;
+							max1 = (*itr)->GetTransform()->position + mCollider->GetSize() / 2;
+							min2 = (*other_itr)->GetTransform()->position - oCollider->GetSize() / 2;
+							max2 = (*other_itr)->GetTransform()->position + oCollider->GetSize() / 2;
+
+							if (min1.x > max2.x)continue;
+							if (max1.x < min2.x)continue;
+							if (min1.y > max2.y)continue;
+							if (max1.y < min2.y)continue;
+							if (min1.z > max2.z)continue;
+							if (max1.z < min2.z)continue;
+
+							(*itr)->Collision((*other_itr));
 						}
 					}
 				}

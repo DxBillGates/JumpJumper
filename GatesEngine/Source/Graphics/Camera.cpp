@@ -63,30 +63,30 @@ void GatesEngine::Camera::Update()
 
 		Math::Vector3 moveVector;
 
-		if (input->GetKeyboard()->CheckHitKey(Keys::W))
-		{
-			moveVector += axis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(Keys::S))
-		{
-			moveVector -= axis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(Keys::D))
-		{
-			moveVector += axis.x;
-		}
-		if (input->GetKeyboard()->CheckHitKey(Keys::A))
-		{
-			moveVector -= axis.x;
-		}
-		if (input->GetKeyboard()->CheckHitKey(Keys::E))
-		{
-			moveVector += axis.y;
-		}
-		if (input->GetKeyboard()->CheckHitKey(Keys::Q))
-		{
-			moveVector -= axis.y;
-		}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::W))
+		//{
+		//	moveVector += axis.z;
+		//}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::S))
+		//{
+		//	moveVector -= axis.z;
+		//}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::D))
+		//{
+		//	moveVector += axis.x;
+		//}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::A))
+		//{
+		//	moveVector -= axis.x;
+		//}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::E))
+		//{
+		//	moveVector += axis.y;
+		//}
+		//if (input->GetKeyboard()->CheckHitKey(Keys::Q))
+		//{
+		//	moveVector -= axis.y;
+		//}
 
 		moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10 : 1;
 

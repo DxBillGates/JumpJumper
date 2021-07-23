@@ -87,7 +87,7 @@ void TitleScene::Draw()
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	GatesEngine::Math::Matrix4x4 titleMatrix = GatesEngine::Math::Matrix4x4::Scale({10,1,1}) * GatesEngine::Math::Matrix4x4::Translate(titlePos);
+	GatesEngine::Math::Matrix4x4 titleMatrix = GatesEngine::Math::Matrix4x4::Scale({500,50,50}) * GatesEngine::Math::Matrix4x4::Translate(titlePos);
 	graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, titleMatrix);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2,app->GetMainCamera()->GetData());

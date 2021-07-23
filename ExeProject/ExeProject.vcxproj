@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlockBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalEnemyBehaviour.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="Stage3.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="TrankingEnemyBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GatesEngine\GatesEngine.vcxproj">
@@ -152,6 +154,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlockBehaviour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="NormalEnemyBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
@@ -167,6 +170,7 @@
     <ClInclude Include="Stage3.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="TrankingEnemyBehaviour.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BloomPS.hlsl">

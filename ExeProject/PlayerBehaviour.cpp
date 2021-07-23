@@ -1,6 +1,7 @@
 #include "PlayerBehaviour.h"
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
+#include "NormalEnemyBehaviour.h"
 
 void PlayerBehaviour::Start()
 {
@@ -8,12 +9,13 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	combo = 0;
 	isAnimation = false;
-	gameObject->GetTransform()->position = { 0,10000,0 };
+	gameObject->GetTransform()->position = { 0,10000,300 };
+	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 }
 
 void PlayerBehaviour::Update()
 {
-	if (!isAnimation)vel -= GatesEngine::Math::Vector3(0, 0.981f / 2, 0);
+	if (!isAnimation)vel -= GatesEngine::Math::Vector3(0, 0.981f / 5, 0);
 	else
 	{
 		if (animationTime >= 1)
@@ -25,7 +27,7 @@ void PlayerBehaviour::Update()
 		const float MAX_ANGLE = 180;
 
 		using namespace GatesEngine::Math;
-		gameObject->GetTransform()->rotation.x = ConvertToRadian(Lerp(MIN_ANGLE, MAX_ANGLE,Easing::EaseInCirc(animationTime)));
+		gameObject->GetTransform()->rotation.x = ConvertToRadian(Lerp(MIN_ANGLE, MAX_ANGLE, Easing::EaseInCirc(animationTime)));
 
 
 		const float ADD_TIME_VALUE = 0.016f * 2;
@@ -60,7 +62,7 @@ void PlayerBehaviour::Update()
 		}
 	}
 	//ˆÚ“®ˆ—
-	if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	if (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
 	{
 		GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
 		cameraAxis.z.y = 0;
@@ -90,12 +92,13 @@ void PlayerBehaviour::Update()
 	if (vel.y <= -50)vel.y = -50;
 	gameObject->GetTransform()->position += vel;
 
-	if (gameObject->GetTransform()->position.y <= 0)
+	if (gameObject->GetTransform()->position.y <= -1000)
 	{
 		vel = {};
 		isJump = false;
 		combo = 0;
 		gameObject->GetTransform()->position.y = 0;
+		Start();
 	}
 
 	GatesEngine::Math::Vector3 a = mainCamera->GetRotation()->GetAxis().z;
@@ -105,11 +108,12 @@ void PlayerBehaviour::Update()
 
 	//ƒJƒƒ‰‚Ìˆ—
 	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
-	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) + GatesEngine::Math::Vector3(0, 1000, -1000) });
+	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z)/* + GatesEngine::Math::Vector3(0, 1000, -1000)*/ });
 	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
+	mainCamera->Update();
 
-	mainCamera->SetPosition(GatesEngine::Math::Vector3::Lerp(oldCameraPos, newCameraPos, 0.025f));
-	mainCamera->SetYawPitch({ 0,GatesEngine::Math::ConvertToRadian(45) });
+	//mainCamera->SetPosition(GatesEngine::Math::Vector3::Lerp(oldCameraPos, newCameraPos, 0.025f));
+	//mainCamera->SetYawPitch({ 0,GatesEngine::Math::ConvertToRadian(45) });
 }
 
 void PlayerBehaviour::OnDraw()
@@ -129,8 +133,11 @@ void PlayerBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 
+	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());
+	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
 	graphicsDevice->GetMeshManager()->GetMesh("LineCube")->Draw();
 }
 
@@ -138,19 +145,33 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 {
 	if (other->GetTag() == "enemy" && isJump)
 	{
+		NormalEnemyBehaviour* enemy = other->GetComponent<NormalEnemyBehaviour>();
+		enemy->Damage();
 		combo++;
-		other->SetEnabled(false);
+		//other->SetEnabled(false);
 		vel = GatesEngine::Math::Vector3(0, 20, 0);
 		vel.y += (combo * combo) / 10;
 		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
 		gameObject->GetTransform()->position += vel;
-		killedValue++;
+		if (enemy->GetHP() <= 0)
+		{
+			killedValue++;
+		}
 	}
 	if (other->GetTag() == "block")
 	{
-		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + 50;
+		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + (other->GetCollider()->GetSize().y / 2 + gameObject->GetCollider()->GetSize().y / 2);
 		vel = {};
 		isJump = false;
+	}
+	if (other->GetTag() == "goal")
+	{
+		Start();
+	}
+	if (other->GetTag() == "trak_enemy")
+	{
+		GatesEngine::Math::Vector3 vec = GatesEngine::Math::Vector3::Normalize(other->GetTransform()->position - gameObject->GetTransform()->position);
+		vel -= vec * 10;
 	}
 }
 

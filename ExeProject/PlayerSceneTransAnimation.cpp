@@ -18,6 +18,7 @@ void PlayerSceneTransAnimation::Start()
 	waitTime = 0;
 	onceFlag = false;
 	gameObject->GetTransform()->position = {10,0,-10};
+	gameObject->GetTransform()->scale = { 50 };
 }
 
 void PlayerSceneTransAnimation::Update()

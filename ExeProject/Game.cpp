@@ -83,7 +83,7 @@ bool Game::LoadContents()
 
 	//Cubeê∂ê¨
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData4;
-	MeshCreater::CreateCube({ 50,50,50 }, testMeshData4);
+	MeshCreater::CreateCube({ 1,1,1 }, testMeshData4);
 	graphicsDevice.GetMeshManager()->Add("Cube")->Create(&graphicsDevice, testMeshData4);
 
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData5;
@@ -91,7 +91,7 @@ bool Game::LoadContents()
 	graphicsDevice.GetMeshManager()->Add("Sphere")->Create(&graphicsDevice, testMeshData5);
 
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData6;
-	MeshCreater::CreateLineCube({ 55,55,55 }, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData6);
+	MeshCreater::CreateLineCube({ 1,1,1 }, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData6);
 	graphicsDevice.GetMeshManager()->Add("LineCube")->Create(&graphicsDevice, testLineMeshData6);
 
 	return true;

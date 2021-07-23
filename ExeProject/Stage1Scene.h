@@ -3,7 +3,8 @@
 #include "Stage1.h"
 #include "SceneTranslater.h"
 #include "PlayerBehaviour.h"
-class Stage1Scene : public GatesEngine::Scene
+
+class Stage1Scene : public GatesEngine::Scene,Stage1
 {
 private:
 	Stage1 stage;
