@@ -44,6 +44,7 @@ void SceneTranslater::Update(float elapsedTime)
 	{
 		time = (state == TranslateState::UP) ? setTime : 0;
 		state = (state == TranslateState::UP) ? TranslateState::DOWN : TranslateState::NONE;
+		isActive = false;
 	}
 
 	scale = GatesEngine::Math::Vector3::Lerp({}, { 16,16,16 },GatesEngine::Math::Easing::EaseInCubic(time));

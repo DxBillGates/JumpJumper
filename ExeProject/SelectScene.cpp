@@ -36,10 +36,12 @@ void SelectScene::Update()
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::A))
 	{
 		if (selectState == SelectState::TITLE)selectState = SelectState::NEXT_STAGE;
+		waveValue = waveMax;
 	}
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D))
 	{
 		if (selectState == SelectState::NEXT_STAGE)selectState = SelectState::TITLE;
+		waveValue = waveMax;
 	}
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::SPACE))
 	{
@@ -52,7 +54,15 @@ void SelectScene::Update()
 	{
 		if (selectState == SelectState::NEXT_STAGE)
 		{
-			app->GetSceneManager()->ChangeScene("SampleScene");
+			const char* beforeSceneName = app->GetSceneManager()->GetBeforeScene()->GetSceneName();
+			if (beforeSceneName == "Stage1Scene")
+			{
+				app->GetSceneManager()->ChangeScene("Stage2Scene");
+			}
+			else if (beforeSceneName == "Stage2Scene")
+			{
+				app->GetSceneManager()->ChangeScene("Stage3Scene");
+			}
 		}
 		else
 		{

@@ -74,7 +74,7 @@ void TitleScene::Update()
 	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
 	if (oldSceneTranslaterState == SceneTranslater::TranslateState::UP && oldSceneTranslaterState != sceneTranslater.GetTranslateState())
 	{
-		app->GetSceneManager()->ChangeScene("SampleScene");
+		app->GetSceneManager()->ChangeScene("Stage1Scene");
 		app->GetMainCamera()->SetPosition(GatesEngine::Math::Vector3(0, 10000, 0) + GatesEngine::Math::Vector3(0, 1000, -70));
 		app->GetMainCamera()->Update();
 	}
