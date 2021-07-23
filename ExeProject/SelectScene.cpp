@@ -27,6 +27,8 @@ void SelectScene::Initialize()
 	mainCamera->SetYawPitch({ GatesEngine::Math::ConvertToRadian(-60),0 });
 	selectState = SelectState::NEXT_STAGE;
 	input = GatesEngine::Input::GetInstance();
+	waveValue = 0;
+	waveFlag = true;
 }
 
 void SelectScene::Update()
@@ -57,6 +59,18 @@ void SelectScene::Update()
 			app->GetSceneManager()->ChangeScene("TitleScene");
 		}
 	}
+
+
+	if (waveValue < 0)
+	{
+		waveFlag = !waveFlag;
+	}
+	if (waveValue >= waveMax)
+	{
+		waveFlag = !waveFlag;
+	}
+	float elapsedTime = app->GetTimer()->GetElapsedTime();
+	waveValue += (waveFlag) ? elapsedTime : -elapsedTime;
 }
 
 void SelectScene::Draw()
@@ -75,14 +89,16 @@ void SelectScene::Draw()
 
 	sceneTranslater.Draw(graphicsDevice);
 
-	GatesEngine::Math::Vector3 nextStageUIScale = (selectState == SelectState::NEXT_STAGE) ? GatesEngine::Math::Vector3(2) : GatesEngine::Math::Vector3(1);
+	if (waveValue > waveMax)waveValue = waveMax;
+	float easingWave = GatesEngine::Math::Easing::EaseInCirc(waveValue);
+	GatesEngine::Math::Vector3 nextStageUIScale = (selectState == SelectState::NEXT_STAGE) ? GatesEngine::Math::Vector3(1) + easingWave : GatesEngine::Math::Vector3(1);
 	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(nextStageUIScale) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2 - 500,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
 
-	GatesEngine::Math::Vector3 goTitleUIScale = (selectState == SelectState::TITLE) ? GatesEngine::Math::Vector3(2) : GatesEngine::Math::Vector3(1);
+	GatesEngine::Math::Vector3 goTitleUIScale = (selectState == SelectState::TITLE) ? GatesEngine::Math::Vector3(1) + easingWave : GatesEngine::Math::Vector3(1);
 	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(goTitleUIScale) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 1, 1));

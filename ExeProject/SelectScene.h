@@ -16,6 +16,9 @@ private:
 	SceneTranslater sceneTranslater;
 	SelectState selectState;
 	GatesEngine::Input* input;
+	float waveValue;
+	bool waveFlag;
+	const float waveMax = 0.5f;
 public:
 	SelectScene();
 	SelectScene(const char* sceneName);

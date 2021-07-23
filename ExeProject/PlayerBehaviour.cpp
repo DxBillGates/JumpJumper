@@ -64,23 +64,24 @@ void PlayerBehaviour::Update()
 	{
 		GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
 		cameraAxis.z.y = 0;
+		GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
 
 		GatesEngine::Math::Vector3 moveVector = {};
 		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
 		{
-			moveVector += cameraAxis.z;
+			moveVector += playerAxis.z;
 		}
 		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
 		{
-			moveVector -= cameraAxis.z;
+			moveVector -= playerAxis.z;
 		}
 		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
 		{
-			moveVector += cameraAxis.x;
+			moveVector += playerAxis.x;
 		}
 		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
 		{
-			moveVector -= cameraAxis.x;
+			moveVector -= playerAxis.x;
 		}
 
 		const float SPEED = 5;
