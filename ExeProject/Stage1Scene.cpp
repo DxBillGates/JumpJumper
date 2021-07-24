@@ -108,6 +108,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		for (int j = 0; j < 10; ++j)
 		{
 			if (i == 0 || i == 9 || j == 0 || j == 9)
+			//if(i == 4 || j == 4)
 			{
 				g = gameObjectManager.Add(new GameObject());
 				g->SetGraphicsDevice(graphicsDevice);
@@ -117,7 +118,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 				g->GetCollider()->SetSize({ 100 });
 				g->SetTag("block");
-				g->GetTransform()->position = { (float)j * 100 - 450,0,(float)i * 100 - 450 };
+				g->GetTransform()->position = { (float)j * 100 - 450,(float)100 * (10 - i),(float)i * 100 - 450 };
 			}
 		}
 	}

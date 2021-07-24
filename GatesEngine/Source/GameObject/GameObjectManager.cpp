@@ -50,14 +50,17 @@ void GatesEngine::GameObjectManager::Start()
 
 void GatesEngine::GameObjectManager::Update()
 {
-	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
+	auto begin = gameObjects.begin();
+	auto end = gameObjects.end();
+
+	for (auto itr = begin; itr != end; ++itr)
 	{
 		if ((*itr)->GetEnabled())
 		{
 			(*itr)->Update();
 		}
 
-		for (auto other_itr = gameObjects.begin(); other_itr != gameObjects.end(); ++other_itr)
+		for (auto other_itr = begin; other_itr != end; ++other_itr)
 		{
 			if ((*other_itr)->GetEnabled())
 			{ 
@@ -70,12 +73,15 @@ void GatesEngine::GameObjectManager::Update()
 					{
 						ColliderType mColliderType = mCollider->GetType();
 						ColliderType oColliderType = oCollider->GetType();
-
+						GatesEngine::Math::Vector3 mColliderSize = mCollider->GetSize();
+						GatesEngine::Math::Vector3 oColliderSize = oCollider->GetSize();
+						GatesEngine::Transform* mTransform = (*itr)->GetTransform();
+						GatesEngine::Transform* oTransform = (*other_itr)->GetTransform();
 						//‹…‚Æ‹…
 						if (mColliderType == ColliderType::SPHERE && oColliderType == ColliderType::SPHERE)
 						{
-							float distance = Math::Vector3::Distance((*itr)->GetTransform()->position, (*other_itr)->GetTransform()->position);
-							float r = (*itr)->GetCollider()->GetSize().x;
+							float distance = Math::Vector3::Distance(mTransform->position, oTransform->position);
+							float r = mColliderSize.x;
 							if (distance * distance <= r * r)
 							{
 								(*itr)->Collision((*other_itr));
@@ -86,10 +92,10 @@ void GatesEngine::GameObjectManager::Update()
 						if (mColliderType == ColliderType::CUBE && oColliderType == ColliderType::CUBE)
 						{
 							Math::Vector3 min1,min2,max1,max2;
-							min1 = (*itr)->GetTransform()->position - mCollider->GetSize() / 2;
-							max1 = (*itr)->GetTransform()->position + mCollider->GetSize() / 2;
-							min2 = (*other_itr)->GetTransform()->position - oCollider->GetSize() / 2;
-							max2 = (*other_itr)->GetTransform()->position + oCollider->GetSize() / 2;
+							min1 = mTransform->position - mColliderSize / 2;
+							max1 = mTransform->position + mColliderSize / 2;
+							min2 = oTransform->position - oColliderSize / 2;
+							max2 = oTransform->position + oColliderSize / 2;
 
 							if (min1.x > max2.x)continue;
 							if (max1.x < min2.x)continue;

@@ -101,7 +101,7 @@ bool Game::Initialize()
 {
 	gameObjectManager.Start();
 	timer.SetFrameRate(144);
-	timer.SetIsShow(false);
+	timer.SetIsShow(true);
 	return true;
 }
 
