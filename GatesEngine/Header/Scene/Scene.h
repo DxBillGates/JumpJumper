@@ -1,5 +1,6 @@
 #pragma once
 #include "..\GameObject\GameObjectManager.h"
+#include "..\Collision\CollisionManager.h"
 
 namespace GatesEngine
 {
@@ -11,6 +12,7 @@ namespace GatesEngine
 		Application* app;
 		GraphicsDevice* graphicsDevice;
 		GameObjectManager gameObjectManager;
+		CollisionManager collisionManager;
 		const char* sceneName;
 		bool changeNextSceneFlag;
 	public:

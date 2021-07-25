@@ -1,5 +1,6 @@
 #include "..\..\Header\Util\Timer.h"
 #include <stdio.h>
+#include <string>
 #pragma comment(lib,"winmm.lib")
 
 GatesEngine::Util::Timer::Timer()
@@ -64,7 +65,15 @@ bool GatesEngine::Util::Timer::Update()
 	}
 	timeStart = timeEnd;
 	fps = 1.0f / frameTime;
+#ifdef _DEBUG
 	if (isShow)printf("%3.3ffps\n", fps);
+#else
+	char numStr[16];
+	sprintf_s(numStr, "fps:%d\n", (int)fps);
+	OutputDebugString(numStr);
+	//if (isShow)printf("%3.3ffps\n", fps);
+#endif
+
 	return false;
 }
 

@@ -9,7 +9,7 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	combo = 0;
 	isAnimation = false;
-	gameObject->GetTransform()->position = { 0,10000,300 };
+	gameObject->GetTransform()->position = { 0,10000,0 };
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 }
 

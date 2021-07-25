@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Application\Application.h" />
+    <ClInclude Include="Header\Collision\CollisionManager.h" />
+    <ClInclude Include="Header\Collision\CollisionTreeCell.h" />
+    <ClInclude Include="Header\Collision\CollisionTreeManager.h" />
+    <ClInclude Include="Header\Collision\CollisionTreeObject.h" />
     <ClInclude Include="Header\Component\Behaviour.h" />
     <ClInclude Include="Header\Component\Collider.h" />
     <ClInclude Include="Header\Component\Component.h" />
@@ -68,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application\Application.cpp" />
+    <ClCompile Include="Source\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Source\Collision\CollisionTreeCell.cpp" />
+    <ClCompile Include="Source\Collision\CollisionTreeManager.cpp" />
+    <ClCompile Include="Source\Collision\CollisionTreeObject.cpp" />
     <ClCompile Include="Source\Component\Behaviour.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\Component.cpp" />

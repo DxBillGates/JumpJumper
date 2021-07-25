@@ -73,6 +73,12 @@
     <Filter Include="Source\Graphics\Manager">
       <UniqueIdentifier>{d6ec8435-146e-4fe8-8f23-c34c2a1ddc4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Collision">
+      <UniqueIdentifier>{2ef105de-7e09-4658-b522-0c973e82160f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision">
+      <UniqueIdentifier>{cef28b4c-1e87-466d-b8c7-b17cde3f1e01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Math\Easing.h">
@@ -213,6 +219,18 @@
     <ClInclude Include="Header\Component\Collider.h">
       <Filter>Header\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Collision\CollisionTreeManager.h">
+      <Filter>Header\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Collision\CollisionTreeCell.h">
+      <Filter>Header\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Collision\CollisionTreeObject.h">
+      <Filter>Header\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Collision\CollisionManager.h">
+      <Filter>Header\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -328,6 +346,18 @@
     </ClCompile>
     <ClCompile Include="Source\Component\Collider.cpp">
       <Filter>Source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionTreeManager.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionTreeCell.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionTreeObject.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionManager.cpp">
+      <Filter>Source\Collision</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
