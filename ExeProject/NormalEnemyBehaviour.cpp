@@ -2,6 +2,7 @@
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/CBufferStruct.h"
+#include "Header/Component/Collider.h"
 
 void NormalEnemyBehaviour::Start()
 {

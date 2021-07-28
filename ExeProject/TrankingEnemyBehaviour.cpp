@@ -1,6 +1,8 @@
 #include "TrankingEnemyBehaviour.h"
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
+#include "Header/Component/Collider.h"
+
 
 void TrankingEnemyBehaviour::Start()
 {

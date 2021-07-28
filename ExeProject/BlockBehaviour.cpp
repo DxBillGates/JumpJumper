@@ -2,6 +2,8 @@
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/CBufferStruct.h"
+#include "Header/Component/Collider.h"
+
 
 void BlockBehaviour::Start()
 {
@@ -19,7 +21,7 @@ void BlockBehaviour::OnDraw()
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,0,1,0},{1,1,1,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,1,0},{1,1,1,1} });
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 
 	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());

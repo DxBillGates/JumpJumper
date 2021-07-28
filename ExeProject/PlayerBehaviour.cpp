@@ -2,6 +2,7 @@
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
 #include "NormalEnemyBehaviour.h"
+#include "Header/Component/Collider.h"
 
 void PlayerBehaviour::Start()
 {
@@ -9,7 +10,7 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	combo = 0;
 	isAnimation = false;
-	gameObject->GetTransform()->position = { 0,10000,0 };
+	gameObject->GetTransform()->position = { 0,1000,0 };
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 }
 

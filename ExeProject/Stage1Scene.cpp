@@ -29,16 +29,16 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	gp->SetName("player");
 
 	auto* g = gameObjectManager.Add(new GameObject());
-	//g->SetGraphicsDevice(graphicsDevice);
-	//auto* e = g->AddComponent<NormalEnemyBehaviour>();
-	//e->SetR(1000);
-	//e->SetY(0);
-	//collisionManager.AddColliderComponent(g->AddComponent<Collider>());
-	//g->SetCollider();
-	//g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	//g->GetCollider()->SetSize({ 200 });
-	//g->SetTag("enemy");
-	//g->GetTransform()->position = { 1000,0,1000 };
+	g->SetGraphicsDevice(graphicsDevice);
+	auto* e = g->AddComponent<NormalEnemyBehaviour>();
+	e->SetR(1000);
+	e->SetY(0);
+	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+	g->SetCollider();
+	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	g->GetCollider()->SetSize({ 200 });
+	g->SetTag("enemy");
+	g->GetTransform()->position = { 1000,0,1000 };
 
 	//g = gameObjectManager.Add(new GameObject());
 	//g->SetGraphicsDevice(graphicsDevice);
@@ -54,7 +54,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 	//g = gameObjectManager.Add(new GameObject());
 	//g->SetGraphicsDevice(graphicsDevice);
-	//e = g->AddComponent<NormalEnemyBehaviour>();
+	//auto* e = g->AddComponent<NormalEnemyBehaviour>();
 	//e->SetR(1000);
 	//e->SetY(1500);
 	//collisionManager.AddColliderComponent(g->AddComponent<Collider>());
@@ -130,16 +130,43 @@ void Stage1Scene::Update()
 			collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetCollider()->SetSize({ 50,10,50 });
+			g->GetCollider()->SetSize({ 100,10,100 });
 			g->SetTag("block");
 			float x, y, z;
-			float range = 10000;
+			float range = 3000;
 			x = ((float)std::rand() / RAND_MAX * range) - range / 2;
 			y = ((float)std::rand() / RAND_MAX * range) - range / 2;
 			z = ((float)std::rand() / RAND_MAX * range) - range / 2;
 			g->GetTransform()->position = { x,y,z };
 			g->GetTransform()->scale = g->GetCollider()->GetSize();
 			g->Start();
+		}
+	}
+
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
+	{
+		float x, y, z;
+		float range = 3000;
+		x = ((float)std::rand() / RAND_MAX * range) - range / 2;
+		y = ((float)std::rand() / RAND_MAX * range) - range / 2;
+		z = ((float)std::rand() / RAND_MAX * range) - range / 2;
+		for (int i = 0; i < 5; ++i)
+		{
+			for (int j = 0; j < 5; ++j)
+			{
+				using namespace GatesEngine;
+				auto* g = gameObjectManager.Add(new GameObject());
+				g->SetGraphicsDevice(graphicsDevice);
+				g->AddComponent<BlockBehaviour>();
+				collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+				g->SetCollider();
+				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+				g->GetCollider()->SetSize({ 50,10,50 });
+				g->SetTag("block");
+				g->GetTransform()->position = { x + 50 * i,y,z + 50 * j };
+				g->GetTransform()->scale = g->GetCollider()->GetSize();
+				g->Start();
+			}
 		}
 	}
 	static int i = 0;
