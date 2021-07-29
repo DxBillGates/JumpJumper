@@ -17,6 +17,7 @@ namespace GatesEngine
 		Math::Vector3 size;
 		CollisionTreeObject* treeObj;
 	public:
+		Collider();
 		~Collider();
 		void SetType(ColliderType sType);
 		ColliderType GetType();

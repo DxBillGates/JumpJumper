@@ -12,6 +12,8 @@ private:
 	float r;
 	float y;
 public:
+	NormalEnemyBehaviour();
+	~NormalEnemyBehaviour();
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;

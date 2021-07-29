@@ -5,6 +5,15 @@
 #include "Header/Component/Collider.h"
 
 
+BlockBehaviour::BlockBehaviour()
+	: hp(10)
+{
+}
+
+BlockBehaviour::~BlockBehaviour()
+{
+}
+
 void BlockBehaviour::Start()
 {
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();

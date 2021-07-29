@@ -1,5 +1,12 @@
 #include "..\..\Header\Component\Collider.h"
 
+GatesEngine::Collider::Collider()
+	: type(ColliderType::CUBE)
+	, size({ 1 })
+	, treeObj(nullptr)
+{
+}
+
 GatesEngine::Collider::~Collider()
 {
 	delete treeObj;

@@ -16,6 +16,8 @@ private:
 	float animationTime;
 	int killedValue;
 public:
+	PlayerBehaviour();
+	~PlayerBehaviour();
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;

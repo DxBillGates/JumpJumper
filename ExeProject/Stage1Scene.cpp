@@ -4,11 +4,11 @@
 #include "TrankingEnemyBehaviour.h"
 #include "BlockBehaviour.h"
 
-Stage1Scene::Stage1Scene() : Scene("Stage1Scene", nullptr)
+Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
 {
 }
 
-Stage1Scene::Stage1Scene(const char* sceneName) : Scene(sceneName, nullptr)
+Stage1Scene::Stage1Scene(const char* sceneName) : Stage1Scene(sceneName, nullptr)
 {
 }
 
@@ -16,7 +16,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName, app)
 	, playerBehaviour(nullptr)
 {
-	collisionManager.Initialize(6, {-10000}, { 20000 });
+	collisionManager.Initialize(6, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
@@ -40,49 +40,17 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->SetTag("enemy");
 	g->GetTransform()->position = { 1000,0,1000 };
 
-	//g = gameObjectManager.Add(new GameObject());
-	//g->SetGraphicsDevice(graphicsDevice);
-	//e = g->AddComponent<NormalEnemyBehaviour>();
-	//e->SetR(1500);
-	//e->SetY(500);
-	//collisionManager.AddColliderComponent(g->AddComponent<Collider>());
-	//g->SetCollider();
-	//g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	//g->GetCollider()->SetSize({ 200 });
-	//g->SetTag("enemy");
-	//g->GetTransform()->position = { 1000,0,1000 };
 
-	//g = gameObjectManager.Add(new GameObject());
-	//g->SetGraphicsDevice(graphicsDevice);
-	//auto* e = g->AddComponent<NormalEnemyBehaviour>();
-	//e->SetR(1000);
-	//e->SetY(1500);
-	//collisionManager.AddColliderComponent(g->AddComponent<Collider>());
-	//g->SetCollider();
-	//g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	//g->GetCollider()->SetSize({ 200 });
-	//g->SetTag("enemy");
-	//g->GetTransform()->position = { 1000,0,1000 };
+	g = gameObjectManager.Add(new GameObject());
+	g->SetGraphicsDevice(graphicsDevice);
+	g->AddComponent<BlockBehaviour>();
+	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+	g->SetCollider();
+	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	g->GetCollider()->SetSize({ 500,10,500 });
+	g->SetTag("block");
+	g->GetTransform()->position = { 0,0,0 };
 
-	for (int i = 0; i < 1; ++i)
-	{
-		for (int j = 0; j < 1; ++j)
-		{
-			//if (i == 0 || i == 99 || j == 0 || j == 99)
-			//if(i == 4 || j == 4)
-			{
-				g = gameObjectManager.Add(new GameObject());
-				g->SetGraphicsDevice(graphicsDevice);
-				g->AddComponent<BlockBehaviour>();
-				collisionManager.AddColliderComponent(g->AddComponent<Collider>());
-				g->SetCollider();
-				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-				g->GetCollider()->SetSize({ 500,10,500 });
-				g->SetTag("block");
-				g->GetTransform()->position = { (float)j * 50,(float)0,(float)i * 50 };
-			}
-		}
-	}
 }
 
 Stage1Scene::~Stage1Scene()

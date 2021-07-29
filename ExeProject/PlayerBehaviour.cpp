@@ -4,6 +4,22 @@
 #include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
 
+PlayerBehaviour::PlayerBehaviour()
+	: vel({})
+	, isJump(false)
+	, combo(0)
+	, input(nullptr)
+	, mainCamera(nullptr)
+	, isAnimation(false)
+	, animationTime(0)
+	, killedValue(0)
+{
+}
+
+PlayerBehaviour::~PlayerBehaviour()
+{
+}
+
 void PlayerBehaviour::Start()
 {
 	input = GatesEngine::Input::GetInstance();

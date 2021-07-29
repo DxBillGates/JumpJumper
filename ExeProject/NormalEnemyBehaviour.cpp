@@ -4,6 +4,19 @@
 #include "Header/Graphics/CBufferStruct.h"
 #include "Header/Component/Collider.h"
 
+NormalEnemyBehaviour::NormalEnemyBehaviour()
+	: time(0)
+	, delay(0)
+	, hp(10)
+	, r(0)
+	, y(0)
+{
+}
+
+NormalEnemyBehaviour::~NormalEnemyBehaviour()
+{
+}
+
 void NormalEnemyBehaviour::Start()
 {
 	time = 0;

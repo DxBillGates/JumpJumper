@@ -5,6 +5,8 @@ class BlockBehaviour : public GatesEngine::Behaviour
 private:
 	float hp;
 public:
+	BlockBehaviour();
+	~BlockBehaviour();
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;
