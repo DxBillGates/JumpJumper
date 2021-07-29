@@ -11,6 +11,8 @@ private:
 	float hp;
 	float r;
 	float y;
+	GatesEngine::Math::Vector3 moveVector;
+	GatesEngine::Math::Vector3 targetPos;
 public:
 	NormalEnemyBehaviour();
 	~NormalEnemyBehaviour();
