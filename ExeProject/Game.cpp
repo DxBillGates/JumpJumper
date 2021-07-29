@@ -94,6 +94,10 @@ bool Game::LoadContents()
 	MeshCreater::CreateLineCube({ 1,1,1 }, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData6);
 	graphicsDevice.GetMeshManager()->Add("LineCube")->Create(&graphicsDevice, testLineMeshData6);
 
+	MeshData<VertexInfo::Vertex_Color> testLineMeshData7;
+	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData7);
+	graphicsDevice.GetMeshManager()->Add("LineCircle")->Create(&graphicsDevice, testLineMeshData7);
+
 	return true;
 }
 

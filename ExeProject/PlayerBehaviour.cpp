@@ -149,13 +149,6 @@ void PlayerBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
-
-	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());
-	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
-	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-	graphicsDevice->GetMeshManager()->GetMesh("LineCube")->Draw();
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)

@@ -140,6 +140,30 @@ void GatesEngine::MeshCreater::CreateLineCube(Math::Vector3 size, const Math::Ve
 	indices->push_back(6);
 }
 
+void GatesEngine::MeshCreater::CreateLineCircle(Math::Vector3 size, float vertexCount, const Math::Vector4& color, MeshData<VertexInfo::Vertex_Color>& meshData)
+{
+	using namespace GatesEngine::Math;
+	std::vector<VertexInfo::Vertex_Color>* vertices = meshData.GetVertices();
+	std::vector<unsigned short>* indices = meshData.GetIndices();
+
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		Math::Vector3 pos;
+		pos.x = size.x * sinf((2 * GatesEngine::Math::PI / vertexCount) * i);
+		pos.y = 0;
+		pos.z = size.x * cosf((2 * GatesEngine::Math::PI / vertexCount) * i);
+		//transform->position.x = r * sinf((2 * GatesEngine::Math::PI / 360) * time*10 * delay / 10);
+		//transform->position.z = r * cosf((2 * GatesEngine::Math::PI / 360) * time*10 * delay / 10);
+		vertices->push_back({ pos,color });
+
+		indices->push_back(i);
+		int index = (i >= vertexCount - 1) ? 0 : i + 1;
+		indices->push_back(index);
+	}
+
+
+}
+
 void GatesEngine::MeshCreater::CreateCube(Math::Vector3 size, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	using namespace GatesEngine::Math;
@@ -227,9 +251,9 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 	std::vector<unsigned short>* indices = meshData.GetIndices();
 
 	vertices->resize((uint64_t)vTess * ((uint64_t)hTess + 1));
-	for (int v = 0; v <= hTess; v++) 
+	for (int v = 0; v <= hTess; v++)
 	{
-		for (int u = 0; u < vTess; u++) 
+		for (int u = 0; u < vTess; u++)
 		{
 			float theta = Math::ConvertToRadian(180.0f * v / hTess);
 			float phi = Math::ConvertToRadian(360.0f * u / vTess);

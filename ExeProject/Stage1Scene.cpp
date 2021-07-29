@@ -16,7 +16,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName, app)
 	, playerBehaviour(nullptr)
 {
-	collisionManager.Initialize(4, { -10000 }, { 20000 });
+	collisionManager.Initialize(6, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
@@ -97,7 +97,7 @@ void Stage1Scene::Update()
 			g->AddComponent<BlockBehaviour>();
 			collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 			g->SetCollider();
-			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+			g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
 			g->GetCollider()->SetSize({ 100,10,100 });
 			g->SetTag("block");
 			float x, y, z;
@@ -128,7 +128,7 @@ void Stage1Scene::Update()
 				g->AddComponent<BlockBehaviour>();
 				collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 				g->SetCollider();
-				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+				g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
 				g->GetCollider()->SetSize({ 50,10,50 });
 				g->SetTag("block");
 				g->GetTransform()->position = { x + 50 * i,y,z + 50 * j };
