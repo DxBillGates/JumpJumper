@@ -17,8 +17,9 @@ GatesEngine::Collider::~Collider()
 void GatesEngine::Collider::OnDraw()
 {
 #ifdef _DEBUG
+	float addScale = 1.025f;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());
+	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
@@ -31,13 +32,13 @@ void GatesEngine::Collider::OnDraw()
 	else
 	{
 		lineCubeMatrix = GatesEngine::Math::Matrix4x4::Identity();
-		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() / 1.4f);
+		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
 		graphicsDevice->GetMeshManager()->GetMesh("LineCircle")->Draw();
 
 		lineCubeMatrix = GatesEngine::Math::Matrix4x4::Identity();
-		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() / 1.4f);
+		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::RotationX(Math::ConvertToRadian(90));
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 
@@ -46,7 +47,7 @@ void GatesEngine::Collider::OnDraw()
 
 
 		lineCubeMatrix = GatesEngine::Math::Matrix4x4::Identity();
-		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() / 1.4f);
+		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::RotationZ(Math::ConvertToRadian(90));
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 

@@ -22,77 +22,28 @@ SampleScene::SampleScene(const char* sceneName) : Scene(sceneName)
 
 SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) : Scene(sceneName, app)
 {
+	collisionManager.Initialize(6, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
 	g->AddBehavior<PlayerBehaviour>();
 	g->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
-	g->AddComponent<Collider>();
+	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	g->GetCollider()->SetSize({ 50 });
+	g->GetCollider()->SetSize({ 500 });
 	g->SetName("player");
 
 	auto* e1 = gameObjectManager.Add(new GameObject());
 	e1->SetGraphicsDevice(graphicsDevice);
 	e1->AddBehavior<NormalEnemyBehaviour>();
-	e1->AddComponent<Collider>();
+	collisionManager.AddColliderComponent(e1->AddComponent<Collider>());
 	e1->SetCollider();
 	e1->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e1->GetCollider()->SetSize({ 50 });
+	e1->GetCollider()->SetSize({ 500 });
 	e1->SetName("enemy1");
 	e1->SetTag("enemy");
 	e1->GetTransform()->position = { -300,0,300 };
-
-	auto* e2 = gameObjectManager.Add(new GameObject());
-	e2->SetGraphicsDevice(graphicsDevice);
-	e2->AddBehavior<NormalEnemyBehaviour>();
-	e2->AddComponent<Collider>();
-	e2->SetCollider();
-	e2->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e2->GetCollider()->SetSize({ 50 });
-	e2->SetName("enemy2");
-	e2->SetTag("enemy");
-	e2->GetTransform()->position = { 300,0,300 };
-
-	auto* e3 = gameObjectManager.Add(new GameObject());
-	e3->SetGraphicsDevice(graphicsDevice);
-	e3->AddBehavior<NormalEnemyBehaviour>();
-	e3->AddComponent<Collider>();
-	e3->SetCollider();
-	e3->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e3->GetCollider()->SetSize({ 50 });
-	e3->SetName("enemy3");
-	e3->SetTag("enemy");
-	e3->GetTransform()->position = { 300,0,-300 };
-
-	auto* e4 = gameObjectManager.Add(new GameObject());
-	e4->SetGraphicsDevice(graphicsDevice);
-	e4->AddBehavior<NormalEnemyBehaviour>();
-	e4->AddComponent<Collider>();
-	e4->SetCollider();
-	e4->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e4->GetCollider()->SetSize({ 50 });
-	e4->SetName("enemy4");
-	e4->SetTag("enemy");
-	e4->GetTransform()->position = { -300,0,-300 };
-
-	auto* e5 = gameObjectManager.Add(new GameObject());
-	e5->SetGraphicsDevice(graphicsDevice);
-	e5->AddBehavior<NormalEnemyBehaviour>();
-	e5->AddComponent<Collider>();
-	e5->SetCollider();
-	e5->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
-	e5->GetCollider()->SetSize({ 50 });
-	e5->SetName("enemy4");
-	e5->SetTag("enemy");
-	e5->GetTransform()->position = { 0,0,0 };
-
-	stageManager.Add(new Stage1());
-	stageManager.Add(new Stage2());
-	stageManager.Add(new Stage3());
-	stageManager.ChangeStage(0);
-	stageManager.SetPlayer(gameObjectManager.Find("player")->GetComponent<PlayerBehaviour>());
 }
 
 SampleScene::~SampleScene()
@@ -102,30 +53,12 @@ SampleScene::~SampleScene()
 void SampleScene::Initialize()
 {
 	gameObjectManager.Start();
-	if (app->GetSceneManager()->GetBeforeScene()->GetSceneName() == "TitleScene")
-	{
-		stageManager.ChangeStage(0);
-	}
-	sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::DOWN);
-	sceneTranslater.StartSceneTranslate(1);
 }
 
 void SampleScene::Update()
 {
 	gameObjectManager.Update();
-	stageManager.Update();
-	if (stageManager.IsChangeStage())
-	{
-		sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::UP);
-		sceneTranslater.StartSceneTranslate(1);
-	}
-
-	SceneTranslater::TranslateState oldSceneTranslaterState = sceneTranslater.GetTranslateState();
-	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
-	if (oldSceneTranslaterState == SceneTranslater::TranslateState::UP && oldSceneTranslaterState != sceneTranslater.GetTranslateState())
-	{
-		app->GetSceneManager()->ChangeScene("SelectScene");
-	}
+	collisionManager.Update();
 }
 
 void SampleScene::Draw()

@@ -97,7 +97,7 @@ void Stage1Scene::Update()
 			g->AddComponent<BlockBehaviour>();
 			collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 			g->SetCollider();
-			g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 			g->GetCollider()->SetSize({ 100,10,100 });
 			g->SetTag("block");
 			float x, y, z;
@@ -128,7 +128,7 @@ void Stage1Scene::Update()
 				g->AddComponent<BlockBehaviour>();
 				collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 				g->SetCollider();
-				g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 				g->GetCollider()->SetSize({ 50,10,50 });
 				g->SetTag("block");
 				g->GetTransform()->position = { x + 50 * i,y,z + 50 * j };

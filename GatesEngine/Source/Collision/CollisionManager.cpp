@@ -81,12 +81,16 @@ void GatesEngine::CollisionManager::CollisionCheck()
 			if (CheckAABB(colliderList[i], colliderList[(size_t)i + 1]))
 			{
 				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]->GetGameObject());
-				colliderList[i+1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
+				colliderList[(size_t)i+1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
 			}
 		}
 		if (colliderList[i]->GetType() == colliderList[(size_t)i + 1]->GetType() && colliderList[i]->GetType() == sphere)
 		{
-			if (CheckSphereToSphere(colliderList[i], colliderList[(size_t)i + 1]));
+			if (CheckSphereToSphere(colliderList[i], colliderList[(size_t)i + 1]))
+			{
+				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]->GetGameObject());
+				colliderList[(size_t)i + 1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
+			}
 		}
 	}
 }
@@ -115,6 +119,17 @@ bool GatesEngine::CollisionManager::CheckAABB(Collider* collider1, Collider* col
 
 bool GatesEngine::CollisionManager::CheckSphereToSphere(Collider* collider1, Collider* collider2)
 {
+	Transform* mTransform;
+	Transform* oTransform;
+	mTransform = collider1->GetGameObject()->GetTransform();
+	oTransform = collider2->GetGameObject()->GetTransform();
+
+	Math::Vector3 mColliderSize, oColliderSize;
+	mColliderSize = collider1->GetSize();
+	oColliderSize = collider2->GetSize();
+
+	float distance = GatesEngine::Math::Vector3::Distance(mTransform->position, oTransform->position);
+	if (distance * distance <= powf(mColliderSize.x/2 + oColliderSize.x/2,2))return true;
 	return false;
 }
 

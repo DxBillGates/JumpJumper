@@ -149,9 +149,9 @@ void GatesEngine::MeshCreater::CreateLineCircle(Math::Vector3 size, float vertex
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		Math::Vector3 pos;
-		pos.x = size.x * sinf((2 * GatesEngine::Math::PI / vertexCount) * i);
+		pos.x = size.x * sinf((2 * GatesEngine::Math::PI / vertexCount) * i)/2;
 		pos.y = 0;
-		pos.z = size.x * cosf((2 * GatesEngine::Math::PI / vertexCount) * i);
+		pos.z = size.x * cosf((2 * GatesEngine::Math::PI / vertexCount) * i)/2;
 		//transform->position.x = r * sinf((2 * GatesEngine::Math::PI / 360) * time*10 * delay / 10);
 		//transform->position.z = r * cosf((2 * GatesEngine::Math::PI / 360) * time*10 * delay / 10);
 		vertices->push_back({ pos,color });
@@ -246,11 +246,62 @@ void GatesEngine::MeshCreater::CreateCube(Math::Vector3 size, MeshData<VertexInf
 
 void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int hTess, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
+	//using namespace GatesEngine::Math;
+	//std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
+	//std::vector<unsigned short>* indices = meshData.GetIndices();
+
+	//vertices->resize((uint64_t)vTess * ((uint64_t)hTess + 1));
+	//for (int v = 0; v <= hTess; v++)
+	//{
+	//	for (int u = 0; u < vTess; u++)
+	//	{
+	//		float theta = Math::ConvertToRadian(180.0f * v / hTess);
+	//		float phi = Math::ConvertToRadian(360.0f * u / vTess);
+	//		float x = sinf(theta) * cosf(phi);
+	//		float c = cosf(theta);
+	//		float y = cosf(theta);
+	//		float z = sinf(theta) * sinf(phi);
+	//		(*vertices)[(uint64_t)vTess * v + u].point = { x, y, z, };
+	//	}
+	//}
+
+
+	////int maxIndex = vTess * hTess * 6;
+	////for (int i = 0; i < maxIndex / 6; ++i)
+	////{
+	////	indices->push_back(i);
+	////	indices->push_back(i + 1);
+	////	indices->push_back(i + 12);
+	////	indices->push_back(i + 12);
+	////	indices->push_back(i + 11);
+	////	indices->push_back(i);
+	////}
+
+	//int i = 0;
+	//indices->resize((uint64_t)2 * hTess * ((uint64_t)vTess + 1));
+
+	//for (int v = 0; v < hTess; v++) {
+	//	for (int u = 0; u <= vTess; u++) {
+	//		if (u == vTess) {
+	//			(*indices)[i] = v * vTess;
+	//			++i;
+	//			(*indices)[i] = (v + 1) * vTess;
+	//			++i;
+	//		}
+	//		else {
+	//			(*indices)[i] = (v * vTess) + u;
+	//			++i;
+	//			(*indices)[i] = (*indices)[(uint64_t)i - 1] + vTess;
+	//			++i;
+	//		}
+	//	}
+	//}
 	using namespace GatesEngine::Math;
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
 	std::vector<unsigned short>* indices = meshData.GetIndices();
 
-	vertices->resize((uint64_t)vTess * ((uint64_t)hTess + 1));
+	vertices->resize(vTess * (hTess + 1));
+
 	for (int v = 0; v <= hTess; v++)
 	{
 		for (int u = 0; u < vTess; u++)
@@ -261,39 +312,91 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 			float c = cosf(theta);
 			float y = cosf(theta);
 			float z = sinf(theta) * sinf(phi);
-			(*vertices)[(uint64_t)vTess * v + u].point = { x, y, z, };
+			(*vertices)[vTess * v + u].point = { x/2, y/2, z/2 };
 		}
 	}
 
+	//c—ñ
+	for (int i = 0; i < hTess; ++i)
+	{
+		if (i >= hTess)continue;
+		//‰¡—ñ
+		for (int j = 0; j < vTess; ++j)
+		{
+			if (j == vTess - 1)
+			{
+				int offset = i * vTess;
+				int jPlusOffset = j + offset;
 
-	//int maxIndex = vTess * hTess * 6;
-	//for (int i = 0; i < maxIndex / 6; ++i)
-	//{
-	//	indices->push_back(i);
-	//	indices->push_back(i + 1);
-	//	indices->push_back(i + 12);
-	//	indices->push_back(i + 12);
-	//	indices->push_back(i + 11);
-	//	indices->push_back(i);
-	//}
+				indices->push_back(jPlusOffset);
 
-	int i = 0;
-	indices->resize((uint64_t)2 * hTess * ((uint64_t)vTess + 1));
+				int jPlusMinusVTessMinusOne = jPlusOffset - (vTess - 1);
+				indices->push_back(jPlusMinusVTessMinusOne);
 
-	for (int v = 0; v < hTess; v++) {
-		for (int u = 0; u <= vTess; u++) {
-			if (u == vTess) {
-				(*indices)[i] = v * vTess;
-				++i;
-				(*indices)[i] = (v + 1) * vTess;
-				++i;
+				int jPlusOne = jPlusOffset + 1;
+				indices->push_back(jPlusOne);
+
+				Math::Vector3 normal, ba, cb;
+				ba = (*vertices)[jPlusMinusVTessMinusOne].point - (*vertices)[jPlusOffset].point;
+				cb = (*vertices)[jPlusOne].point - (*vertices)[jPlusMinusVTessMinusOne].point;
+				normal = Math::Vector3::Cross(ba, cb);
+				(*vertices)[jPlusOffset].normal = normal;
+				(*vertices)[jPlusMinusVTessMinusOne].normal = normal;
+				(*vertices)[jPlusOne].normal = normal;
+
+				indices->push_back(jPlusOne);
+
+				int jPlusVTessMinusOne = jPlusOffset + vTess;
+				indices->push_back(jPlusVTessMinusOne);
+
+				indices->push_back(jPlusOffset);
+
+				ba = (*vertices)[jPlusVTessMinusOne].point - (*vertices)[jPlusOne].point;
+				cb = (*vertices)[jPlusOffset].point - (*vertices)[jPlusVTessMinusOne].point;
+				normal = Math::Vector3::Cross(ba, cb);
+				normal = normal.Normalize();
+				(*vertices)[jPlusOne].normal = normal;
+				(*vertices)[jPlusVTessMinusOne].normal = normal;
+				(*vertices)[jPlusOffset].normal = normal;
+
+				continue;
 			}
-			else {
-				(*indices)[i] = (v * vTess) + u;
-				++i;
-				(*indices)[i] = (*indices)[(uint64_t)i - 1] + vTess;
-				++i;
-			}
+
+			int offset = i * vTess;
+			int jPlusOffset = j + offset;
+
+			indices->push_back(jPlusOffset);
+
+			int jPlusOne = jPlusOffset + 1;
+			indices->push_back(jPlusOne);
+
+			int jPlusVTess = jPlusOffset + vTess + 1;
+			indices->push_back(jPlusVTess);
+
+			Math::Vector3 normal, ba, cb;
+			ba = (*vertices)[jPlusOne].point - (*vertices)[jPlusOffset].point;
+			cb = (*vertices)[jPlusVTess].point - (*vertices)[jPlusOffset].point;
+			normal = Math::Vector3::Cross(ba, cb);
+			(*vertices)[jPlusOffset].normal = normal;
+			(*vertices)[jPlusOne].normal = normal;
+			(*vertices)[jPlusVTess].normal = normal;
+
+
+			indices->push_back(jPlusVTess);
+
+			int jPlusVTessMinusOne = jPlusVTess - 1;
+			indices->push_back(jPlusVTessMinusOne);
+
+			indices->push_back(jPlusOffset);
+
+			ba = (*vertices)[jPlusVTessMinusOne].point - (*vertices)[jPlusVTess].point;
+			cb = (*vertices)[jPlusOffset].point - (*vertices)[jPlusVTessMinusOne].point;
+			normal = Math::Vector3::Cross(ba, cb);
+			normal = normal.Normalize();
+
+			(*vertices)[jPlusVTess].normal = normal;
+			(*vertices)[jPlusVTessMinusOne].normal = normal;
+			(*vertices)[jPlusOffset].normal = normal;
 		}
 	}
 }

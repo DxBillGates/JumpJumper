@@ -132,7 +132,7 @@ bool GatesEngine::CollisionTreeManager::Register(Collider* registerCollider, Col
 	max = registerCollider->GetGameObject()->GetTransform()->position + registerCollider->GetSize() / 2;
 
 	int registerArea = GetMortonNumber(min, max);
-	if (registerCollider->GetType() == ColliderType::SPHERE)registerArea = GetPointElement(registerCollider->GetGameObject()->GetTransform()->position);
+	//if (registerCollider->GetType() == ColliderType::SPHERE)registerArea = GetPointElement(registerCollider->GetGameObject()->GetTransform()->position);
 	if (registerArea == -1)return false;
 	if (registerArea < cellCount)
 	{

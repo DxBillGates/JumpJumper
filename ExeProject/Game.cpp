@@ -21,11 +21,12 @@ Game::~Game()
 bool Game::LoadContents()
 {
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
-	//sceneManager->AddScene(new SampleScene("SampleScene", this));
+	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new SelectScene("SelectScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->AddScene(new Stage2Scene("Stage2Scene", this));
-	sceneManager->ChangeScene("TitleScene");
+	sceneManager->ChangeScene("SampleScene");
+	//sceneManager->ChangeScene("TitleScene");
 
 	using namespace GatesEngine;
 	using namespace GatesEngine::Math;

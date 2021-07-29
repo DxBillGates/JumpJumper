@@ -26,7 +26,7 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	combo = 0;
 	isAnimation = false;
-	gameObject->GetTransform()->position = { 0,1000,0 };
+	gameObject->GetTransform()->position.y = 1000;
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 }
 
@@ -122,6 +122,12 @@ void PlayerBehaviour::Update()
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
+	if (pos.y <= 0)
+	{
+		isJump = false;
+		gameObject->GetTransform()->position.y = 0;
+		pos = gameObject->GetTransform()->position;
+	}
 
 	//ƒJƒƒ‰‚Ìˆ—
 	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
