@@ -25,7 +25,7 @@ bool Game::LoadContents()
 	sceneManager->AddScene(new SelectScene("SelectScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->AddScene(new Stage2Scene("Stage2Scene", this));
-	sceneManager->ChangeScene("SampleScene");
+	sceneManager->ChangeScene("TitleScene");
 	//sceneManager->ChangeScene("TitleScene");
 
 	using namespace GatesEngine;
