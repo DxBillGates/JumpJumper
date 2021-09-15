@@ -1,6 +1,7 @@
 #pragma once
 #include "..\MeshData.h"
 #include "..\VertexInfo.h"
+#include <string>
 
 namespace GatesEngine
 {
@@ -14,5 +15,6 @@ namespace GatesEngine
 		void CreateLineCircle(Math::Vector3 size, float vertexCount, const Math::Vector4& color, MeshData<VertexInfo::Vertex_Color>& meshData);
 		void CreateCube(Math::Vector3 size, MeshData<VertexInfo::Vertex_UV_Normal>& meshData);
 		void CreateSphere(Math::Vector3 size,int vTess,int hTess,MeshData<VertexInfo::Vertex_UV_Normal>& meshData);
+		void LoadModelData(const std::string& filename,MeshData<VertexInfo::Vertex_UV_Normal>& meshData);
 	}
 }

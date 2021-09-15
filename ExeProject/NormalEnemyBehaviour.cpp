@@ -106,7 +106,7 @@ void NormalEnemyBehaviour::Update()
 		graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader")->Set();
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0,0,1} });
-		graphicsDevice->GetMeshManager()->GetMesh("Sphere")->Draw();
+		graphicsDevice->GetMeshManager()->GetMesh("testModel")->Draw();
 	}
 
 	void NormalEnemyBehaviour::OnCollision(GatesEngine::GameObject * other)
