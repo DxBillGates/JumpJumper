@@ -11,5 +11,8 @@ namespace GatesEngine
 
 		Math::Matrix4x4 GetMatrix();
 		Math::Vector3 GetEulerAngle();
+		Math::Vector3 GetForward();
+		Math::Vector3 GetRight();
+		Math::Vector3 GetUp();
 	};
 }

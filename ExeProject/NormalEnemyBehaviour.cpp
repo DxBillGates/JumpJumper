@@ -103,10 +103,10 @@ void NormalEnemyBehaviour::Update()
 		GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
 		graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+		graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader")->Set();
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,0,1,0},{1,0,0,1} });
-		graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0,0,1} });
+		graphicsDevice->GetMeshManager()->GetMesh("Sphere")->Draw();
 	}
 
 	void NormalEnemyBehaviour::OnCollision(GatesEngine::GameObject * other)

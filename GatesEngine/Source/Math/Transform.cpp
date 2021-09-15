@@ -10,3 +10,21 @@ GatesEngine::Math::Vector3 GatesEngine::Transform::GetEulerAngle()
 {
 	return Math::Vector3();
 }
+
+GatesEngine::Math::Vector3 GatesEngine::Transform::GetForward()
+{
+	GatesEngine::Math::Axis axis = GetMatrix().GetAxis();
+	return axis.z;
+}
+
+GatesEngine::Math::Vector3 GatesEngine::Transform::GetRight()
+{
+	GatesEngine::Math::Axis axis = GetMatrix().GetAxis();
+	return axis.x;
+}
+
+GatesEngine::Math::Vector3 GatesEngine::Transform::GetUp()
+{
+	GatesEngine::Math::Axis axis = GetMatrix().GetAxis();
+	return axis.y;
+}

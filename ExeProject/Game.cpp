@@ -63,6 +63,9 @@ bool Game::LoadContents()
 
 	auto* rgbShiftShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"RGBShift")), "RGBShiftShader");
 	rgbShiftShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
+
+	auto* meshShadowShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"MeshShadow")), "MeshShadowShader");
+	meshShadowShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
 	//î¬É|Éäê∂ê¨
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
 	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
@@ -99,6 +102,9 @@ bool Game::LoadContents()
 	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData7);
 	graphicsDevice.GetMeshManager()->Add("LineCircle")->Create(&graphicsDevice, testLineMeshData7);
 
+	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
+	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
+
 	return true;
 }
 
@@ -122,15 +128,49 @@ void Game::Draw()
 	graphicsDevice.GetCBufferAllocater()->ResetCurrentUseNumber();
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
 
-	graphicsDevice.ClearRenderTarget({ 135,206,235,0 }, true);
+	//âeê[ìxï`âÊ
+	graphicsDevice.ClearRenderTarget({ 0,0,0,1 }, true, &shadowRenderTex, &shadowDepthTex);
 	graphicsDevice.GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
+	GatesEngine::GameObject* player = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
+	GatesEngine::Math::Vector3 pos = (player) ? player->GetTransform()->position : GatesEngine::Math::Vector3();
+	GatesEngine::B2 lightViewData;
+	float angle = 90;
+	GatesEngine::Math::Vector3 dir = GatesEngine::Math::Vector3(0, 0, 1).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
+	GatesEngine::Math::Vector3 up = GatesEngine::Math::Vector3(0, 1, 0).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
+	lightViewData.viewMatrix = GatesEngine::Math::Matrix4x4::GetViewMatrixLookTo({ GatesEngine::Math::Vector3(0,10000,0) + pos},dir, up);
+	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({1000,1000},1,20000);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, lightViewData);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,-1,0,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
 
 	gameObjectManager.Draw();
 	//TestópÇÃGridÇ‚2Dï`âÊ
 	sceneManager->Draw();
+
+
+	graphicsDevice.ClearRenderTarget({ 135,206,235,0 }, true);
+
+	graphicsDevice.GetShaderManager()->GetShader("MeshShadowShader")->Set();
+
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
+	GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
+ 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
+	shadowDepthTex.Set(5);
+
+	gameObjectManager.Draw();
+	//TestópÇÃGridÇ‚2Dï`âÊ
+	sceneManager->Draw();
+
+	graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	graphicsDevice.GetShaderManager()->GetShader("Line")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
+
+	for (int i = 0; i < 1; ++i)
+	{
+		graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
+		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
+	}
 
 	graphicsDevice.ScreenFlip();
 }

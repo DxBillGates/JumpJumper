@@ -259,6 +259,19 @@ GatesEngine::Math::Matrix4x4 GatesEngine::Math::Matrix4x4::GetOrthographMatrix(c
 	return result;
 }
 
+GatesEngine::Math::Matrix4x4 GatesEngine::Math::Matrix4x4::GetOrthographMatrix(const Vector2& size, float nearClip, float farClip)
+{
+	Matrix4x4 result;
+	result =
+	{
+		2.0f / size.x,0,0,0,
+		0,-2.0f / size.y,0,0,
+		0,0,1 / (farClip - nearClip),0,
+		0,nearClip / (nearClip - farClip),0,1
+	};
+	return result;
+}
+
 GatesEngine::Math::Matrix4x4 & GatesEngine::Math::operator*=(Matrix4x4 & m1, const Matrix4x4 & m2)
 {
 	Matrix4x4 result;

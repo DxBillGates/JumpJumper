@@ -10,6 +10,8 @@
 class Game : public GatesEngine::Application
 {
 private:
+	GatesEngine::RenderTexture shadowRenderTex;
+	GatesEngine::DepthStencilTexture shadowDepthTex;
 public:
 	Game();
 	Game(const GatesEngine::Math::Vector2& wSize, const char* title);

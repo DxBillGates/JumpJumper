@@ -41,3 +41,8 @@ bool GatesEngine::Scene::IsChangeScene()
 {
 	return changeNextSceneFlag;
 }
+
+GatesEngine::GameObjectManager* GatesEngine::Scene::GetGameObjectManager()
+{
+	return &gameObjectManager;
+}

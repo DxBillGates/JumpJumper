@@ -3,6 +3,7 @@
 #include "Header/Graphics/Graphics.h"
 #include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
+#include "Header/Math/Vector3.h"
 
 PlayerBehaviour::PlayerBehaviour()
 	: vel({})
@@ -131,6 +132,7 @@ void PlayerBehaviour::Update()
 
 	//ƒJƒƒ‰‚Ìˆ—
 	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
+	GatesEngine::Math::Vector3 back = -gameObject->GetTransform()->GetForward();
 	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z)/* + GatesEngine::Math::Vector3(0, 1000, -1000)*/ });
 	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
 	mainCamera->Update();
@@ -144,16 +146,16 @@ void PlayerBehaviour::OnDraw()
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
-	int value = (combo >= 10) ? 10 : combo;
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,(float)1080 - 108 * value + 54,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
+	//graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	//int value = (combo >= 10) ? 10 : combo;
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,(float)1080 - 108 * value + 54,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+	graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 }
 

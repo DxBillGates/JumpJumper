@@ -25,5 +25,6 @@ namespace GatesEngine
 		virtual void Draw() = 0;
 		const char* GetSceneName();
 		bool IsChangeScene();
+		GameObjectManager* GetGameObjectManager();
 	};
 }

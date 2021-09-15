@@ -15,6 +15,7 @@ namespace GatesEngine
 	{
 		POSITION,
 		TEXCOORD,
+		TEXCOORD2,
 		NORMAL,
 		COLOR,
 	};

@@ -201,6 +201,12 @@
     <FxCompile Include="Resources\Shader\RGBShiftPS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\MeshShadowVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MeshShadowPS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\DefaultShader.hlsli">
@@ -228,6 +234,9 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Resources\Shader\RGBShiftShader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\MeshShadowShader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>

@@ -47,9 +47,9 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	g->GetCollider()->SetSize({ 500,10,500 });
+	g->GetCollider()->SetSize({ 10000,10,10000 });
 	g->SetTag("block");
-	g->GetTransform()->position = { 0,0,0 };
+	g->GetTransform()->position = { 0,-500,0 };
 
 }
 
@@ -153,14 +153,4 @@ void Stage1Scene::Draw()
 {
 	gameObjectManager.Draw();
 	sceneTranslater.Draw(graphicsDevice);
-
-	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
-
-	for (int i = 0; i < 5; ++i)
-	{
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
-		graphicsDevice->GetMeshManager()->GetMesh("Grid")->Draw();
-	}
 }
