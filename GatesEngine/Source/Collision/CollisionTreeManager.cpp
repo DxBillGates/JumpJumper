@@ -116,8 +116,8 @@ void GatesEngine::CollisionTreeManager::Initialize(int level, const Math::Vector
 	maxRange = max;
 	range = max - min;
 
-	int minArea = 1 << level;
-	minAreaRange = range / (float)minArea;
+
+	minAreaRange = range / ((float)(1 << level));
 
 	minLevel = level;
 }
@@ -154,6 +154,7 @@ bool GatesEngine::CollisionTreeManager::GetCollisionList(int elem, std::vector<C
 		CollisionTreeObject* treeObj2 = treeObj->GetNextObject();
 		while (treeObj2)
 		{
+			//if (treeObj->GetCollider()->GetGameObject()->GetName() == treeObj2->GetCollider()->GetGameObject()->GetName())continue;
 			if (treeObj == treeObj2)
 			{
 				printf("同じオブジェクト!!!!\n");

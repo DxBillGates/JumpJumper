@@ -82,7 +82,7 @@ bool Game::LoadContents()
 
 	//ƒOƒŠƒbƒh¶¬
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData;
-	MeshCreater::CreateGrid({ 10000,10000 }, 100, testLineMeshData);
+	MeshCreater::CreateGrid({ 1200,1200 }, 120, testLineMeshData);
 	graphicsDevice.GetMeshManager()->Add("Grid")->Create(&graphicsDevice, testLineMeshData);
 
 	//Cube¶¬

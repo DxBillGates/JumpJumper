@@ -3,6 +3,7 @@
 #include "NormalEnemyBehaviour.h"
 #include "TrankingEnemyBehaviour.h"
 #include "BlockBehaviour.h"
+#include "PlayerBulletBehaviour.h"
 
 Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
 {
@@ -16,7 +17,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName, app)
 	, playerBehaviour(nullptr)
 {
-	collisionManager.Initialize(6, { -10000 }, { 20000 });
+	collisionManager.Initialize(4, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
@@ -28,6 +29,20 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	gp->GetCollider()->SetSize({ 50 });
 	gp->SetName("player");
 
+	for (int i = 0; i < 20; ++i)
+	{
+		auto* bullet = gameObjectManager.Add(new GameObject());
+		bullet->SetGraphicsDevice(graphicsDevice);
+		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+		collisionManager.AddColliderComponent(bullet->AddComponent<Collider>());
+		bullet->SetCollider();
+		bullet->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+		bullet->GetCollider()->SetSize({ 10 });
+		bullet->SetName("playerBullet");
+
+		playerBehaviour->AddBullet(bulletBehaviour);
+	}
+
 	auto* g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
 	auto* e = g->AddComponent<NormalEnemyBehaviour>();
@@ -35,7 +50,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	e->SetY(0);
 	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 	g->SetCollider();
-	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
 	g->GetCollider()->SetSize({ 200 });
 	g->SetTag("enemy");
 	g->GetTransform()->position = { 1000,0,1000 };

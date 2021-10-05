@@ -38,8 +38,8 @@ void GatesEngine::Camera::Update()
 {
 	Math::Axis axis = rotation.GetAxis();
 	//ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ðŽæ“¾
-	if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
-	{
+	//if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
+	//{
 		input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
 		//Math::Vector2 inputPos = input->GetMouse()->GetMousePos();
 		//Math::Vector2 newPos;
@@ -92,7 +92,7 @@ void GatesEngine::Camera::Update()
 
 		moveVector = moveVector.Normalize();
 		position += moveVector * moveSpeed;
-	}
+	//}
 
 	direction = Math::Vector3(0, 0, 1);
 	rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);

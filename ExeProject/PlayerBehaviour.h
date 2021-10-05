@@ -3,6 +3,7 @@
 #include "Header/Math/Math.h"
 #include "Header/Input/Input.h"
 #include "Header/Graphics/Camera.h"
+#include "PlayerBullet.h"
 
 class PlayerBehaviour : public GatesEngine::Behaviour
 {
@@ -15,6 +16,8 @@ private:
 	bool isAnimation;
 	float animationTime;
 	int killedValue;
+
+	std::vector<PlayerBullet*> bullets;
 public:
 	PlayerBehaviour();
 	~PlayerBehaviour();
@@ -27,4 +30,5 @@ public:
 	bool GetSceneTransFlag();
 	void ResetKillCount();
 	int GetKillCount();
+	void AddBullet(PlayerBullet* newBullet);
 };

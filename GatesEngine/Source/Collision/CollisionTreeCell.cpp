@@ -15,7 +15,7 @@ bool GatesEngine::CollisionTreeCell::PushObject(CollisionTreeObject* pushObj)
 	if (!pushObj)return false;
 	if (pushObj->GetSettingCell() == this)return false;
 
-	//pushObj->Remove();
+	pushObj->Remove();
 	if (!latestTreeObj)latestTreeObj = pushObj;
 	else
 	{
@@ -43,15 +43,15 @@ bool GatesEngine::CollisionTreeCell::OnRemove(CollisionTreeObject* removeobj)
 		{
 			latestTreeObj = latestTreeObj->GetNextObject();
 		}
-		else
-		{
-			return false;
-		}
+		//else
+		//{
+		//	return false;
+		//}
 	}
-	else
-	{
-		return false;
-	}
+	//else
+	//{
+	//	return false;
+	//}
 	return true;;
 }
 

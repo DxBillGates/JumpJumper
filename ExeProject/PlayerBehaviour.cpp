@@ -80,10 +80,10 @@ void PlayerBehaviour::Update()
 		}
 	}
 	//ˆÚ“®ˆ—
-	if (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
-	{
+	//if (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	//{
 		GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
-		cameraAxis.z.y = 0;
+		//cameraAxis.z.y = 0;
 		GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
 
 		GatesEngine::Math::Vector3 moveVector = {};
@@ -106,7 +106,7 @@ void PlayerBehaviour::Update()
 
 		const float SPEED = 5;
 		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
-	}
+	//}
 	if (vel.y <= -50)vel.y = -50;
 	gameObject->GetTransform()->position += vel;
 
@@ -123,11 +123,30 @@ void PlayerBehaviour::Update()
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	if (pos.y <= 0)
+	if (pos.y <= 100)
 	{
 		isJump = false;
-		gameObject->GetTransform()->position.y = 0;
+		gameObject->GetTransform()->position.y = 100;
 		pos = gameObject->GetTransform()->position;
+	}
+
+	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK))
+	{
+		for (int i = 0; i < (int)bullets.size(); ++i)
+		{
+			if (!(*bullets[i]).IsUse())
+			{
+				(*bullets[i]).Shot(cameraAxis.z.Normalize());
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < (int)bullets.size(); ++i)
+	{
+		if (!(*bullets[i]).IsUse())
+		{
+			(*bullets[i]).SetPos(gameObject->GetTransform()->position);
+		}
 	}
 
 	//ƒJƒƒ‰‚Ìˆ—
@@ -191,6 +210,7 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 		GatesEngine::Math::Vector3 vec = GatesEngine::Math::Vector3::Normalize(other->GetTransform()->position - gameObject->GetTransform()->position);
 		vel -= vec * 10;
 	}
+
 }
 
 void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)
@@ -220,4 +240,9 @@ void PlayerBehaviour::ResetKillCount()
 int PlayerBehaviour::GetKillCount()
 {
 	return killedValue;
+}
+
+void PlayerBehaviour::AddBullet(PlayerBullet* newBullet)
+{
+	bullets.push_back(newBullet);
 }
