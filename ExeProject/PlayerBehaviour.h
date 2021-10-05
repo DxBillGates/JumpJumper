@@ -10,12 +10,13 @@ class PlayerBehaviour : public GatesEngine::Behaviour
 private:
 	GatesEngine::Math::Vector3 vel;
 	bool isJump;
-	int combo;
+	//int combo;
 	GatesEngine::Input* input;
 	GatesEngine::Camera* mainCamera;
-	bool isAnimation;
-	float animationTime;
-	int killedValue;
+	//bool isAnimation;
+	//float animationTime;
+	//int killedValue;
+	float fuelValue;
 
 	std::vector<PlayerBullet*> bullets;
 public:

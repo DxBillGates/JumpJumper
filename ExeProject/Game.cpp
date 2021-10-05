@@ -152,7 +152,7 @@ void Game::Draw()
 	sceneManager->Draw();
 
 
-	graphicsDevice.ClearRenderTarget({ 135,206,235,0 }, true);
+	graphicsDevice.ClearRenderTarget({ 0,0,0,0 }, true);
 
 	graphicsDevice.GetShaderManager()->GetShader("MeshShadowShader")->Set();
 

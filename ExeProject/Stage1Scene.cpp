@@ -17,7 +17,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName, app)
 	, playerBehaviour(nullptr)
 {
-	collisionManager.Initialize(4, { -10000 }, { 20000 });
+	collisionManager.Initialize(6, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
@@ -36,7 +36,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
 		collisionManager.AddColliderComponent(bullet->AddComponent<Collider>());
 		bullet->SetCollider();
-		bullet->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 		bullet->GetCollider()->SetSize({ 10 });
 		bullet->SetName("playerBullet");
 
