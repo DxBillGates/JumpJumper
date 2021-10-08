@@ -7,6 +7,7 @@
 
 BlockBehaviour::BlockBehaviour()
 	: hp(10)
+	, mesh(nullptr)
 {
 }
 
@@ -17,6 +18,10 @@ BlockBehaviour::~BlockBehaviour()
 void BlockBehaviour::Start()
 {
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
+
+	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
+	mesh = graphicsDevice->GetMeshManager()->GetMesh("Cube");
+	shader = graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader");
 }
 
 void BlockBehaviour::Update()
@@ -28,10 +33,10 @@ void BlockBehaviour::OnDraw()
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader")->Set();
+	shader->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{0.5f,0.5f,0.5f,1} });
-	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
+	mesh->Draw();
 
 	//GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());
 	//lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);

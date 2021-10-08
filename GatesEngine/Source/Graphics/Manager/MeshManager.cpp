@@ -18,21 +18,32 @@ GatesEngine::Mesh* GatesEngine::MeshManager::Add(const std::string& name)
 {
 	Mesh* mesh = new Mesh();
 	meshes.insert(std::make_pair(name.c_str(),mesh));
+	meshInfos.push_back({name,mesh});
 	return mesh;
 }
 
 GatesEngine::Mesh* GatesEngine::MeshManager::GetMesh(const std::string& name)
 {
-	//モデルが見つからなかったら四角形を返す
-	Mesh* mesh = meshes.at("Cube");
-	for (auto m : meshes)
-	{
-		if (m.first == name)
-		{
-			mesh = m.second;
-			return mesh;
-		}
-	}
+	////モデルが見つからなかったら四角形を返す
+	Mesh* mesh = meshes.at(name.c_str());
+
+	//for (auto m : meshInfos)
+	//{
+	//	if (m.name == name)
+	//	{
+	//		return m.mesh;
+	//	}
+	//}
+	//for (auto m : meshes)
+	//{
+	//	if (m.first == name)
+	//	{
+	//		mesh = m.second;
+	//		return mesh;
+	//	}
+	//}
+
+
 
 	return mesh;
 }

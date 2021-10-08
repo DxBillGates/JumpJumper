@@ -15,6 +15,13 @@ GatesEngine::Collider::~Collider()
 	delete treeObj;
 }
 
+void GatesEngine::Collider::Start()
+{
+	GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
+	mesh = (type == ColliderType::CUBE) ? graphicsDevice->GetMeshManager()->GetMesh("LineCube") : graphicsDevice->GetMeshManager()->GetMesh("LineCircle");
+	shader = graphicsDevice->GetShaderManager()->GetShader("Line");
+}
+
 void GatesEngine::Collider::OnDraw()
 {
 #ifdef _DEBUG
@@ -23,12 +30,11 @@ void GatesEngine::Collider::OnDraw()
 	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
+	shader->Set();
 
 	if (type == ColliderType::CUBE)
 	{
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-		graphicsDevice->GetMeshManager()->GetMesh("LineCube")->Draw();
 	}
 	else
 	{
@@ -36,7 +42,7 @@ void GatesEngine::Collider::OnDraw()
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-		graphicsDevice->GetMeshManager()->GetMesh("LineCircle")->Draw();
+		mesh->Draw();
 
 		lineCubeMatrix = GatesEngine::Math::Matrix4x4::Identity();
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
@@ -44,7 +50,7 @@ void GatesEngine::Collider::OnDraw()
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-		graphicsDevice->GetMeshManager()->GetMesh("LineCircle")->Draw();
+		mesh->Draw();
 
 
 		lineCubeMatrix = GatesEngine::Math::Matrix4x4::Identity();
@@ -53,8 +59,8 @@ void GatesEngine::Collider::OnDraw()
 		lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-		graphicsDevice->GetMeshManager()->GetMesh("LineCircle")->Draw();
 	}
+	mesh->Draw();
 #endif
 }
 

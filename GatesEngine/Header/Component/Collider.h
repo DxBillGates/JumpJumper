@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 #include "..\Math\Math.h"
+#include "..\Graphics\Mesh.h"
+#include "..\Graphics\Shader.h"
 
 namespace GatesEngine
 {
@@ -16,9 +18,12 @@ namespace GatesEngine
 		ColliderType type;
 		Math::Vector3 size;
 		CollisionTreeObject* treeObj;
+		Mesh* mesh;
+		Shader* shader;
 	public:
 		Collider();
 		~Collider();
+		void Start() override;
 		void OnDraw() override;
 		void SetType(ColliderType sType);
 		ColliderType GetType();

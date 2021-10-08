@@ -96,7 +96,7 @@ void GatesEngine::CollisionTreeManager::Initialize(int level, const Math::Vector
 {
 	if (level >= MAX_LEVEL)
 	{
-		printf("八分木空間分割の分割レベルがキャパオーバーです、最大値に設定して再生成します\n");
+		printf("八分木空間分割の分割レベルがキャパオーバーです、最大値に設定して生成します\n");
 		level = MAX_LEVEL - 1;
 		//assert(false);
 	}
@@ -155,12 +155,18 @@ bool GatesEngine::CollisionTreeManager::GetCollisionList(int elem, std::vector<C
 		while (treeObj2)
 		{
 			//if (treeObj->GetCollider()->GetGameObject()->GetName() == treeObj2->GetCollider()->GetGameObject()->GetName())continue;
-			if (treeObj == treeObj2)
+			//if (treeObj == treeObj2)
+			//{
+			//	printf("同じオブジェクト!!!!\n");
+			//	//treeObj2 = treeObj2->GetNextObject();
+			//	//continue;
+			//	break;
+			//}
+
+			if (treeObj->GetCollider()->GetGameObject()->GetTag() == treeObj2->GetCollider()->GetGameObject()->GetTag())
 			{
-				printf("同じオブジェクト!!!!\n");
-				//treeObj2 = treeObj2->GetNextObject();
-				//continue;
-				break;
+				treeObj2 = treeObj2->GetNextObject();
+				continue;
 			}
 			colliders.push_back(treeObj->GetCollider());
 			colliders.push_back(treeObj2->GetCollider());
