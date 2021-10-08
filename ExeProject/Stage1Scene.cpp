@@ -64,7 +64,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	g->GetCollider()->SetSize({ 10000,10,10000 });
 	g->SetTag("block");
-	g->GetTransform()->position = { 0,-500,0 };
+	g->GetTransform()->position = { 0,100,0 };
 
 }
 

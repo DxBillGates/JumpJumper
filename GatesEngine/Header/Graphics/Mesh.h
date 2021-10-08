@@ -34,6 +34,8 @@ namespace GatesEngine
 		std::vector<T>* vertices = meshData.GetVertices();
 		std::vector<unsigned short>* indices = meshData.GetIndices();
 
+		if ((int)vertices->size() == 0)return;
+
 		D3D12_HEAP_PROPERTIES heapProp = {};
 		heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
 		D3D12_RESOURCE_DESC resDesc = {};
@@ -44,7 +46,10 @@ namespace GatesEngine
 		resDesc.SampleDesc.Count = 1;
 		resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		resDesc.Width = sizeof(T) * (*vertices).size();
-		device->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vBuffer));
+
+		HRESULT result;
+		result = device->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vBuffer));
+
 		vbView.BufferLocation = vBuffer->GetGPUVirtualAddress();
 		vbView.SizeInBytes = (UINT)resDesc.Width;
 		vbView.StrideInBytes = sizeof(T);

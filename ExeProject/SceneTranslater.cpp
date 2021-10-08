@@ -21,7 +21,7 @@ void SceneTranslater::StartSceneTranslate(int time)
 		this->time = 0;
 		break;
 	case SceneTranslater::TranslateState::DOWN:
-		this->time = setTime;
+		this->time = (float)setTime;
 		break;
 	}
 }
@@ -42,7 +42,7 @@ void SceneTranslater::Update(float elapsedTime)
 
 	if (time > setTime || time < 0)
 	{
-		time = (state == TranslateState::UP) ? setTime : 0;
+		time = (state == TranslateState::UP) ? (float)setTime : 0;
 		state = (state == TranslateState::UP) ? TranslateState::DOWN : TranslateState::NONE;
 		isActive = false;
 	}

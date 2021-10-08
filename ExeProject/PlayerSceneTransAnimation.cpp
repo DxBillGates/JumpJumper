@@ -43,7 +43,7 @@ void PlayerSceneTransAnimation::Update()
 		mainCamera->SetPosition(Math::Vector3::Lerp(oldCameraPos, pos,(cameraAnimationTime)));
 
 		float yaw = 0;
-		yaw = gameObject->GetTransform()->position.x < 0 ? 10 : -10;
+		yaw = (gameObject->GetTransform()->position.x < 0.0f) ? 10.0f : -10.0f;
 		mainCamera->SetYawPitch(Math::Vector2::Lerp({ oldCameraDir.x,oldCameraDir.y }, { Math::ConvertToRadian(yaw),Math::ConvertToRadian(10)}, Math::Easing::EaseInCirc(cameraAnimationTime)));
 
 		if (cameraAnimationTime >= 1)

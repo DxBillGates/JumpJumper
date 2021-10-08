@@ -1,6 +1,7 @@
 #include "..\..\Header\Component\Collider.h"
 #include "..\..\Header\GameObject\GameObject.h"
 #include "..\..\Header\Graphics\Graphics.h"
+#include "..\..\Header\Collision\CollisionTreeObject.h"
 
 GatesEngine::Collider::Collider()
 	: type(ColliderType::CUBE)
