@@ -44,8 +44,9 @@ bool GatesEngine::Application::Update()
 	return true;
 }
 
-void GatesEngine::Application::Draw()
+bool GatesEngine::Application::Draw()
 {
+	return true;
 }
 
 void GatesEngine::Application::Run()
@@ -63,7 +64,7 @@ void GatesEngine::Application::Run()
 		input->Update();
 		mainCamera.Update();
 		if (!Update())break;
-		Draw();
+		if(!Draw())break;
 		if (!mainWindow.ProcessMessage())break;
 	}
 }

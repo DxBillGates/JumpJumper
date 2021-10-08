@@ -27,9 +27,10 @@ GatesEngine::Mesh* GatesEngine::MeshManager::GetMesh(const std::string& name)
 	Mesh* mesh = meshes.at("Cube");
 	for (auto m : meshes)
 	{
-		if (m.first.c_str() == name.c_str())
+		if (m.first == name)
 		{
 			mesh = m.second;
+			return mesh;
 		}
 	}
 

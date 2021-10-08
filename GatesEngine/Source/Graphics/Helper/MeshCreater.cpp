@@ -303,8 +303,7 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
 	std::vector<unsigned short>* indices = meshData.GetIndices();
 
-	vertices->resize(vTess * (hTess + 1));
-
+	vertices->resize((uint64_t)vTess * ((uint64_t)hTess + 1));
 	for (int v = 0; v <= hTess; v++)
 	{
 		for (int u = 0; u < vTess; u++)
@@ -315,7 +314,7 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 			float c = cosf(theta);
 			float y = cosf(theta);
 			float z = sinf(theta) * sinf(phi);
-			(*vertices)[vTess * v + u].point = { x/2, y/2, z/2 };
+			(*vertices)[(uint64_t)vTess * v + u].point = { x/2, y/2, z/2 };
 		}
 	}
 
@@ -478,8 +477,8 @@ void GatesEngine::MeshCreater::LoadModelData(const std::string& filename, MeshDa
 			{
 				int v, vt, vn;
 				v = localIndices[i];
-				vt = localIndices[i + 1];
-				vn = localIndices[i + 2];
+				vt = localIndices[(uint64_t)i + 1];
+				vn = localIndices[(uint64_t)i + 2];
 				vertices->emplace_back(positions[v], uvies[vt], normals[vn]);
 			}
 			//面情報からインデックスを作る

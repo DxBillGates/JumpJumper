@@ -31,7 +31,7 @@ namespace GatesEngine
 		virtual bool LoadContents();
 		virtual bool Initialize();
 		virtual bool Update();
-		virtual void Draw();
+		virtual bool Draw();
 		virtual void Run();
 
 		Util::Timer* GetTimer();

@@ -102,9 +102,9 @@ bool Game::LoadContents()
 	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData7);
 	graphicsDevice.GetMeshManager()->Add("LineCircle")->Create(&graphicsDevice, testLineMeshData7);
 
-	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("testModel", testModel);
-	graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
+	//MeshData<VertexInfo::Vertex_UV_Normal> testModel;
+	//MeshCreater::LoadModelData("testModel", testModel);
+	//graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
@@ -127,7 +127,7 @@ bool Game::Update()
 	return true;
 }
 
-void Game::Draw()
+bool Game::Draw()
 {
 	graphicsDevice.GetCBufferAllocater()->ResetCurrentUseNumber();
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
@@ -176,6 +176,8 @@ void Game::Draw()
 		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
 	}
 
-	graphicsDevice.ScreenFlip();
+	if (!graphicsDevice.ScreenFlip())return false;
+
+	return true;
 }
 

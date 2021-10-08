@@ -18,7 +18,7 @@ GatesEngine::Collider::~Collider()
 void GatesEngine::Collider::OnDraw()
 {
 #ifdef _DEBUG
-	float addScale = 1.025f;
+	float addScale = 1.015f;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize() * addScale);
 	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);

@@ -247,7 +247,7 @@ void GatesEngine::GraphicsDevice::ClearDepthStencil()
 	mCmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void GatesEngine::GraphicsDevice::ScreenFlip()
+bool GatesEngine::GraphicsDevice::ScreenFlip()
 {
 	if (mRenderTarget->GetCurrentResourceState() != D3D12_RESOURCE_STATE_PRESENT)
 	{
@@ -260,14 +260,20 @@ void GatesEngine::GraphicsDevice::ScreenFlip()
 	mCmdQueue->Signal(mFence, ++mFenceValue);
 	if (mFence->GetCompletedValue() != mFenceValue)
 	{
-		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
+		HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		if (!event)
+		{
+			printf("ID3D12Fence:イベントエラー、アプリケーションを終了します。");
+			return false;
+		}
 		mFence->SetEventOnCompletion(mFenceValue, event);
 		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
+		//CloseHandle(event);
 	}
 	mCmdAlloc->Reset();
 	mCmdList->Reset(mCmdAlloc, nullptr);
 	mSwapChain->Present(0, 0);
+	return true;
 }
 
 void GatesEngine::GraphicsDevice::SetResourceBarrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)

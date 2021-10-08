@@ -19,5 +19,5 @@ public:
 	bool LoadContents()override;
 	bool Initialize()override;
 	bool Update()override;
-	void Draw()override;
+	bool Draw()override;
 };
