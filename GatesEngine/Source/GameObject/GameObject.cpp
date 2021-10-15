@@ -6,7 +6,13 @@ GatesEngine::GameObject::GameObject() :GameObject("none", "none")
 {
 }
 
-GatesEngine::GameObject::GameObject(const char* name, const char* tag) : name(name), tag(tag), graphicsDevice(nullptr), transform({}), collider(nullptr)
+GatesEngine::GameObject::GameObject(const char* name, const char* tag)
+	: name(name)
+	, tag(tag)
+	, graphicsDevice(nullptr)
+	, transform({})
+	, collider(nullptr)
+	, enabled(true)
 {
 }
 

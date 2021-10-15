@@ -7,6 +7,8 @@ GatesEngine::Collider::Collider()
 	: type(ColliderType::CUBE)
 	, size({ 1 })
 	, treeObj(nullptr)
+	, mesh(nullptr)
+	, shader(nullptr)
 {
 }
 
