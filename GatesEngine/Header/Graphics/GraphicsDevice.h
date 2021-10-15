@@ -12,6 +12,7 @@ namespace GatesEngine
 	class RenderTarget;
 	class ShaderManager;
 	class MeshManager;
+	class TextureManager;
 	class CBVSRVUAVHeap;
 	class CBufferAllocater;
 	class DepthStencil;
@@ -41,6 +42,7 @@ namespace GatesEngine
 		DescriptorHeapManager* descriptorHeapManager;
 		ShaderManager* shaderManager;
 		MeshManager* meshManager;
+		TextureManager* textureManager;
 		CBVSRVUAVHeap* cbvSrvUavHeap;
 		CBufferAllocater* cBufferAllocater;
 	private:
@@ -74,6 +76,7 @@ namespace GatesEngine
 		DescriptorHeapManager* GetDescriptorHeapManager();
 		ShaderManager* GetShaderManager();
 		MeshManager* GetMeshManager();
+		TextureManager* GetTextureManager();
 		CBVSRVUAVHeap* GetCBVSRVUAVHeap();
 		CBufferAllocater* GetCBufferAllocater();
 	};

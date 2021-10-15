@@ -4,6 +4,7 @@
 #include "..\..\Header\Graphics\DescriptorHeapManager.h"
 #include "..\..\Header\Graphics\Manager\MeshManager.h"
 #include "..\..\Header\Graphics\Manager\ShaderManager.h"
+#include "..\..\Header\Graphics\Manager\TextureManager.h"
 #include "..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\Header\Graphics\CBufferAllocater.h"
 #include "..\..\Header\Graphics\DepthStencil.h"
@@ -74,6 +75,7 @@ GatesEngine::GraphicsDevice::~GraphicsDevice()
 	delete descriptorHeapManager;
 	delete shaderManager;
 	delete meshManager;
+	delete textureManager;
 	delete cBufferAllocater;
 	delete cbvSrvUavHeap;
 }
@@ -92,6 +94,7 @@ bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
 	descriptorHeapManager = new DescriptorHeapManager(this, 640, 64);
 	shaderManager = new ShaderManager(this);
 	meshManager = new MeshManager(this);
+	textureManager = new TextureManager(this);
 	cbvSrvUavHeap = new CBVSRVUAVHeap();
 	cBufferAllocater = new CBufferAllocater();
 
@@ -379,6 +382,11 @@ GatesEngine::ShaderManager* GatesEngine::GraphicsDevice::GetShaderManager()
 GatesEngine::MeshManager* GatesEngine::GraphicsDevice::GetMeshManager()
 {
 	return meshManager;
+}
+
+GatesEngine::TextureManager* GatesEngine::GraphicsDevice::GetTextureManager()
+{
+	return textureManager;
 }
 
 GatesEngine::CBVSRVUAVHeap* GatesEngine::GraphicsDevice::GetCBVSRVUAVHeap()
