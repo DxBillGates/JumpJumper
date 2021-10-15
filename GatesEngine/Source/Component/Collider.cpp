@@ -24,6 +24,10 @@ void GatesEngine::Collider::Start()
 
 void GatesEngine::Collider::OnDraw()
 {
+}
+
+void GatesEngine::Collider::OnLateDraw()
+{
 #ifdef _DEBUG
 	float addScale = 1.015f;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();

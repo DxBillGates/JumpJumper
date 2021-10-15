@@ -184,5 +184,6 @@ void Stage1Scene::Draw()
 
 void Stage1Scene::LateDraw()
 {
+	gameObjectManager.LateDraw();
 	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS,1000);
 }

@@ -67,6 +67,21 @@ void GatesEngine::GameObject::Draw()
 	}
 }
 
+void GatesEngine::GameObject::LateDraw()
+{
+	if (enabled)
+	{
+		for (auto itr = components.begin(); itr != components.end(); ++itr)
+		{
+			(*itr)->OnLateDraw();
+		}
+		for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+		{
+			(*itr)->OnLateDraw();
+		}
+	}
+}
+
 void GatesEngine::GameObject::Collision(GameObject* other)
 {
 	for (auto itr = components.begin(); itr != components.end(); ++itr)

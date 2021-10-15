@@ -17,6 +17,7 @@ namespace GatesEngine
 		virtual void Start();
 		virtual void Update();
 		virtual void OnDraw();
+		virtual void OnLateDraw();
 		virtual void OnCollision(GameObject* other);
 		void SetGameObject(GameObject* gameObject);
 		void SetNameAndTag(const char* name, const char* tag);

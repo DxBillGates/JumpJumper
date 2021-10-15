@@ -25,6 +25,7 @@ namespace GatesEngine
 		~Collider();
 		void Start() override;
 		void OnDraw() override;
+		void OnLateDraw() override;
 		void SetType(ColliderType sType);
 		ColliderType GetType();
 		void SetSize(const Math::Vector3& sSize);

@@ -185,6 +185,7 @@ bool Game::Draw()
 		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
 	}
 
+	gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
 
 	if (!graphicsDevice.ScreenFlip())return false;

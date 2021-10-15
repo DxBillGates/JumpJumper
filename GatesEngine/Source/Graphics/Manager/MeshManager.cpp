@@ -25,8 +25,10 @@ GatesEngine::Mesh* GatesEngine::MeshManager::Add(const std::string& name)
 GatesEngine::Mesh* GatesEngine::MeshManager::GetMesh(const std::string& name)
 {
 	////ƒ‚ƒfƒ‹‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚çŽlŠpŒ`‚ð•Ô‚·
-	Mesh* mesh = meshes.at(name.c_str());
+	//Mesh* mesh = meshes.at(name.c_str());
 
+	Mesh* mesh = meshes[name.c_str()];
+	if (!mesh)mesh = meshes["Cube"];
 	//for (auto m : meshInfos)
 	//{
 	//	if (m.name == name)
