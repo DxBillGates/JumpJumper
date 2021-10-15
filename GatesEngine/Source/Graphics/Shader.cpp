@@ -3,15 +3,70 @@
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
+GatesEngine::Shader::Shader()
+	: pGraphicsDevice(nullptr)
+	, pipeline(nullptr)
+	, rootSignature(nullptr)
+	, vsBlob(nullptr)
+	, psBlob(nullptr)
+	, gsBlob(nullptr)
+	, isCreate(false)
+	, isCreatePipelineOrRootSignature(false)
+	, blendMode(BlendMode::BLENDMODE_ADD)
+	, topologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
+	, depthFlag(false)
+	, rtvCount(0)
+	, isSetGraphicsDevice(false)
+	, isLoadShaderFile(false)
+	, isSetInputLayout(false)
+	, isSetRootParamerters(false)
+	, isSetBlendMode(false)
+	, isSetPrimitiveTopologyType(false)
+	, isSetDepthFlag(false)
+	, isSetRtvCount(false)
+{
+}
+
 GatesEngine::Shader::Shader(GraphicsDevice* graphicsDevice, const std::wstring& fileName)
-	:pGraphicsDevice(graphicsDevice)
-	,pipeline(nullptr)
-	,rootSignature(nullptr)
-	,vsBlob(nullptr)
-	,psBlob(nullptr)
-	,gsBlob(nullptr)
-	,isCreate(false)
-	,isCreatePipelineOrRootSignature(false)
+	: Shader()
+{
+	SetGraphicsDevice(graphicsDevice);
+	LoadShaderFile(fileName);
+
+	isLoadShaderFile = (!vsBlob || !psBlob) ? false : true;
+}
+
+GatesEngine::Shader::~Shader()
+{
+	COM_RELEASE(vsBlob);
+	COM_RELEASE(psBlob);
+	COM_RELEASE(gsBlob);
+	if (isCreatePipelineOrRootSignature)
+	{
+		delete pipeline;
+	}
+}
+
+void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, bool depthFlag, int rtvCount)
+{
+	SetInputLayout(inputLayouts);
+	SetRootParamerters(rangeTypes);
+	SetBlendMode(blendMode);
+	SetPrimitiveTopology(topologyType);
+	SetIsUseDepth(depthFlag);
+	SetRtvCount(rtvCount);
+
+	CreatePipeline();
+}
+
+bool GatesEngine::Shader::SetGraphicsDevice(GraphicsDevice* graphicsDevice)
+{
+	isSetGraphicsDevice = (!graphicsDevice) ? false : true;
+	pGraphicsDevice = graphicsDevice;
+	return isSetGraphicsDevice;
+}
+
+bool GatesEngine::Shader::LoadShaderFile(const std::wstring& fileName)
 {
 	ID3DInclude* include = D3D_COMPILE_STANDARD_FILE_INCLUDE;
 	UINT flag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
@@ -30,34 +85,129 @@ GatesEngine::Shader::Shader(GraphicsDevice* graphicsDevice, const std::wstring& 
 	fullFilename = firstPass + fileName + L"GS" + format;
 	result = D3DCompileFromFile(fullFilename.c_str(), nullptr, include, "main", "gs_5_0", flag, 0, &gsBlob, &errorBlob);
 	COM_RELEASE(errorBlob);
+
+	isLoadShaderFile = (!vsBlob || !psBlob) ? false : true;
+	return isLoadShaderFile;
 }
 
-GatesEngine::Shader::~Shader()
+bool GatesEngine::Shader::SetInputLayout(const std::vector<InputLayout>& layouts)
 {
-	COM_RELEASE(vsBlob);
-	COM_RELEASE(psBlob);
-	COM_RELEASE(gsBlob);
-	if (isCreatePipelineOrRootSignature)
+	if ((int)layouts.size() == 0)
 	{
-		delete pipeline;
+		isSetInputLayout = false;
 	}
+	isSetInputLayout = true;
+	inputLayouts = layouts;
+	return isSetInputLayout;
 }
 
-void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, bool depthFlag, int rtvCount)
+bool GatesEngine::Shader::SetRootParamerters(const std::vector<RangeType>& ranges)
 {
-	rootSignature = new RootSignature(pGraphicsDevice, rangeTypes);
+	if ((int)ranges.size() == 0)
+	{
+		isSetRootParamerters = false;
+	}
+	isSetRootParamerters = true;
+	this->ranges = ranges;
+	return isSetRootParamerters;
+}
+
+bool GatesEngine::Shader::SetBlendMode(BlendMode mode)
+{
+	blendMode = mode;
+	isSetBlendMode = true;
+	return isSetBlendMode;
+}
+
+bool GatesEngine::Shader::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE type)
+{
+	topologyType = type;
+	isSetPrimitiveTopologyType = true;
+	return isSetPrimitiveTopologyType;
+}
+
+bool GatesEngine::Shader::SetIsUseDepth(bool depthFlag)
+{
+	this->depthFlag = depthFlag;
+	isSetDepthFlag = true;
+	return isSetDepthFlag;
+}
+
+bool GatesEngine::Shader::SetRtvCount(unsigned int value)
+{
+	isSetRtvCount = (value == 0) ? false : true;
+	rtvCount = value;
+	return isSetRtvCount;
+}
+
+bool GatesEngine::Shader::Check()
+{
+	bool isTrueReturn = true;
+	if (!isSetGraphicsDevice)
+	{
+		printf("GraphicsDeviceがセットされていません\n");
+		isTrueReturn = false;
+	}
+	if (!isLoadShaderFile)
+	{
+		printf("シェーダーファイルがロードされていません\n");
+		isTrueReturn = false;
+	}
+	if (!isSetInputLayout)
+	{
+		printf("インプットレイアウトがセットされていません\n");
+		isTrueReturn = false;
+	}
+	if (!isSetRootParamerters)
+	{
+		printf("ロートパラメータがセットされていません\n");
+		isTrueReturn = false;
+	}
+
+	if (!isTrueReturn)
+	{
+		printf("グラフィックスパイプラインを生成できませんでした\n");
+		return false;
+	}
+
+	if (!isSetBlendMode)
+	{
+		printf("ブレンドモードがセットされていません、アルファブレンドをセットします\n");
+		SetBlendMode(BlendMode::BLENDMODE_ALPHA);
+	}
+	if (isSetPrimitiveTopologyType)
+	{
+		printf("トポロジータイプがセットされていません、三角形をセットします\n");
+		SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	}
+	if (!isSetDepthFlag)
+	{
+		printf("深度フラグがセットされていません、深度フラグをtrueでセットします\n");
+		SetIsUseDepth(true);
+	}
+	if (!isSetRtvCount)
+	{
+		printf("レンダ―ターゲットの数がセットされていません、1でセットします\n");
+		SetRtvCount(1);
+	}
+	return true;
+}
+
+void GatesEngine::Shader::CreatePipeline()
+{
+	if (!Check())
+	{
+		return;
+	}
+	rootSignature = new RootSignature(pGraphicsDevice, ranges);
 	rootSignature->Create();
 
-	pipeline = new Pipeline(pGraphicsDevice, rootSignature, inputLayouts,blendMode,topologyType);
-	pipeline->Create({vsBlob,psBlob,gsBlob},depthFlag,rtvCount);
+	pipeline = new Pipeline(pGraphicsDevice, rootSignature, inputLayouts, blendMode, topologyType);
+	pipeline->Create({ vsBlob,psBlob,gsBlob }, depthFlag, rtvCount);
 
 	isCreate = true;
 	isCreatePipelineOrRootSignature = true;
 }
-
-//void GatesEngine::Shader::Create(Pipeline* pPipeline, RootSignature* pRootSignature)
-//{
-//}
 
 void GatesEngine::Shader::Set(bool wireFrame)
 {
