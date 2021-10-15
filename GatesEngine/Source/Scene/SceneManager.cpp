@@ -84,6 +84,14 @@ void GatesEngine::SceneManager::Draw()
 	}
 }
 
+void GatesEngine::SceneManager::LateDraw()
+{
+	if (currentScene != nullptr)
+	{
+		currentScene->LateDraw();
+	}
+}
+
 GatesEngine::SceneManager::SceneManager():currentScene(nullptr),beforeScene(nullptr)
 {
 }

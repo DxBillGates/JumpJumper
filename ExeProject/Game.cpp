@@ -20,14 +20,6 @@ Game::~Game()
 
 bool Game::LoadContents()
 {
-	sceneManager->AddScene(new TitleScene("TitleScene", this));
-	sceneManager->AddScene(new SampleScene("SampleScene", this));
-	sceneManager->AddScene(new SelectScene("SelectScene", this));
-	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
-	sceneManager->AddScene(new Stage2Scene("Stage2Scene", this));
-	sceneManager->ChangeScene("TitleScene");
-	//sceneManager->ChangeScene("TitleScene");
-
 	using namespace GatesEngine;
 	using namespace GatesEngine::Math;
 
@@ -66,6 +58,10 @@ bool Game::LoadContents()
 
 	auto* meshShadowShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"MeshShadow")), "MeshShadowShader");
 	meshShadowShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
+
+	auto* pointShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"Point")),"PointShader");
+	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
+
 	//î¬É|Éäê∂ê¨
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
 	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
@@ -102,12 +98,25 @@ bool Game::LoadContents()
 	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData7);
 	graphicsDevice.GetMeshManager()->Add("LineCircle")->Create(&graphicsDevice, testLineMeshData7);
 
+	MeshData<VertexInfo::Vertex> testMeshData6;
+	testMeshData6.GetVertices()->push_back({});
+	testMeshData6.GetIndices()->push_back(0);
+	graphicsDevice.GetMeshManager()->Add("Point")->Create(&graphicsDevice, testMeshData6);
+
 	//MeshData<VertexInfo::Vertex_UV_Normal> testModel;
 	//MeshCreater::LoadModelData("testModel", testModel);
 	//graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
+
+	sceneManager->AddScene(new TitleScene("TitleScene", this));
+	sceneManager->AddScene(new SampleScene("SampleScene", this));
+	sceneManager->AddScene(new SelectScene("SelectScene", this));
+	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
+	sceneManager->AddScene(new Stage2Scene("Stage2Scene", this));
+	sceneManager->ChangeScene("Stage1Scene");
+	//sceneManager->ChangeScene("TitleScene");
 
 	return true;
 }
@@ -175,6 +184,8 @@ bool Game::Draw()
 		graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
 		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
 	}
+
+	sceneManager->LateDraw();
 
 	if (!graphicsDevice.ScreenFlip())return false;
 

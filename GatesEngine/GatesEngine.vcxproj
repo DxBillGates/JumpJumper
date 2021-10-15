@@ -34,10 +34,13 @@
     <ClInclude Include="Header\Graphics\CBufferAllocater.h" />
     <ClInclude Include="Header\Graphics\CBufferStruct.h" />
     <ClInclude Include="Header\Graphics\CBVSRVUAVHeap.h" />
+    <ClInclude Include="Header\Graphics\ComputePipeline.h" />
     <ClInclude Include="Header\Graphics\COMRelease.h" />
     <ClInclude Include="Header\Graphics\DepthStencil.h" />
     <ClInclude Include="Header\Graphics\DepthStencilTexture.h" />
     <ClInclude Include="Header\Graphics\DescriptorHeapManager.h" />
+    <ClInclude Include="Header\Graphics\GPUParticle\GPUParticleEmitter.h" />
+    <ClInclude Include="Header\Graphics\GPUParticle\GPUParticleManager.h" />
     <ClInclude Include="Header\Graphics\Graphics.h" />
     <ClInclude Include="Header\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Header\Graphics\Helper\MeshCreater.h" />
@@ -84,9 +87,12 @@
     <ClCompile Include="Source\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Graphics\CBufferAllocater.cpp" />
     <ClCompile Include="Source\Graphics\CBVSRVUAVHeap.cpp" />
+    <ClCompile Include="Source\Graphics\ComputePipeline.cpp" />
     <ClCompile Include="Source\Graphics\DepthStencil.cpp" />
     <ClCompile Include="Source\Graphics\DepthStencilTexture.cpp" />
     <ClCompile Include="Source\Graphics\DescriptorHeapManager.cpp" />
+    <ClCompile Include="Source\Graphics\GPUParticle\GPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Graphics\GPUParticle\GPUParticleManager.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\Helper\MeshCreater.cpp" />
     <ClCompile Include="Source\Graphics\Manager\MeshManager.cpp" />

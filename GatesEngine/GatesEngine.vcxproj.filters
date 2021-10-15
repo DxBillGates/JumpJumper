@@ -79,6 +79,12 @@
     <Filter Include="Source\Collision">
       <UniqueIdentifier>{cef28b4c-1e87-466d-b8c7-b17cde3f1e01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Graphics\GPUParticle">
+      <UniqueIdentifier>{19e76c43-8ca1-4db1-a4f6-951e3d3e095f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\GPUParticle">
+      <UniqueIdentifier>{fefa57c5-a9d7-4f65-be82-23eb24d59238}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Math\Easing.h">
@@ -231,6 +237,15 @@
     <ClInclude Include="Header\Collision\CollisionManager.h">
       <Filter>Header\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Graphics\GPUParticle\GPUParticleEmitter.h">
+      <Filter>Header\Graphics\GPUParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics\GPUParticle\GPUParticleManager.h">
+      <Filter>Header\Graphics\GPUParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics\ComputePipeline.h">
+      <Filter>Header\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -358,6 +373,15 @@
     </ClCompile>
     <ClCompile Include="Source\Collision\CollisionManager.cpp">
       <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GPUParticle\GPUParticleEmitter.cpp">
+      <Filter>Source\Graphics\GPUParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GPUParticle\GPUParticleManager.cpp">
+      <Filter>Source\Graphics\GPUParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ComputePipeline.cpp">
+      <Filter>Source\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

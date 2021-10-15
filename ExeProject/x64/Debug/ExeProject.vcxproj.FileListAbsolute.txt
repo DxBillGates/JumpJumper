@@ -44,3 +44,6 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Debug\VGaussBlurPS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\VGaussBlurVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\MeshShadowPS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\MeshShadowVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PointPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PointVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\testCS.cso

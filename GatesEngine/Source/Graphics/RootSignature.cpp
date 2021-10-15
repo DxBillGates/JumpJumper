@@ -19,6 +19,13 @@ void GatesEngine::RootSignature::CreateRange(D3D12_DESCRIPTOR_RANGE& range, Rang
 		range.BaseShaderRegister = count;
 		range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 		break;
+	case RangeType::UAV:
+		range = {};
+		range.NumDescriptors = 1;
+		range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+		range.BaseShaderRegister = count;
+		range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		break;
 	}
 }
 
@@ -39,9 +46,9 @@ void GatesEngine::RootSignature::CreateSampler(D3D12_STATIC_SAMPLER_DESC& sample
 
 GatesEngine::RootSignature::RootSignature(GraphicsDevice* graphicsDevice, const std::vector<RangeType>& rangeTypes)
 	:pGraphicsDevice(graphicsDevice)
-	,rangeType(rangeTypes)
-	,rootBlob(nullptr)
-	,rootSignature(nullptr)
+	, rangeType(rangeTypes)
+	, rootBlob(nullptr)
+	, rootSignature(nullptr)
 {
 }
 
@@ -71,6 +78,7 @@ void GatesEngine::RootSignature::Create()
 	int cbvCount = 0;
 	samplerCount = 0;
 	bool isSampler = false;
+	int uavCount = 0;
 	for (int i = 0; i < (int)rangeType.size(); ++i)
 	{
 		switch (rangeType[i])
@@ -92,6 +100,14 @@ void GatesEngine::RootSignature::Create()
 			CreateSampler(samplerDesc[samplerCount]);
 			++samplerCount;
 			isSampler = true;
+			break;
+		case RangeType::UAV:
+			CreateRange(range[i], RangeType::UAV, uavCount);
+			rootParam[i].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParam[i].DescriptorTable.pDescriptorRanges = &range[i];
+			rootParam[i].DescriptorTable.NumDescriptorRanges = 1;
+			rootParam[i].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+			++uavCount;
 			break;
 		}
 	}

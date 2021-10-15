@@ -66,6 +66,15 @@ void GatesEngine::CBVSRVUAVHeap::CreateSRV(ID3D12Resource* buffer)
 	++nextSrvDescriptorNum;
 }
 
+void GatesEngine::CBVSRVUAVHeap::CreateSRV(ID3D12Resource* buffer, const D3D12_SHADER_RESOURCE_VIEW_DESC& viewDesc)
+{
+	if (!graphicsDevice)return;
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = heap->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += ((UINT64)useCount.x + 1) * incrementSize + (UINT64)nextSrvDescriptorNum * incrementSize;
+	graphicsDevice->GetDevice()->CreateShaderResourceView(buffer, &viewDesc, handle);
+	++nextSrvDescriptorNum;
+}
+
 D3D12_GPU_DESCRIPTOR_HANDLE GatesEngine::CBVSRVUAVHeap::GetSRVHandleForSRV(int number)
 {
 	D3D12_GPU_DESCRIPTOR_HANDLE handle = heap->GetGPUDescriptorHandleForHeapStart();

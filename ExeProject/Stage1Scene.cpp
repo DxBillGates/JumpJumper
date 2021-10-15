@@ -16,7 +16,16 @@ Stage1Scene::Stage1Scene(const char* sceneName) : Stage1Scene(sceneName, nullptr
 Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName, app)
 	, playerBehaviour(nullptr)
+	, testCS(nullptr)
+	, gpuParticleManager(nullptr)
+	, gpuParticleEmitter({})
 {
+	testCS = new GatesEngine::ComputePipeline(graphicsDevice, L"test");
+	testCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV });
+
+	gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
+	gpuParticleEmitter.Create(gpuParticleManager, 10000);
+
 	collisionManager.Initialize(6, { -10000 }, { 20000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
@@ -70,6 +79,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 Stage1Scene::~Stage1Scene()
 {
+	delete testCS;
+	delete gpuParticleManager;
 }
 
 void Stage1Scene::Initialize()
@@ -81,6 +92,7 @@ void Stage1Scene::Initialize()
 
 void Stage1Scene::Update()
 {
+	gpuParticleEmitter.Update();
 	gameObjectManager.Update();
 	collisionManager.Update();
 
@@ -168,4 +180,9 @@ void Stage1Scene::Draw()
 {
 	gameObjectManager.Draw();
 	sceneTranslater.Draw(graphicsDevice);
+}
+
+void Stage1Scene::LateDraw()
+{
+	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS,1000);
 }

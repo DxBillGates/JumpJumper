@@ -18,9 +18,9 @@ GatesEngine::Mesh::~Mesh()
 	COM_RELEASE(iBuffer);
 }
 
-void GatesEngine::Mesh::Draw()
+void GatesEngine::Mesh::Draw(UINT value)
 {
 	cmdList->IASetIndexBuffer(&ibView);
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	cmdList->DrawIndexedInstanced(indicesCount, 1, 0, 0, 0);
+	cmdList->DrawIndexedInstanced(indicesCount, value, 0, 0, 0);
 }

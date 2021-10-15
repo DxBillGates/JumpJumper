@@ -20,6 +20,7 @@ namespace GatesEngine
 		ID3D12DescriptorHeap* GetHeap();
 		Math::Vector3 GetUseCount();
 		void CreateSRV(ID3D12Resource* buffer);
+		void CreateSRV(ID3D12Resource* buffer, const D3D12_SHADER_RESOURCE_VIEW_DESC& viewDesc);
 		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleForSRV(int number);
 		int GetNextSrvNumber();
 		void Set();

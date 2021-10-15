@@ -23,6 +23,7 @@ namespace GatesEngine
 		virtual void Initialize() = 0;
 		virtual void Update() = 0;
 		virtual void Draw() = 0;
+		virtual void LateDraw() {}
 		const char* GetSceneName();
 		bool IsChangeScene();
 		GameObjectManager* GetGameObjectManager();

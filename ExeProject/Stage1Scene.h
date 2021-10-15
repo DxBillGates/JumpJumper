@@ -3,13 +3,19 @@
 #include "Stage1.h"
 #include "SceneTranslater.h"
 #include "PlayerBehaviour.h"
+#include "Header/Graphics/GPUParticle/GPUParticleManager.h"
+#include "Header/Graphics/GPUParticle/GPUParticleEmitter.h"
 
-class Stage1Scene : public GatesEngine::Scene,Stage1
+class Stage1Scene : public GatesEngine::Scene,public Stage1
 {
 private:
 	Stage1 stage;
 	SceneTranslater sceneTranslater;
 	PlayerBehaviour* playerBehaviour;
+
+	GatesEngine::ComputePipeline* testCS;
+	GatesEngine::GPUParticleManager* gpuParticleManager;
+	GatesEngine::GPUParticleEmitter gpuParticleEmitter;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);
@@ -18,5 +24,6 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+	void LateDraw() override;
 };
 

@@ -22,6 +22,7 @@ namespace GatesEngine
 		void Initialize();
 		void Update();
 		void Draw();
+		void LateDraw();
 	private:
 		SceneManager();
 		SceneManager(const SceneManager&) = delete;

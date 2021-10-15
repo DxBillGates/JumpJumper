@@ -22,7 +22,7 @@ namespace GatesEngine
 		~Mesh();
 		template<typename T>
 		void Create(GraphicsDevice* graphicsDevice,MeshData<T>& meshData);
-		void Draw();
+		void Draw(UINT value = 1);
 	};
 	template<typename T>
 	inline void Mesh::Create(GraphicsDevice* graphicsDevice, MeshData<T>& meshData)
