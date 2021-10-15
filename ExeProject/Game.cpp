@@ -91,11 +91,11 @@ bool Game::LoadContents()
 	graphicsDevice.GetMeshManager()->Add("Sphere")->Create(&graphicsDevice, testMeshData5);
 
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData6;
-	MeshCreater::CreateLineCube({ 1,1,1 }, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData6);
+	MeshCreater::CreateLineCube({ 1,1,1 }, Math::Vector4(0, 0, 0, 1), testLineMeshData6);
 	graphicsDevice.GetMeshManager()->Add("LineCube")->Create(&graphicsDevice, testLineMeshData6);
 
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData7;
-	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0.5f, 1, 0, 1), testLineMeshData7);
+	MeshCreater::CreateLineCircle({ 1,1,1 },24, Math::Vector4(0, 0, 0, 1), testLineMeshData7);
 	graphicsDevice.GetMeshManager()->Add("LineCircle")->Create(&graphicsDevice, testLineMeshData7);
 
 	MeshData<VertexInfo::Vertex> testMeshData6;
@@ -182,6 +182,7 @@ bool Game::Draw()
 	for (int i = 0; i < 1; ++i)
 	{
 		graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
+		graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
 		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
 	}
 

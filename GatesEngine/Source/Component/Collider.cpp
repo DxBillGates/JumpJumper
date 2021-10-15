@@ -2,10 +2,12 @@
 #include "..\..\Header\GameObject\GameObject.h"
 #include "..\..\Header\Graphics\Graphics.h"
 #include "..\..\Header\Collision\CollisionTreeObject.h"
+#include "..\..\Header\Graphics\CBufferStruct.h"
 
 GatesEngine::Collider::Collider()
 	: type(ColliderType::CUBE)
 	, size({ 1 })
+	, color({0,1,0,0})
 	, treeObj(nullptr)
 	, mesh(nullptr)
 	, shader(nullptr)
@@ -22,6 +24,11 @@ void GatesEngine::Collider::Start()
 	GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	mesh = (type == ColliderType::CUBE) ? graphicsDevice->GetMeshManager()->GetMesh("LineCube") : graphicsDevice->GetMeshManager()->GetMesh("LineCircle");
 	shader = graphicsDevice->GetShaderManager()->GetShader("Line");
+}
+
+void GatesEngine::Collider::Update()
+{
+	color = { 0.5f,1,0,0 };
 }
 
 void GatesEngine::Collider::OnDraw()
@@ -66,8 +73,14 @@ void GatesEngine::Collider::OnLateDraw()
 
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
 	}
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),color });
 	mesh->Draw();
 #endif
+}
+
+void GatesEngine::Collider::SetColor(const Math::Vector4& c)
+{
+	color = c;
 }
 
 void GatesEngine::Collider::SetType(ColliderType sType)

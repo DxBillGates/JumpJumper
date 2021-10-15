@@ -71,9 +71,9 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	g->GetCollider()->SetSize({ 10000,10,10000 });
+	g->GetCollider()->SetSize({ 10000,1,10000 });
 	g->SetTag("block");
-	g->GetTransform()->position = { 0,10,0 };
+	g->GetTransform()->position = { 0,-10,0 };
 
 }
 

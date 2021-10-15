@@ -82,6 +82,9 @@ void GatesEngine::CollisionManager::CollisionCheck()
 			{
 				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]->GetGameObject());
 				colliderList[(size_t)i+1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
+
+				colliderList[i]->GetGameObject()->GetCollider()->SetColor({1,0,0,0});
+				colliderList[(size_t)i+1]->GetGameObject()->GetCollider()->SetColor({ 1,0,0,0 });
 			}
 		}
 		if (colliderList[i]->GetType() == colliderList[(size_t)i + 1]->GetType() && colliderList[i]->GetType() == sphere)
@@ -90,6 +93,9 @@ void GatesEngine::CollisionManager::CollisionCheck()
 			{
 				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]->GetGameObject());
 				colliderList[(size_t)i + 1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
+
+				colliderList[i]->GetGameObject()->GetCollider()->SetColor({ 1,0,0,0 });
+				colliderList[(size_t)i + 1]->GetGameObject()->GetCollider()->SetColor({ 1,0,0,0 });
 			}
 		}
 	}

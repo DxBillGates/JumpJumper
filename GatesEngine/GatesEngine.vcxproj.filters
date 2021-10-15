@@ -246,6 +246,9 @@
     <ClInclude Include="Header\Graphics\ComputePipeline.h">
       <Filter>Header\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Graphics\Manager\TextureManager.h">
+      <Filter>Header\Graphics\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -382,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\ComputePipeline.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Manager\TextureManager.cpp">
+      <Filter>Source\Graphics\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

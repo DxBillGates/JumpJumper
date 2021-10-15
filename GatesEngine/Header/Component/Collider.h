@@ -17,6 +17,7 @@ namespace GatesEngine
 	private:
 		ColliderType type;
 		Math::Vector3 size;
+		Math::Vector4 color;
 		CollisionTreeObject* treeObj;
 		Mesh* mesh;
 		Shader* shader;
@@ -24,8 +25,10 @@ namespace GatesEngine
 		Collider();
 		~Collider();
 		void Start() override;
+		void Update() override;
 		void OnDraw() override;
 		void OnLateDraw() override;
+		void SetColor(const Math::Vector4& c);
 		void SetType(ColliderType sType);
 		ColliderType GetType();
 		void SetSize(const Math::Vector3& sSize);
