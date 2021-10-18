@@ -160,7 +160,7 @@ bool GatesEngine::Shader::Check()
 	}
 	if (!isSetRootParamerters)
 	{
-		printf("ロートパラメータがセットされていません\n");
+		printf("ルートパラメータがセットされていません\n");
 		isTrueReturn = false;
 	}
 
@@ -175,7 +175,7 @@ bool GatesEngine::Shader::Check()
 		printf("ブレンドモードがセットされていません、アルファブレンドをセットします\n");
 		SetBlendMode(BlendMode::BLENDMODE_ALPHA);
 	}
-	if (isSetPrimitiveTopologyType)
+	if (!isSetPrimitiveTopologyType)
 	{
 		printf("トポロジータイプがセットされていません、三角形をセットします\n");
 		SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
