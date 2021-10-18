@@ -175,19 +175,19 @@ bool Game::Draw()
 	//Test—p‚ÌGrid‚â2D•`‰æ
 	sceneManager->Draw();
 
-	//graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	//graphicsDevice.GetShaderManager()->GetShader("Line")->Set();
-	////graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
+	graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	graphicsDevice.GetShaderManager()->GetShader("Line")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
 
-	//for (int i = 0; i < 1; ++i)
-	//{
-	//	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
-	//	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
-	//	graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
-	//}
+	for (int i = 0; i < 1; ++i)
+	{
+		graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
+		graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
+		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
+	}
 
-	//gameObjectManager.LateDraw();
-	//sceneManager->LateDraw();
+	gameObjectManager.LateDraw();
+	sceneManager->LateDraw();
 
 	if (!graphicsDevice.ScreenFlip())return false;
 
