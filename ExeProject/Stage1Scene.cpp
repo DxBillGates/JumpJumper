@@ -59,10 +59,10 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	e->SetY(0);
 	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
 	g->SetCollider();
-	g->GetCollider()->SetType(GatesEngine::ColliderType::SPHERE);
+	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	g->GetCollider()->SetSize({ 200 });
 	g->SetTag("enemy");
-	g->GetTransform()->position = { 1000,0,1000 };
+	g->GetTransform()->position = { 1000,200,1000 };
 
 
 	g = gameObjectManager.Add(new GameObject());
