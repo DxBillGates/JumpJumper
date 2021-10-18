@@ -7,10 +7,12 @@
 GatesEngine::Collider::Collider()
 	: type(ColliderType::CUBE)
 	, size({ 1 })
-	, color({0,1,0,0})
+	, color({ 0,1,0,0 })
 	, treeObj(nullptr)
 	, mesh(nullptr)
 	, shader(nullptr)
+	, isOldHit(false)
+	, hitFrameCount(0)
 {
 }
 
@@ -28,7 +30,17 @@ void GatesEngine::Collider::Start()
 
 void GatesEngine::Collider::Update()
 {
-	color = { 0.5f,1,0,0 };
+	if (isOldHit)
+	{
+		const int MAX_FRAME = 10;
+		if (hitFrameCount >= MAX_FRAME)
+		{
+			isOldHit = false;
+			color = { 0.5f,1,0,0 };
+			hitFrameCount = 0;
+		}
+		++hitFrameCount;
+	}
 }
 
 void GatesEngine::Collider::OnDraw()
@@ -80,6 +92,7 @@ void GatesEngine::Collider::OnLateDraw()
 
 void GatesEngine::Collider::SetColor(const Math::Vector4& c)
 {
+	isOldHit = true;
 	color = c;
 }
 

@@ -21,6 +21,8 @@ namespace GatesEngine
 		CollisionTreeObject* treeObj;
 		Mesh* mesh;
 		Shader* shader;
+		bool isOldHit;
+		int hitFrameCount;
 	public:
 		Collider();
 		~Collider();
