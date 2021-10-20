@@ -16,6 +16,7 @@ namespace GatesEngine
 	class CBVSRVUAVHeap;
 	class CBufferAllocater;
 	class DepthStencil;
+	class Camera;
 	class GraphicsDevice
 	{
 	private:
@@ -24,19 +25,19 @@ namespace GatesEngine
 
 		D3D12_VIEWPORT               mViewport;
 		D3D12_RECT                   mRect;
-		IDXGIFactory6*               mDxgiFactory;
+		IDXGIFactory6* mDxgiFactory;
 		std::vector<IDXGIAdapter*>   mEnumAdapter;
-		IDXGIAdapter*                mUseAdapter;
-		ID3D12Device*                mDevice;
-		ID3D12CommandAllocator*      mCmdAlloc;
-		ID3D12GraphicsCommandList*   mCmdList;
-		ID3D12CommandQueue*          mCmdQueue;
-		IDXGISwapChain4*             mSwapChain;
+		IDXGIAdapter* mUseAdapter;
+		ID3D12Device* mDevice;
+		ID3D12CommandAllocator* mCmdAlloc;
+		ID3D12GraphicsCommandList* mCmdList;
+		ID3D12CommandQueue* mCmdQueue;
+		IDXGISwapChain4* mSwapChain;
 		std::vector<ID3D12Resource*> mFrameBuffer;
-		RenderTarget*                mRenderTarget;
-		ID3D12DescriptorHeap*        mDsvHeap;
-		ID3D12Resource*              mDepthBuffer;
-		ID3D12Fence*                 mFence;
+		RenderTarget* mRenderTarget;
+		ID3D12DescriptorHeap* mDsvHeap;
+		ID3D12Resource* mDepthBuffer;
+		ID3D12Fence* mFence;
 		UINT64                       mFenceValue;
 
 		DescriptorHeapManager* descriptorHeapManager;
@@ -45,6 +46,8 @@ namespace GatesEngine
 		TextureManager* textureManager;
 		CBVSRVUAVHeap* cbvSrvUavHeap;
 		CBufferAllocater* cBufferAllocater;
+
+		Camera* mainCamera;
 	private:
 		void CreateDxgiFactory();
 		void CreateDevice();
@@ -58,7 +61,7 @@ namespace GatesEngine
 		~GraphicsDevice();
 
 		bool Create(Window* mainWindow);
-		void ClearRenderTarget(const Vector4& color = { 0,0,0,0 },bool clearFlag = true, RenderTarget* renderTarget = nullptr,DepthStencil* depthStencil = nullptr);
+		void ClearRenderTarget(const Vector4& color = { 0,0,0,0 }, bool clearFlag = true, RenderTarget* renderTarget = nullptr, DepthStencil* depthStencil = nullptr);
 		void ClearRenderTargetOutDsv(const Vector4& color = { 0,0,0,0 }, bool clearFlag = true, RenderTarget* renderTarget = nullptr);
 		void ClearDepthStencil();
 		bool ScreenFlip();
@@ -66,6 +69,7 @@ namespace GatesEngine
 		void SetViewport(const Vector2& size, const Vector2& pos = {});
 		void SetDescriptorHeap();
 		void SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets);
+		void SetMainCamera(Camera* camera);
 
 		ID3D12Device* GetDevice();
 		ID3D12GraphicsCommandList* GetCmdList();
@@ -79,5 +83,6 @@ namespace GatesEngine
 		TextureManager* GetTextureManager();
 		CBVSRVUAVHeap* GetCBVSRVUAVHeap();
 		CBufferAllocater* GetCBufferAllocater();
+		Camera* GetMainCamera();
 	};
 }

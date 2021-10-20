@@ -122,6 +122,8 @@ bool Game::LoadContents()
 	sceneManager->ChangeScene("Stage1Scene");
 	//sceneManager->ChangeScene("TitleScene");
 
+	graphicsDevice.SetMainCamera(&mainCamera);
+
 	return true;
 }
 

@@ -96,30 +96,30 @@ void PlayerBehaviour::Update()
 	//ˆÚ“®ˆ—
 	//if (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
 	//{
-		GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
-		//cameraAxis.z.y = 0;
-		GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
+	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
+	//cameraAxis.z.y = 0;
+	GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
 
-		GatesEngine::Math::Vector3 moveVector = {};
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
-		{
-			moveVector += playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
-		{
-			moveVector -= playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
-		{
-			moveVector += playerAxis.x;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
-		{
-			moveVector -= playerAxis.x;
-		}
+	GatesEngine::Math::Vector3 moveVector = {};
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
+	{
+		moveVector += playerAxis.z;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
+	{
+		moveVector -= playerAxis.z;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
+	{
+		moveVector += playerAxis.x;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
+	{
+		moveVector -= playerAxis.x;
+	}
 
-		const float SPEED = 5;
-		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
+	const float SPEED = 5;
+	gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
 	//}
 	if (vel.y <= -50)vel.y = -50;
 	gameObject->GetTransform()->position += vel;
@@ -192,6 +192,17 @@ void PlayerBehaviour::OnDraw()
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, mainCamera->GetData());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 
+}
+
+void PlayerBehaviour::OnLateDraw()
+{
+	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
+	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,(float)1080 - 108 + 54,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)

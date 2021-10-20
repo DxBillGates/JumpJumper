@@ -11,3 +11,4 @@
 #include "Mesh.h"
 #include "DepthStencil.h"
 #include "DepthStencilTexture.h"
+#include "Camera.h"

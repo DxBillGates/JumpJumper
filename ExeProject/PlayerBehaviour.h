@@ -25,6 +25,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;
+	void OnLateDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
 	void SetCamera(GatesEngine::Camera* pCamera);
 	GatesEngine::Camera* GetSetCamera();

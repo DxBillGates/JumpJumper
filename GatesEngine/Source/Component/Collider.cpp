@@ -56,6 +56,7 @@ void GatesEngine::Collider::OnLateDraw()
 	lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	shader->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
 
 	if (type == ColliderType::CUBE)
 	{

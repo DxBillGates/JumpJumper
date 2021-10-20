@@ -8,6 +8,7 @@
 #include "..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\Header\Graphics\CBufferAllocater.h"
 #include "..\..\Header\Graphics\DepthStencil.h"
+#include "..\..\Header\Graphics\Camera.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -339,6 +340,11 @@ void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*
 	mCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+void GatesEngine::GraphicsDevice::SetMainCamera(Camera* camera)
+{
+	mainCamera = camera;
+}
+
 ID3D12Device* GatesEngine::GraphicsDevice::GetDevice()
 {
 	return mDevice;
@@ -397,6 +403,11 @@ GatesEngine::CBVSRVUAVHeap* GatesEngine::GraphicsDevice::GetCBVSRVUAVHeap()
 GatesEngine::CBufferAllocater* GatesEngine::GraphicsDevice::GetCBufferAllocater()
 {
 	return cBufferAllocater;
+}
+
+GatesEngine::Camera* GatesEngine::GraphicsDevice::GetMainCamera()
+{
+	return mainCamera;
 }
 
 void GatesEngine::GraphicsDevice::CreateDxgiFactory()
