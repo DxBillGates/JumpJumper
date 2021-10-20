@@ -55,7 +55,7 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 	handle.ptr += (UINT64)manager->GetDevice()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 200 + (UINT64)manager->GetDevice()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * addDataSrvValue;
 	manager->GetDevice()->GetCmdList()->SetComputeRootDescriptorTable(1, handle);
 
-	manager->GetDevice()->GetCmdList()->Dispatch(useParticleValue/128.0f, 1, 1);
+	manager->GetDevice()->GetCmdList()->Dispatch(useParticleValue/128, 1, 1);
 }
 
 void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT useParticleValue)
@@ -124,7 +124,7 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	//std::vector<ParticleData> date(useParticleValue);
 
 	//先頭アドレスを進める
-	for (int i = 0; i < useParticleValue; ++i)
+	for (int i = 0; i < (int)useParticleValue; ++i)
 	{
 		particleData[useParticleOffset + i].vel = { (float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,-(float)(rand() % 5),(float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,1 };
 		particleData[useParticleOffset + i].vel = particleData[useParticleOffset + i].vel.Normalize();

@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="BlockBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObjectCollisionManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalEnemyBehaviour.cpp" />
     <ClCompile Include="PlayerBehaviour.cpp" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="BlockBehaviour.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObjectCollisionManager.h" />
     <ClInclude Include="NormalEnemyBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerBullet.h" />

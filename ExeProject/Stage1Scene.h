@@ -6,7 +6,7 @@
 #include "Header/Graphics/GPUParticle/GPUParticleManager.h"
 #include "Header/Graphics/GPUParticle/GPUParticleEmitter.h"
 
-class Stage1Scene : public GatesEngine::Scene,public Stage1
+class Stage1Scene : public GatesEngine::Scene
 {
 private:
 	Stage1 stage;

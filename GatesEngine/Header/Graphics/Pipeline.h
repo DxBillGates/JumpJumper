@@ -20,6 +20,15 @@ namespace GatesEngine
 		COLOR,
 	};
 
+	enum class PrimiriveTopologyType
+	{
+		UNDIFINED = 0,
+		POINT = 1,
+		LINE = 2,
+		TRIANGLE = 3,
+		PATCH = 4,
+	};
+
 	class Pipeline
 	{
 	private:

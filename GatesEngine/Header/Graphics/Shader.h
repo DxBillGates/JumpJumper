@@ -42,13 +42,14 @@ namespace GatesEngine
 		~Shader();
 		void Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes,
 			        BlendMode blendMode = BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,bool depthFlag = true,int rtvCount = 1);
+		void Create();
 
 		bool SetGraphicsDevice(GraphicsDevice* graphicsDevice);
 		bool LoadShaderFile(const std::wstring& fileName);
 		bool SetInputLayout(const std::vector<InputLayout>& layouts);
 		bool SetRootParamerters(const std::vector<RangeType>& ranges);
 		bool SetBlendMode(BlendMode mode);
-		bool SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE type);
+		bool SetPrimitiveTopology(PrimiriveTopologyType type);
 		bool SetIsUseDepth(bool depthFlag);
 		bool SetRtvCount(unsigned int value);
 		bool Check();

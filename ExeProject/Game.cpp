@@ -27,6 +27,10 @@ bool Game::LoadContents()
 	testTexShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
 
 	auto* testLineShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"Line")), "Line");
+	//testLineShader->SetInputLayout({ InputLayout::POSITION,InputLayout::COLOR });
+	//testLineShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV });
+	//testLineShader->SetPrimitiveTopology(GatesEngine::PrimiriveTopologyType::LINE);
+	//testLineShader->Create();
 	testLineShader->Create({ InputLayout::POSITION,InputLayout::COLOR }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE, true);
 
 	auto* defaultMeshShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"DefaultMesh")), "DefaultMeshShader");
@@ -78,7 +82,7 @@ bool Game::LoadContents()
 
 	//ƒOƒŠƒbƒh¶¬
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData;
-	MeshCreater::CreateGrid({ 1200,1200 }, 120, testLineMeshData);
+	MeshCreater::CreateGrid({ 10000,10000 }, 100, testLineMeshData);
 	graphicsDevice.GetMeshManager()->Add("Grid")->Create(&graphicsDevice, testLineMeshData);
 
 	//Cube¶¬

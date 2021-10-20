@@ -17,8 +17,8 @@ namespace GatesEngine
 		void UpdateTree(Collider* collider, CollisionTreeObject* object);
 		void Update();
 		void CollisionCheck();
-		bool CheckAABB(Collider* collider1,Collider* collider2);
-		bool CheckSphereToSphere(Collider* collider1, Collider* collider2);
+		static bool CheckAABB(Collider* collider1,Collider* collider2);
+		static bool CheckSphereToSphere(Collider* collider1, Collider* collider2);
 		void Initialize(int level, const Math::Vector3& min, const Math::Vector3& max);
 	};
 }

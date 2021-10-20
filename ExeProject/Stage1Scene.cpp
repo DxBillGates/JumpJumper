@@ -26,13 +26,13 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
 	gpuParticleEmitter.Create(gpuParticleManager, 10000);
 
-	collisionManager.Initialize(6, { -10000 }, { 20000 });
+	collisionManager.Initialize(5, { -10000,-100,-10000 }, { 10000 });
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
 	playerBehaviour = gp->AddBehavior<PlayerBehaviour>();
 	gp->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
-	collisionManager.AddColliderComponent(gp->AddComponent<Collider>());
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::PLAYER);
 	gp->SetCollider();
 	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	gp->GetCollider()->SetSize({ 50 });
@@ -43,7 +43,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		auto* bullet = gameObjectManager.Add(new GameObject());
 		bullet->SetGraphicsDevice(graphicsDevice);
 		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
-		collisionManager.AddColliderComponent(bullet->AddComponent<Collider>());
+		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
 		bullet->SetCollider();
 		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 		bullet->GetCollider()->SetSize({ 10 });
@@ -57,7 +57,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	auto* e = g->AddComponent<NormalEnemyBehaviour>();
 	e->SetR(1000);
 	e->SetY(0);
-	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	g->GetCollider()->SetSize({ 200 });
@@ -68,7 +68,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
 	g->AddComponent<BlockBehaviour>();
-	collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	g->GetCollider()->SetSize({ 10000,1,10000 });
@@ -94,7 +94,8 @@ void Stage1Scene::Update()
 {
 	gpuParticleEmitter.Update();
 	gameObjectManager.Update();
-	collisionManager.Update();
+	//collisionManager.Update();
+	stage.Update();
 
 	SceneTranslater::TranslateState sceneTranslaterState = sceneTranslater.GetTranslateState();
 	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
@@ -116,21 +117,21 @@ void Stage1Scene::Update()
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::UP))
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
 			using namespace GatesEngine;
 			auto* g = gameObjectManager.Add(new GameObject());
 			g->SetGraphicsDevice(graphicsDevice);
 			g->AddComponent<BlockBehaviour>();
-			collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()),GColliderType::BLOCK);
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetCollider()->SetSize({ 100,10,100 });
+			g->GetCollider()->SetSize({ 500,100,500 });
 			g->SetTag("block");
 			float x, y, z;
 			float range = 3000;
 			x = ((float)std::rand() / RAND_MAX * range) - range / 2;
-			y = ((float)std::rand() / RAND_MAX * range) - range / 2;
+			y = ((float)std::rand() / RAND_MAX * range) - 100 / 2;
 			z = ((float)std::rand() / RAND_MAX * range) - range / 2;
 			g->GetTransform()->position = { x,y,z };
 			g->GetTransform()->scale = g->GetCollider()->GetSize();
@@ -153,7 +154,7 @@ void Stage1Scene::Update()
 				auto* g = gameObjectManager.Add(new GameObject());
 				g->SetGraphicsDevice(graphicsDevice);
 				g->AddComponent<BlockBehaviour>();
-				collisionManager.AddColliderComponent(g->AddComponent<Collider>());
+				stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 				g->SetCollider();
 				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 				g->GetCollider()->SetSize({ 50,10,50 });
@@ -185,5 +186,5 @@ void Stage1Scene::Draw()
 void Stage1Scene::LateDraw()
 {
 	gameObjectManager.LateDraw();
-	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS,1000);
+	gpuParticleEmitter.Draw(app->GetMainCamera(), testCS,1000);
 }

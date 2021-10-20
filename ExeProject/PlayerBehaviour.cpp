@@ -196,20 +196,25 @@ void PlayerBehaviour::OnDraw()
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 {
-	if (other->GetTag() == "enemy" && isJump)
+	if (other->GetTag() == "enemy"/* && isJump*/)
 	{
-		NormalEnemyBehaviour* enemy = other->GetComponent<NormalEnemyBehaviour>();
-		enemy->Damage();
-		//combo++;
-		//other->SetEnabled(false);
-		vel = GatesEngine::Math::Vector3(0, 20, 0);
-		//vel.y += (combo * combo) / 10;
-		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
-		gameObject->GetTransform()->position += vel;
-		//if (enemy->GetHP() <= 0)
-		//{
-		//	killedValue++;
-		//}
+		//NormalEnemyBehaviour* enemy = other->GetComponent<NormalEnemyBehaviour>();
+		//enemy->Damage();
+		////combo++;
+		////other->SetEnabled(false);
+		//vel = GatesEngine::Math::Vector3(0, 20, 0);
+		////vel.y += (combo * combo) / 10;
+		//gameObject->GetTransform()->position.y = other->GetTransform()->position.y + other->GetCollider()->GetSize().x;
+		//gameObject->GetTransform()->position += vel;
+		////if (enemy->GetHP() <= 0)
+		////{
+		////	killedValue++;
+		////}
+		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + (other->GetCollider()->GetSize().y / 2 + gameObject->GetCollider()->GetSize().y / 2);
+		vel = {};
+		isJump = false;
+		fuelValue += 10;
+		if (fuelValue >= 100)fuelValue = 100;
 	}
 	if (other->GetTag() == "block")
 	{

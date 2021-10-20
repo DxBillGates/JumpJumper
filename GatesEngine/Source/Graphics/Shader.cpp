@@ -52,10 +52,15 @@ void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, c
 	SetInputLayout(inputLayouts);
 	SetRootParamerters(rangeTypes);
 	SetBlendMode(blendMode);
-	SetPrimitiveTopology(topologyType);
+	SetPrimitiveTopology((GatesEngine::PrimiriveTopologyType)topologyType);
 	SetIsUseDepth(depthFlag);
 	SetRtvCount(rtvCount);
 
+	CreatePipeline();
+}
+
+void GatesEngine::Shader::Create()
+{
 	CreatePipeline();
 }
 
@@ -119,9 +124,9 @@ bool GatesEngine::Shader::SetBlendMode(BlendMode mode)
 	return isSetBlendMode;
 }
 
-bool GatesEngine::Shader::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE type)
+bool GatesEngine::Shader::SetPrimitiveTopology(PrimiriveTopologyType type)
 {
-	topologyType = type;
+	topologyType = (D3D12_PRIMITIVE_TOPOLOGY_TYPE)type;
 	isSetPrimitiveTopologyType = true;
 	return isSetPrimitiveTopologyType;
 }
@@ -178,7 +183,7 @@ bool GatesEngine::Shader::Check()
 	if (!isSetPrimitiveTopologyType)
 	{
 		printf("トポロジータイプがセットされていません、三角形をセットします\n");
-		SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+		SetPrimitiveTopology(GatesEngine::PrimiriveTopologyType::TRIANGLE);
 	}
 	if (!isSetDepthFlag)
 	{
