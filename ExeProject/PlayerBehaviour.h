@@ -17,6 +17,8 @@ private:
 	//float animationTime;
 	//int killedValue;
 	float fuelValue;
+	const float MAX_FUEL;
+	const float CHARGE_FUEL;
 
 	std::vector<PlayerBullet*> bullets;
 public:

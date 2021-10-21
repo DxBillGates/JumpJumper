@@ -14,7 +14,9 @@ PlayerBehaviour::PlayerBehaviour()
 	//, isAnimation(false)
 	//, animationTime(0)
 	//, killedValue(0)
-	, fuelValue(100)
+	, fuelValue(1000)
+	, MAX_FUEL(1000)
+	, CHARGE_FUEL(1)
 {
 }
 
@@ -30,7 +32,7 @@ void PlayerBehaviour::Start()
 	//isAnimation = false;
 	gameObject->GetTransform()->position.y = 1000;
 	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
-	fuelValue = 100;
+	fuelValue = MAX_FUEL;
 }
 
 void PlayerBehaviour::Update()
@@ -86,7 +88,7 @@ void PlayerBehaviour::Update()
 			//else
 			//{
 			vel.y += 1;
-			fuelValue -= 0.5f;
+			fuelValue -= CHARGE_FUEL;
 			//}
 		}
 	}
@@ -142,7 +144,8 @@ void PlayerBehaviour::Update()
 		isJump = false;
 		gameObject->GetTransform()->position.y = 100;
 		pos = gameObject->GetTransform()->position;
-		fuelValue = 100;
+		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
+		fuelValue += CHARGE_FUEL;
 	}
 
 	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK))
@@ -196,10 +199,11 @@ void PlayerBehaviour::OnDraw()
 
 void PlayerBehaviour::OnLateDraw()
 {
+	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,(float)1080 - 108 + 54,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
@@ -232,8 +236,8 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + (other->GetCollider()->GetSize().y / 2 + gameObject->GetCollider()->GetSize().y / 2);
 		vel = {};
 		isJump = false;
-		fuelValue += 10;
-		if (fuelValue >= 100)fuelValue = 100;
+		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
+		fuelValue -= CHARGE_FUEL;
 	}
 	if (other->GetTag() == "goal")
 	{
