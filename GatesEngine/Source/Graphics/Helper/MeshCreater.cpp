@@ -6,7 +6,7 @@
 void GatesEngine::MeshCreater::CreatePlane(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	using namespace Math;
 	vertices->push_back({ Vector3(-size.x / 2.0f,0, size.y / 2.0f),Vector2(0,0),Vector3(0,1,0) });
@@ -25,7 +25,7 @@ void GatesEngine::MeshCreater::CreatePlane(Math::Vector2 size, Math::Vector2 uvM
 void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	using namespace Math;
 	vertices->push_back({ Vector3(-size.x / 2.0f, size.y / 2.0f,0),Vector2(0,0),Vector3(0,0,-1) });
@@ -44,7 +44,7 @@ void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMa
 void GatesEngine::MeshCreater::Create2DQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	using namespace Math;
 	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0),Vector2(0,0),Vector3(0,0,-1) });
@@ -66,7 +66,7 @@ void GatesEngine::MeshCreater::CreateGrid(Math::Vector2 size, float spaceInterva
 	int depth = (int)(size.y / spaceInterval);
 
 	std::vector<VertexInfo::Vertex_Color>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	Math::Vector2 offset = Math::Vector2(-size.x / 2, -size.y / 2);
 	Math::Vector2 maxOffset = size / 2;
@@ -100,7 +100,7 @@ void GatesEngine::MeshCreater::CreateLineCube(Math::Vector3 size, const Math::Ve
 {
 	using namespace GatesEngine::Math;
 	std::vector<VertexInfo::Vertex_Color>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	Vector4 white = color;
 	//‘O
@@ -147,7 +147,7 @@ void GatesEngine::MeshCreater::CreateLineCircle(Math::Vector3 size, float vertex
 {
 	using namespace GatesEngine::Math;
 	std::vector<VertexInfo::Vertex_Color>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	for (int i = 0; i < vertexCount; ++i)
 	{
@@ -171,7 +171,7 @@ void GatesEngine::MeshCreater::CreateCube(Math::Vector3 size, MeshData<VertexInf
 {
 	using namespace GatesEngine::Math;
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	//‘O
 	vertices->push_back({ Vector3(-size.x / 2.0f, size.y / 2.0f,-size.z / 2.0f),Vector2(0,0),Vector3(0,0,-1) });
@@ -301,7 +301,7 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 	//}
 	using namespace GatesEngine::Math;
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	vertices->resize((uint64_t)vTess * ((uint64_t)hTess + 1));
 	for (int v = 0; v <= hTess; v++)
@@ -406,7 +406,7 @@ void GatesEngine::MeshCreater::CreateSphere(Math::Vector3 size, int vTess, int h
 void GatesEngine::MeshCreater::LoadModelData(const std::string& filename, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
-	std::vector<unsigned short>* indices = meshData.GetIndices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
 
 	std::string  filepath = "Resources/Model/" + filename + ".obj";
 	std::vector<Math::Vector3> positions;

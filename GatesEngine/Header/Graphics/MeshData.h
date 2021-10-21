@@ -9,12 +9,12 @@ namespace GatesEngine
 	private:
 		unsigned int vertexDataSize;
 		std::vector<T> vertices;
-		std::vector<unsigned short> indices;
+		std::vector<unsigned int> indices;
 	public:
 		MeshData();
 		unsigned int GetVertexDataSize() { return vertexDataSize; }
 		std::vector<T>* GetVertices() { return &vertices; }
-		std::vector<unsigned short>* GetIndices() { return &indices; }
+		std::vector<unsigned int>* GetIndices() { return &indices; }
 		void Clear()
 		{
 			vertices.clear();

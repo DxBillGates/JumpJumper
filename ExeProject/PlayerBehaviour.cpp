@@ -139,14 +139,14 @@ void PlayerBehaviour::Update()
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	if (pos.y <= 100)
-	{
-		isJump = false;
-		gameObject->GetTransform()->position.y = 100;
-		pos = gameObject->GetTransform()->position;
-		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
-		fuelValue += CHARGE_FUEL;
-	}
+	//if (pos.y <= 100)
+	//{
+	//	isJump = false;
+	//	gameObject->GetTransform()->position.y = 100;
+	//	pos = gameObject->GetTransform()->position;
+	//	if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
+	//	fuelValue += CHARGE_FUEL;
+	//}
 
 	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK))
 	{
@@ -204,7 +204,7 @@ void PlayerBehaviour::OnLateDraw()
 	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1,0,0,1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
 }
@@ -237,7 +237,7 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 		vel = {};
 		isJump = false;
 		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
-		fuelValue -= CHARGE_FUEL;
+		fuelValue += CHARGE_FUEL;
 	}
 	if (other->GetTag() == "goal")
 	{

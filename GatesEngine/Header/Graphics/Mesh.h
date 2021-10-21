@@ -32,7 +32,7 @@ namespace GatesEngine
 		ID3D12Device* device = graphicsDevice->GetDevice();
 		cmdList = graphicsDevice->GetCmdList();
 		std::vector<T>* vertices = meshData.GetVertices();
-		std::vector<unsigned short>* indices = meshData.GetIndices();
+		std::vector<UINT>* indices = meshData.GetIndices();
 
 		if ((int)vertices->size() == 0)return;
 
@@ -53,14 +53,14 @@ namespace GatesEngine
 		vbView.BufferLocation = vBuffer->GetGPUVirtualAddress();
 		vbView.SizeInBytes = (UINT)resDesc.Width;
 		vbView.StrideInBytes = sizeof(T);
-		resDesc.Width = sizeof(unsigned short) * (*indices).size();
+		resDesc.Width = sizeof(UINT) * (*indices).size();
 		device->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&iBuffer));
 		ibView.BufferLocation = iBuffer->GetGPUVirtualAddress();
 		ibView.SizeInBytes = (UINT)resDesc.Width;
-		ibView.Format = DXGI_FORMAT_R16_UINT;
+		ibView.Format = DXGI_FORMAT_R32_UINT;
 
 		T* vbMap = nullptr;
-		unsigned short* ibMap = nullptr;
+		UINT* ibMap = nullptr;
 		vBuffer->Map(0, nullptr, (void**)&vbMap);
 		iBuffer->Map(0, nullptr, (void**)&ibMap);
 		for (int i = 0; i < (int)(*vertices).size(); ++i)
