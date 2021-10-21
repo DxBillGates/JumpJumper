@@ -6,7 +6,6 @@
 
 void TrankingEnemyBehaviour::Start()
 {
-	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 }
 
 void TrankingEnemyBehaviour::Update()

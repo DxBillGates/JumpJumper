@@ -12,7 +12,7 @@ PlayerBulletBehaviour::~PlayerBulletBehaviour()
 
 void PlayerBulletBehaviour::Start()
 {
-	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize() - 5;
+	//gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize() - 5;
 	Initialize();
 }
 

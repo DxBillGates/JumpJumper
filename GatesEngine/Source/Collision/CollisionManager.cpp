@@ -106,13 +106,15 @@ bool GatesEngine::CollisionManager::CheckAABB(Collider* collider1, Collider* col
 	Math::Vector3 min1, min2, max1, max2;
 	Transform* mTransform = collider1->GetGameObject()->GetTransform();
 	Transform* oTransform = collider2->GetGameObject()->GetTransform();
+	Transform* mcTransform = collider1->GetTransform();
+	Transform* ocTransform = collider2->GetTransform();
 	Math::Vector3 mColliderSize, oColliderSize;
-	mColliderSize = collider1->GetSize();
-	oColliderSize = collider2->GetSize();
-	min1 = mTransform->position - mColliderSize / 2;
-	max1 = mTransform->position + mColliderSize / 2;
-	min2 = oTransform->position - oColliderSize / 2;
-	max2 = oTransform->position + oColliderSize / 2;
+	mColliderSize = { mTransform->scale.x * mcTransform->scale.x,mTransform->scale.y * mcTransform->scale.y,mTransform->scale.z * mcTransform->scale.z };
+	oColliderSize = { oTransform->scale.x * ocTransform->scale.x,oTransform->scale.y * ocTransform->scale.y,oTransform->scale.z * ocTransform->scale.z };
+	min1 = mTransform->position + mcTransform->position - mColliderSize / 2;
+	max1 = mTransform->position + mcTransform->position + mColliderSize / 2;
+	min2 = oTransform->position + ocTransform->position - oColliderSize / 2;
+	max2 = oTransform->position + ocTransform->position + oColliderSize / 2;
 
 	if (min1.x > max2.x)return false;
 	if (max1.x < min2.x)return false;

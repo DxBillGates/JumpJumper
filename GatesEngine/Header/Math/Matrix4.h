@@ -37,6 +37,7 @@ namespace GatesEngine
 			static Matrix4x4 RotationX(float angle);
 			static Matrix4x4 RotationY(float angle);
 			static Matrix4x4 RotationZ(float angle);
+			static Matrix4x4 RotationZXY(const Vector3& angles);
 			static Matrix4x4 Translate(const Vector3& v);
 			static Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 			static Matrix4x4 Transpose(const Matrix4x4& m);

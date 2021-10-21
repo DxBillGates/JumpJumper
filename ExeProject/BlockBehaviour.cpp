@@ -8,6 +8,7 @@
 BlockBehaviour::BlockBehaviour()
 	: hp(10)
 	, mesh(nullptr)
+	, shader(nullptr)
 {
 }
 
@@ -17,7 +18,7 @@ BlockBehaviour::~BlockBehaviour()
 
 void BlockBehaviour::Start()
 {
-	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
+	//gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	mesh = graphicsDevice->GetMeshManager()->GetMesh("Cube");

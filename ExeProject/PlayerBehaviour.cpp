@@ -31,7 +31,6 @@ void PlayerBehaviour::Start()
 	//combo = 0;
 	//isAnimation = false;
 	gameObject->GetTransform()->position.y = 1000;
-	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
 	fuelValue = MAX_FUEL;
 }
 
@@ -233,7 +232,7 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 	}
 	if (other->GetTag() == "block")
 	{
-		gameObject->GetTransform()->position.y = other->GetTransform()->position.y + (other->GetCollider()->GetSize().y / 2 + gameObject->GetCollider()->GetSize().y / 2);
+		gameObject->GetTransform()->position.y = other->GetCollider()->GetTransform()->position.y + other->GetTransform()->position.y + (other->GetTransform()->scale.y * other->GetCollider()->GetTransform()->scale.y / 2 + gameObject->GetTransform()->scale.y * gameObject->GetCollider()->GetTransform()->scale.y / 2);
 		vel = {};
 		isJump = false;
 		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;

@@ -109,6 +109,11 @@ GatesEngine::Math::Matrix4x4 GatesEngine::Math::Matrix4x4::RotationZ(float angle
 	return result;
 }
 
+GatesEngine::Math::Matrix4x4 GatesEngine::Math::Matrix4x4::RotationZXY(const Vector3& angles)
+{
+	return RotationZ(angles.z) * RotationX(angles.x) * RotationY(angles.y);
+}
+
 GatesEngine::Math::Matrix4x4 GatesEngine::Math::Matrix4x4::Translate(const Vector3 & v)
 {
 	Matrix4x4 result

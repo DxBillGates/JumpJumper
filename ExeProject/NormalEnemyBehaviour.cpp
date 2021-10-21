@@ -25,7 +25,6 @@ void NormalEnemyBehaviour::Start()
 {
 	time = 0;
 	delay = (float)(rand() % 10 + 1);
-	gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize()/2;
 	hp = 10;
 }
 

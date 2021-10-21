@@ -3,6 +3,7 @@
 #include "..\Math\Math.h"
 #include "..\Graphics\Mesh.h"
 #include "..\Graphics\Shader.h"
+#include "..\Math\Transform.h"
 
 namespace GatesEngine
 {
@@ -18,6 +19,7 @@ namespace GatesEngine
 		ColliderType type;
 		Math::Vector3 size;
 		Math::Vector4 color;
+		GatesEngine::Transform transform;
 		CollisionTreeObject* treeObj;
 		Mesh* mesh;
 		Shader* shader;
@@ -32,10 +34,13 @@ namespace GatesEngine
 		void OnLateDraw() override;
 		void SetColor(const Math::Vector4& c);
 		void SetType(ColliderType sType);
+		void SetPosition(const Math::Vector3& pos);
+		void SetTransform(const GatesEngine::Transform& transform);
 		ColliderType GetType();
 		void SetSize(const Math::Vector3& sSize);
 		Math::Vector3 GetSize();
 		void SetCollisionTreeObject(CollisionTreeObject* obj);
 		CollisionTreeObject* GetCollisionTreeObject();
+		GatesEngine::Transform* GetTransform();
 	};
 }

@@ -35,7 +35,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::PLAYER);
 	gp->SetCollider();
 	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	gp->GetCollider()->SetSize({ 50 });
+	gp->GetCollider()->SetSize({ 1 });
+	gp->GetTransform()->scale = 50;
 	gp->SetName("player");
 
 	for (int i = 0; i < 20; ++i)
@@ -46,7 +47,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
 		bullet->SetCollider();
 		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-		bullet->GetCollider()->SetSize({ 10 });
+		bullet->GetCollider()->SetSize({ 1 });
+		bullet->GetTransform()->scale = 1;
 		bullet->SetName("playerBullet");
 
 		playerBehaviour->AddBullet(bulletBehaviour);
@@ -60,7 +62,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	g->GetCollider()->SetSize({ 100 });
+	g->GetCollider()->SetSize({ 2 });
+	g->GetTransform()->scale = 100;
 	g->SetTag("enemy");
 	g->GetTransform()->position = { 1000,20,1000 };
 
@@ -71,7 +74,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	g->GetCollider()->SetSize({ 10000,1,10000 });
+	g->GetCollider()->SetSize({ 1 });
+	g->GetTransform()->scale = { 10000,10,10000 };
 	g->SetTag("block");
 	g->GetTransform()->position = { 0,-10,0 };
 
@@ -126,7 +130,7 @@ void Stage1Scene::Update()
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()),GColliderType::BLOCK);
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetCollider()->SetSize({ 500,100,500 });
+			g->GetTransform()->scale = { 500,100,500 };
 			g->SetTag("block");
 			float x, y, z;
 			float range = 3000;
@@ -134,7 +138,6 @@ void Stage1Scene::Update()
 			y = ((float)std::rand() / RAND_MAX * range) - 100 / 2;
 			z = ((float)std::rand() / RAND_MAX * range) - range / 2;
 			g->GetTransform()->position = { x,y,z };
-			g->GetTransform()->scale = g->GetCollider()->GetSize();
 			g->Start();
 		}
 	}
@@ -157,10 +160,9 @@ void Stage1Scene::Update()
 				stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 				g->SetCollider();
 				g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-				g->GetCollider()->SetSize({ 50,10,50 });
+				g->GetTransform()->scale = { 50,10,50 };
 				g->SetTag("block");
 				g->GetTransform()->position = { x + 50 * i,y,z + 50 * j };
-				g->GetTransform()->scale = g->GetCollider()->GetSize();
 				g->Start();
 			}
 		}
