@@ -103,7 +103,7 @@ void GatesEngine::GPUParticleManager::IncrementParticleOffset(UINT value)
 void GatesEngine::GPUParticleManager::CreateUAV(const D3D12_UNORDERED_ACCESS_VIEW_DESC& viewDesc)
 {
 	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
-	handle.ptr += graphicsDevice->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * uavNextOffset;
+	handle.ptr += (UINT64)graphicsDevice->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * uavNextOffset;
 	graphicsDevice->GetDevice()->CreateUnorderedAccessView(particleBuffer, nullptr, &viewDesc, handle);
 
 	++uavNextOffset;
