@@ -28,6 +28,8 @@ namespace GatesEngine
 		float moveSpeed;
 
 		Math::Matrix4x4 rotation;
+
+		bool isFocus;
 	public:
 		Camera();
 		~Camera();

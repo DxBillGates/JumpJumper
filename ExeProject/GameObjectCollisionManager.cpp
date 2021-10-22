@@ -59,9 +59,9 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 			if (GatesEngine::CollisionManager::CheckAABB(b,p))
 			{
 				block->Collision(p);
-				block->GetCollider()->SetColor({ 1,0,0,0 });
+				b->SetColor({ 1,0,0,0 });
 				player->Collision(b);
-				player->GetCollider()->SetColor({ 1,0,0,0 });
+				p->SetColor({ 1,0,0,0 });
 			}
 		}
 
@@ -73,9 +73,9 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 			if (GatesEngine::CollisionManager::CheckAABB(b,e))
 			{
 				block->Collision(e);
-				block->GetCollider()->SetColor({ 1,0,0,0 });
+				b->SetColor({1,0,0,0});
 				enemy->Collision(b);
-				enemy->GetCollider()->SetColor({ 1,0,0,0 });
+				e->SetColor({ 1,0,0,0 });
 			}
 		}
 
@@ -87,9 +87,9 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 			if (GatesEngine::CollisionManager::CheckAABB(b, pb))
 			{
 				block->Collision(pb);
-				block->GetCollider()->SetColor({ 1,0,0,0 });
+				b->SetColor({ 1,0,0,0 });
 				playerBullet->Collision(b);
-				playerBullet->GetCollider()->SetColor({ 1,0,0,0 });
+				pb->SetColor({ 1,0,0,0 });
 			}
 		}
 	}
@@ -107,10 +107,10 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyTo()
 			player = p->GetGameObject();
 			if (GatesEngine::CollisionManager::CheckAABB(enemy->GetCollider(), player->GetCollider()))
 			{
-				enemy->Collision(player);
-				enemy->GetCollider()->SetColor({ 1,0,0,0 });
-				player->Collision(enemy);
-				player->GetCollider()->SetColor({ 1,0,0,0 });
+				enemy->Collision(p);
+				e->SetColor({ 1,0,0,0 });
+				player->Collision(e);
+				p->SetColor({ 1,0,0,0 });
 			}
 		}
 
@@ -121,10 +121,10 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyTo()
 			playerBullet = pb->GetGameObject();
 			if (GatesEngine::CollisionManager::CheckAABB(enemy->GetCollider(), playerBullet->GetCollider()))
 			{
-				enemy->Collision(playerBullet);
-				enemy->GetCollider()->SetColor({ 1,0,0,0 });
-				playerBullet->Collision(enemy);
-				playerBullet->GetCollider()->SetColor({ 1,0,0,0 });
+				enemy->Collision(pb);
+				e->SetColor({ 1,0,0,0 });
+				playerBullet->Collision(e);
+				pb->SetColor({ 1,0,0,0 });
 			}
 		}
 	}

@@ -16,6 +16,7 @@ GatesEngine::Camera::Camera()
 	, pitch(0)
 	, moveSpeed(1)
 	, rotation(Math::Matrix4x4::Identity())
+	, isFocus(true)
 {
 }
 
@@ -37,9 +38,20 @@ void GatesEngine::Camera::Initialize()
 void GatesEngine::Camera::Update()
 {
 	Math::Axis axis = rotation.GetAxis();
-	//マウスの移動量を取得
-	//if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
-	//{
+
+	if (input->GetKeyboard()->CheckPressTrigger(Keys::F1))
+	{
+		isFocus = false;
+	}
+	if (input->GetKeyboard()->CheckPressTrigger(Keys::F2))
+	{
+		isFocus = true;
+	}
+	if (isFocus)
+	{
+		//マウスの移動量を取得
+		//if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
+		//{
 		input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
 		//Math::Vector2 inputPos = input->GetMouse()->GetMousePos();
 		//Math::Vector2 newPos;
@@ -92,16 +104,16 @@ void GatesEngine::Camera::Update()
 
 		moveVector = moveVector.Normalize();
 		position += moveVector * moveSpeed;
-	//}
+		//}
 
-	direction = Math::Vector3(0, 0, 1);
-	rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);
-	direction = Math::Matrix4x4::Transform(direction, rotation);
+		direction = Math::Vector3(0, 0, 1);
+		rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);
+		direction = Math::Matrix4x4::Transform(direction, rotation);
 
-	viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
+		viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
 
-	cameraBuffer.Map({ viewMatrix,projectionMatrix });
-
+		cameraBuffer.Map({ viewMatrix,projectionMatrix });
+	}
 }
 
 void GatesEngine::Camera::Set()
