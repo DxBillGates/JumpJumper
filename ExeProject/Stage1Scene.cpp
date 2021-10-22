@@ -128,6 +128,8 @@ void Stage1Scene::Update()
 			g->SetGraphicsDevice(graphicsDevice);
 			g->AddComponent<BlockBehaviour>();
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()),GColliderType::BLOCK);
+			auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
+			c->SetPosition({ 0,100,100 });
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 			g->GetTransform()->scale = { 500,100,500 };

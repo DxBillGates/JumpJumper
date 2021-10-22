@@ -29,6 +29,7 @@ public:
 	void OnDraw() override;
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
+	void OnCollision(GatesEngine::Collider* hitCollider) override;
 	void SetCamera(GatesEngine::Camera* pCamera);
 	GatesEngine::Camera* GetSetCamera();
 	bool GetSceneTransFlag();

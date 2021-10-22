@@ -250,6 +250,28 @@ void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
 
 }
 
+void PlayerBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
+{
+	if (hitCollider->GetGameObject()->GetTag() == "block")
+	{
+		GatesEngine::Math::Vector3 otherOffSet = hitCollider->GetGameObject()->GetTransform()->position;
+		GatesEngine::Math::Vector3 otherColliderPos = otherOffSet + hitCollider->GetTransform()->position;
+		GatesEngine::Math::Vector3 otherGameObjectSize = hitCollider->GetGameObject()->GetTransform()->scale;
+		GatesEngine::Math::Vector3 otherColliderSize = hitCollider->GetTransform()->scale;
+
+		GatesEngine::Math::Vector3 offSet = gameObject->GetTransform()->position;
+		GatesEngine::Math::Vector3 colliderPos = otherOffSet + gameObject->GetCollider()->GetTransform()->position;
+		GatesEngine::Math::Vector3 gameObjectSize = gameObject->GetTransform()->scale;
+		GatesEngine::Math::Vector3 colliderSize = gameObject->GetCollider()->GetTransform()->scale;
+
+		gameObject->GetTransform()->position.y = otherColliderPos.y + (otherGameObjectSize.y * otherColliderSize.y / 2 + gameObjectSize.y * colliderSize.y / 2);
+		vel = {};
+		isJump = false;
+		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
+		fuelValue += CHARGE_FUEL;
+	}
+}
+
 void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)
 {
 	mainCamera = pCamera;

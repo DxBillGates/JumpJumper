@@ -123,7 +123,7 @@ void GatesEngine::Collider::SetSize(const Math::Vector3& sSize)
 
 GatesEngine::Math::Vector3 GatesEngine::Collider::GetSize()
 {
-	return size;
+	return transform.scale;
 }
 
 void GatesEngine::Collider::SetCollisionTreeObject(CollisionTreeObject* obj)

@@ -3,6 +3,7 @@
 namespace GatesEngine
 {
 	class GameObject;
+	class Collider;
 	class Component
 	{
 	private:
@@ -19,6 +20,7 @@ namespace GatesEngine
 		virtual void OnDraw();
 		virtual void OnLateDraw();
 		virtual void OnCollision(GameObject* other);
+		virtual void OnCollision(Collider* hitCollider);
 		void SetGameObject(GameObject* gameObject);
 		void SetNameAndTag(const char* name, const char* tag);
 		void SetEnabled(bool flag);

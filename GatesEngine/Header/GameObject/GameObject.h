@@ -27,6 +27,7 @@ namespace GatesEngine
 		void Draw();
 		void LateDraw();
 		void Collision(GameObject* other);
+		void Collision(Collider* hitCollider);
 		void SetGraphicsDevice(GraphicsDevice* pGraphicsDevice);
 		void SetCollider();
 		void SetName(const char* sName);

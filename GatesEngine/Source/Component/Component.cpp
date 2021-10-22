@@ -1,5 +1,6 @@
 #include "..\..\Header\Component\Component.h"
 #include "..\..\Header\GameObject\GameObject.h"
+#include "..\..\Header\Component\Collider.h"
 
 GatesEngine::Component::Component() :name("none"), tag("none"),isEnabled(true), gameObject(nullptr)
 {
@@ -26,6 +27,10 @@ void GatesEngine::Component::OnLateDraw()
 }
 
 void GatesEngine::Component::OnCollision(GameObject* other)
+{
+}
+
+void GatesEngine::Component::OnCollision(Collider* hitCollider)
 {
 }
 

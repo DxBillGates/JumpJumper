@@ -21,6 +21,6 @@ private:
 	void CheckCollisionHitEnemyTo();
 public:
 	void Update();
-	void AddCollider(GatesEngine::Collider* collider,GColliderType type);
+	GatesEngine::Collider* AddCollider(GatesEngine::Collider* collider, GColliderType type);
 };
 

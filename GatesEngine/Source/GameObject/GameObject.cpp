@@ -100,6 +100,18 @@ void GatesEngine::GameObject::Collision(GameObject* other)
 	}
 }
 
+void GatesEngine::GameObject::Collision(Collider* hitCollider)
+{
+	for (auto itr = components.begin(); itr != components.end(); ++itr)
+	{
+		(*itr)->OnCollision(hitCollider);
+	}
+	for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+	{
+		(*itr)->OnCollision(hitCollider);
+	}
+}
+
 void GatesEngine::GameObject::SetGraphicsDevice(GraphicsDevice* pGraphicsDevice)
 {
 	graphicsDevice = pGraphicsDevice;

@@ -5,32 +5,76 @@
 void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 {
 	//ブロックとプレイヤー、敵、玉の当たり判定
+	//一つのコライダーのみ対応
 	for (auto b : blockColliders)
 	{
+		//for (auto p : playerColliders)
+		//{
+		//	GatesEngine::GameObject* block, * player;
+		//	block = b->GetGameObject();
+		//	player = p->GetGameObject();
+		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), player->GetCollider()))
+		//	{
+		//		block->Collision(player);
+		//		block->GetCollider()->SetColor({ 1,0,0,0 });
+		//		player->Collision(block);
+		//		player->GetCollider()->SetColor({ 1,0,0,0 });
+		//	}
+		//}
+
+		//for (auto p : enemyColliders)
+		//{
+		//	GatesEngine::GameObject* block, * enemy;
+		//	block = b->GetGameObject();
+		//	enemy = p->GetGameObject();
+		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), enemy->GetCollider()))
+		//	{
+		//		block->Collision(enemy);
+		//		block->GetCollider()->SetColor({ 1,0,0,0 });
+		//		enemy->Collision(block);
+		//		enemy->GetCollider()->SetColor({ 1,0,0,0 });
+		//	}
+		//}
+
+		//for (auto pb : playerBulletColliders)
+		//{
+		//	GatesEngine::GameObject* block, * playerBullet;
+		//	block = b->GetGameObject();
+		//	playerBullet = pb->GetGameObject();
+		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), playerBullet->GetCollider()))
+		//	{
+		//		block->Collision(playerBullet);
+		//		block->GetCollider()->SetColor({ 1,0,0,0 });
+		//		playerBullet->Collision(block);
+		//		playerBullet->GetCollider()->SetColor({ 1,0,0,0 });
+		//	}
+		//}
+
+		//複数コライダー対応
 		for (auto p : playerColliders)
 		{
 			GatesEngine::GameObject* block, * player;
 			block = b->GetGameObject();
 			player = p->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), player->GetCollider()))
+			if (GatesEngine::CollisionManager::CheckAABB(b,p))
 			{
-				block->Collision(player);
+				block->Collision(p);
 				block->GetCollider()->SetColor({ 1,0,0,0 });
-				player->Collision(block);
+				player->Collision(b);
 				player->GetCollider()->SetColor({ 1,0,0,0 });
 			}
 		}
 
-		for (auto p : enemyColliders)
+		for (auto e : enemyColliders)
 		{
 			GatesEngine::GameObject* block, * enemy;
 			block = b->GetGameObject();
-			enemy = p->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), enemy->GetCollider()))
+			enemy = e->GetGameObject();
+			if (GatesEngine::CollisionManager::CheckAABB(b,e))
 			{
-				block->Collision(enemy);
+				block->Collision(e);
 				block->GetCollider()->SetColor({ 1,0,0,0 });
-				enemy->Collision(block);
+				enemy->Collision(b);
 				enemy->GetCollider()->SetColor({ 1,0,0,0 });
 			}
 		}
@@ -40,11 +84,11 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 			GatesEngine::GameObject* block, * playerBullet;
 			block = b->GetGameObject();
 			playerBullet = pb->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), playerBullet->GetCollider()))
+			if (GatesEngine::CollisionManager::CheckAABB(b, pb))
 			{
-				block->Collision(playerBullet);
+				block->Collision(pb);
 				block->GetCollider()->SetColor({ 1,0,0,0 });
-				playerBullet->Collision(block);
+				playerBullet->Collision(b);
 				playerBullet->GetCollider()->SetColor({ 1,0,0,0 });
 			}
 		}
@@ -64,7 +108,7 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyTo()
 			if (GatesEngine::CollisionManager::CheckAABB(enemy->GetCollider(), player->GetCollider()))
 			{
 				enemy->Collision(player);
-				enemy->GetCollider()->SetColor({1,0,0,0});
+				enemy->GetCollider()->SetColor({ 1,0,0,0 });
 				player->Collision(enemy);
 				player->GetCollider()->SetColor({ 1,0,0,0 });
 			}
@@ -92,7 +136,7 @@ void GameObjectCollisionManager::Update()
 	CheckCollisionHitEnemyTo();
 }
 
-void GameObjectCollisionManager::AddCollider(GatesEngine::Collider* collider, GColliderType type)
+GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Collider* collider, GColliderType type)
 {
 	switch (type)
 	{
@@ -111,4 +155,6 @@ void GameObjectCollisionManager::AddCollider(GatesEngine::Collider* collider, GC
 	default:
 		break;
 	}
+
+	return collider;
 }

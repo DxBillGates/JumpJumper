@@ -81,7 +81,10 @@ void GatesEngine::CollisionManager::CollisionCheck()
 			if (CheckAABB(colliderList[i], colliderList[(size_t)i + 1]))
 			{
 				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]->GetGameObject());
+				colliderList[i]->GetGameObject()->Collision(colliderList[(size_t)i + 1]);
+
 				colliderList[(size_t)i+1]->GetGameObject()->Collision(colliderList[(size_t)i]->GetGameObject());
+				colliderList[(size_t)i + 1]->GetGameObject()->Collision(colliderList[(size_t)i]);
 
 				colliderList[i]->GetGameObject()->GetCollider()->SetColor({1,0,0,0});
 				colliderList[(size_t)i+1]->GetGameObject()->GetCollider()->SetColor({ 1,0,0,0 });
