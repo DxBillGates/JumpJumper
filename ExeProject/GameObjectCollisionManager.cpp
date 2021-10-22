@@ -5,9 +5,9 @@
 void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 {
 	//ブロックとプレイヤー、敵、玉の当たり判定
-	//一つのコライダーのみ対応
 	for (auto b : blockColliders)
 	{
+		//一つのコライダーのみ対応
 		//for (auto p : playerColliders)
 		//{
 		//	GatesEngine::GameObject* block, * player;

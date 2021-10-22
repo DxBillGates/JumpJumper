@@ -100,7 +100,7 @@ void GatesEngine::Camera::Update()
 		//	moveVector -= axis.y;
 		//}
 
-		moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10 : 1;
+		moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
 
 		moveVector = moveVector.Normalize();
 		position += moveVector * moveSpeed;
