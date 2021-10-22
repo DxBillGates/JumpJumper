@@ -65,7 +65,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetSize({ 2 });
 	g->GetTransform()->scale = 100;
 	g->SetTag("enemy");
-	g->GetTransform()->position = { 1000,20,1000 };
+	g->GetTransform()->position = { 1000,100,1000 };
 
 
 	g = gameObjectManager.Add(new GameObject());

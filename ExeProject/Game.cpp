@@ -108,7 +108,7 @@ bool Game::LoadContents()
 	graphicsDevice.GetMeshManager()->Add("Point")->Create(&graphicsDevice, testMeshData6);
 
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("testModel", testModel);
+	MeshCreater::LoadModelData("uv_sphere", testModel);
 	graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
