@@ -234,9 +234,6 @@
     <FxCompile Include="Resources\Shader\testCS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PointGS.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\DefaultShader.hlsli">
