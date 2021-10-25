@@ -52,65 +52,68 @@ void GatesEngine::Camera::Update()
 		//ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ðŽæ“¾
 		//if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
 		//{
-		input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
-		//Math::Vector2 inputPos = input->GetMouse()->GetMousePos();
-		//Math::Vector2 newPos;
-		//newPos.x = inputPos.x <= 0 ? 1920 : inputPos.x;
-		//newPos.x = inputPos.x > 1920 ? 0: newPos.x;
-		//newPos.y = inputPos.y <= 0 ? 1070 : inputPos.y;
-		//newPos.y = inputPos.y > 1070 ? 0 : newPos.y;
-		//if (inputPos.x != newPos.x || inputPos.y != newPos.y)
-		//{
-		//	input->GetMouse()->SetMouseCursor({ newPos.x,newPos.y});
-		//}
+		if (input->GetIsFocus())
+		{
+			input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
+			//Math::Vector2 inputPos = input->GetMouse()->GetMousePos();
+			//Math::Vector2 newPos;
+			//newPos.x = inputPos.x <= 0 ? 1920 : inputPos.x;
+			//newPos.x = inputPos.x > 1920 ? 0: newPos.x;
+			//newPos.y = inputPos.y <= 0 ? 1070 : inputPos.y;
+			//newPos.y = inputPos.y > 1070 ? 0 : newPos.y;
+			//if (inputPos.x != newPos.x || inputPos.y != newPos.y)
+			//{
+			//	input->GetMouse()->SetMouseCursor({ newPos.x,newPos.y});
+			//}
 
-		Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() / 500.0f;
+			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() / 500.0f;
 
-		pitch -= inputValue.y;
-		yaw -= inputValue.x;
+			pitch -= inputValue.y;
+			yaw -= inputValue.x;
 
-		float minMaxPitch = Math::ConvertToRadian(89);
-		if (pitch > minMaxPitch)pitch = minMaxPitch;
-		if (pitch < -minMaxPitch)pitch = -minMaxPitch;
+			float minMaxPitch = Math::ConvertToRadian(89);
+			if (pitch > minMaxPitch)pitch = minMaxPitch;
+			if (pitch < -minMaxPitch)pitch = -minMaxPitch;
 
-		Math::Vector3 moveVector;
+			Math::Vector3 moveVector;
 
-		//if (input->GetKeyboard()->CheckHitKey(Keys::W))
-		//{
-		//	moveVector += axis.z;
-		//}
-		//if (input->GetKeyboard()->CheckHitKey(Keys::S))
-		//{
-		//	moveVector -= axis.z;
-		//}
-		//if (input->GetKeyboard()->CheckHitKey(Keys::D))
-		//{
-		//	moveVector += axis.x;
-		//}
-		//if (input->GetKeyboard()->CheckHitKey(Keys::A))
-		//{
-		//	moveVector -= axis.x;
-		//}
-		//if (input->GetKeyboard()->CheckHitKey(Keys::E))
-		//{
-		//	moveVector += axis.y;
-		//}
-		//if (input->GetKeyboard()->CheckHitKey(Keys::Q))
-		//{
-		//	moveVector -= axis.y;
-		//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::W))
+			//{
+			//	moveVector += axis.z;
+			//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::S))
+			//{
+			//	moveVector -= axis.z;
+			//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::D))
+			//{
+			//	moveVector += axis.x;
+			//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::A))
+			//{
+			//	moveVector -= axis.x;
+			//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::E))
+			//{
+			//	moveVector += axis.y;
+			//}
+			//if (input->GetKeyboard()->CheckHitKey(Keys::Q))
+			//{
+			//	moveVector -= axis.y;
+			//}
 
-		moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
+			moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
 
-		moveVector = moveVector.Normalize();
-		position += moveVector * moveSpeed;
-		//}
+			moveVector = moveVector.Normalize();
+			position += moveVector * moveSpeed;
+			//}
 
-		direction = Math::Vector3(0, 0, 1);
-		rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);
-		direction = Math::Matrix4x4::Transform(direction, rotation);
+			direction = Math::Vector3(0, 0, 1);
+			rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);
+			direction = Math::Matrix4x4::Transform(direction, rotation);
 
-		viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
+			viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
+		}
 
 		cameraBuffer.Map({ viewMatrix,projectionMatrix });
 	}

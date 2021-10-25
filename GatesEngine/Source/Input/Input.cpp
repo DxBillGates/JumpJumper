@@ -12,6 +12,7 @@ GatesEngine::Input * GatesEngine::Input::GetInstance()
 
 void GatesEngine::Input::Create(HWND hwnd, HINSTANCE hInstance)
 {
+	this->hwnd = hwnd;
 	if (dInput != nullptr)return;
 	HRESULT result;
 	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dInput, nullptr);
@@ -41,9 +42,16 @@ GatesEngine::Mouse * GatesEngine::Input::GetMouse()
 	return &mouse;
 }
 
+bool GatesEngine::Input::GetIsFocus()
+{
+	if (hwnd != GetFocus())return false;
+	return true;
+}
+
 GatesEngine::Input::Input()
 	:dInput(nullptr)
 	,keyboard(Keyboard())
 	,mouse(Mouse())
+	, hwnd(HWND())
 {
 }

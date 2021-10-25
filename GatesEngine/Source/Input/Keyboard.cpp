@@ -16,7 +16,7 @@ void GatesEngine::Keyboard::Create(IDirectInput8 * input, HWND hwnd)
 	HRESULT result;
 	result = input->CreateDevice(GUID_SysKeyboard, &device, NULL);
 	result = device->SetDataFormat(&c_dfDIKeyboard);
-	result = device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE/* | DISCL_NOWINKEY*/);
 }
 
 void GatesEngine::Keyboard::Initialize()

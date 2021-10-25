@@ -12,6 +12,7 @@ namespace GatesEngine
 	class Input
 	{
 	private:
+		HWND hwnd;
 		IDirectInput8* dInput;
 		Keyboard keyboard;
 		Mouse mouse;
@@ -24,6 +25,7 @@ namespace GatesEngine
 		void Update();
 		Keyboard* GetKeyboard();
 		Mouse* GetMouse();
+		bool GetIsFocus();
 		//XCtrler* GetXInputCtrler();
 		//DCtrler* GetDInputCtrler();
 	protected:
