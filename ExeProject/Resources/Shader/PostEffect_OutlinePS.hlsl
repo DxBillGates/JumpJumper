@@ -42,20 +42,4 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 
 	//no outline
 	return texColor;
-
-	//float SAMPLING_VALUE = 5;
-	//float2 perPixel = float2(1 / 1920.0f, 1 / 1080.0f);
-	//float4 resultValue = float4(0,0,0,1);
-	//for (int i = 0; i < SAMPLING_VALUE; ++i)
-	//{
-	//	for (int j = 0; j < SAMPLING_VALUE; ++j)
-	//	{
-	//		float4 samplingColor = pow(lightDepthTex.Sample(smp, input.uv - (perPixel * SAMPLING_VALUE / 2) + float2(i,j) * perPixel),20);
-	//		resultValue.r += step(texColor.r, samplingColor.r);
-	//	}
-	//}
-	//resultValue.r /= SAMPLING_VALUE * SAMPLING_VALUE;
-	////return texColor * resultValue;
-	//return realTexColor * resultValue.r;
-	////return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
