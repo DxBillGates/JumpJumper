@@ -63,6 +63,7 @@ void GatesEngine::Collider::OnLateDraw()
 
 
 	Math::Vector3 s = gameObject->GetTransform()->scale;
+	s.y *= addScale;
 	Math::Vector3 p = gameObject->GetTransform()->position;
 	if (type == ColliderType::CUBE)
 	{

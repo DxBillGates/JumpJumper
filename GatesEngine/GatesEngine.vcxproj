@@ -71,6 +71,7 @@
     <ClInclude Include="Header\Math\Vector4.h" />
     <ClInclude Include="Header\Scene\Scene.h" />
     <ClInclude Include="Header\Scene\SceneManager.h" />
+    <ClInclude Include="Header\Util\Random.h" />
     <ClInclude Include="Header\Util\Timer.h" />
     <ClInclude Include="Header\Window\Window.h" />
   </ItemGroup>
@@ -119,6 +120,7 @@
     <ClCompile Include="Source\Math\Vector4.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Util\Random.cpp" />
     <ClCompile Include="Source\Util\Timer.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>

@@ -3,7 +3,9 @@
 #include "NormalEnemyBehaviour.h"
 #include "TrankingEnemyBehaviour.h"
 #include "BlockBehaviour.h"
+#include "PlayerBehaviour.h"
 #include "PlayerBulletBehaviour.h"
+#include "Header/Util/Random.h"
 
 Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
 {
@@ -121,13 +123,13 @@ void Stage1Scene::Update()
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::UP))
 	{
+		using namespace GatesEngine;
 		for (int i = 0; i < 3; ++i)
 		{
-			using namespace GatesEngine;
 			auto* g = gameObjectManager.Add(new GameObject());
 			g->SetGraphicsDevice(graphicsDevice);
 			g->AddComponent<BlockBehaviour>();
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()),GColliderType::BLOCK);
+			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 			//複数のコライダーに対応済み
 			//auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 			//c->SetPosition({ 0,100,100 });
@@ -137,9 +139,9 @@ void Stage1Scene::Update()
 			g->SetTag("block");
 			float x, y, z;
 			float range = 3000;
-			x = ((float)std::rand() / RAND_MAX * range) - range / 2;
-			y = ((float)std::rand() / RAND_MAX * range) - 100 / 2;
-			z = ((float)std::rand() / RAND_MAX * range) - range / 2;
+			x = Random::Rand(-range, range);
+			y = Random::Rand(-100, range);
+			z = Random::Rand(-range, range);
 			g->GetTransform()->position = { x,y,z };
 			g->Start();
 		}
@@ -147,16 +149,16 @@ void Stage1Scene::Update()
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
 	{
+		using namespace GatesEngine;
 		float x, y, z;
 		float range = 3000;
-		x = ((float)std::rand() / RAND_MAX * range) - range / 2;
-		y = ((float)std::rand() / RAND_MAX * range) - range / 2;
-		z = ((float)std::rand() / RAND_MAX * range) - range / 2;
+		x = Random::Rand(-range, range);
+		y = Random::Rand(-100, range);
+		z = Random::Rand(-range, range);
 		for (int i = 0; i < 5; ++i)
 		{
 			for (int j = 0; j < 5; ++j)
 			{
-				using namespace GatesEngine;
 				auto* g = gameObjectManager.Add(new GameObject());
 				g->SetGraphicsDevice(graphicsDevice);
 				g->AddComponent<BlockBehaviour>();
@@ -191,5 +193,5 @@ void Stage1Scene::Draw()
 void Stage1Scene::LateDraw()
 {
 	gameObjectManager.LateDraw();
-	gpuParticleEmitter.Draw(app->GetMainCamera(), testCS,1000);
+	gpuParticleEmitter.Draw(app->GetMainCamera(), testCS, 1000);
 }
