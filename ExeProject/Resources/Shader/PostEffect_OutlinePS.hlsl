@@ -35,7 +35,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	float s = 0.00699f;
 	sub = step(c, s);
 
-	float4 resultColor = (depthColor.r < lateDrawDepthColor.r) ? texColor * sub : lateDrawColor * sub;
+	float4 resultColor = (depthColor.r < lateDrawDepthColor.r) ? texColor * sub : lateDrawColor;
 	resultColor = (sub <= 0) ? color : resultColor;
 	//outline
 	return resultColor;
