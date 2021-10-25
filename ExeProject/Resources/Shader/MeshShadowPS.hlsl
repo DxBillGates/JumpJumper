@@ -25,8 +25,8 @@ float4 main(PSInput input) : SV_TARGET
 	{
 		float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
 		float2 shadowUV = saturate((posFromLightVP.xy + float2(1, -1)) * float2(0.5, -0.5));
-		float depthFromLight = lightDepthTex.Sample(smp, shadowUV);
-		shadowWeight = (depthFromLight < posFromLightVP.z - 0.001f) ? 0.5f : 1;
+		float4 depthFromLight = lightDepthTex.Sample(smp, shadowUV);
+		shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.001f) ? 0.5f : 1;
 	}
 
 	return float4(result.rgb * shadowWeight,1);
