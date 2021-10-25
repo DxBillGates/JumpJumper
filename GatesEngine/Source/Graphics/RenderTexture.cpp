@@ -24,7 +24,7 @@ void GatesEngine::RenderTexture::Prepare()
 	}
 }
 
-void GatesEngine::RenderTexture::Create(GraphicsDevice* graphicsDevice, const GatesEngine::Math::Vector2& size)
+void GatesEngine::RenderTexture::Create(GraphicsDevice* graphicsDevice, const GatesEngine::Math::Vector2& size, const Math::Vector4& color)
 {
 	D3D12_HEAP_PROPERTIES heapProp = {};
 	heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -32,13 +32,12 @@ void GatesEngine::RenderTexture::Create(GraphicsDevice* graphicsDevice, const Ga
 	resDesc.Width = (UINT)size.x;
 	resDesc.Height = (UINT)size.y;
 
-	float color[4] = {0,0,0,1};
 	D3D12_CLEAR_VALUE clearValue;
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	clearValue.Color[0] = color[0];
-	clearValue.Color[1] = color[1];
-	clearValue.Color[2] = color[2];
-	clearValue.Color[3] = color[3];
+	clearValue.Color[0] = color.x;
+	clearValue.Color[1] = color.y;
+	clearValue.Color[2] = color.z;
+	clearValue.Color[3] = color.w;
 
 	graphicsDevice->GetDevice()->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearValue, IID_PPV_ARGS(&texBuff));
 

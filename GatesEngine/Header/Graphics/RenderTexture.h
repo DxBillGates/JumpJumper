@@ -16,7 +16,7 @@ namespace GatesEngine
 		RenderTexture();
 		~RenderTexture();
 		void Prepare() override;
-		void Create(GraphicsDevice* graphicsDevice,const GatesEngine::Math::Vector2& size);
+		void Create(GraphicsDevice* graphicsDevice, const GatesEngine::Math::Vector2& size, const Math::Vector4& color = {0,0,0,1});
 		void Set(int descIndex) override;
 		void EndDraw();
 	};

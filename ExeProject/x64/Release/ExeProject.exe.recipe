@@ -55,10 +55,25 @@
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\MeshShadowVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\PointPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\PointVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\PostEffect_OutlinePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\PostEffect_OutlineVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\RGBShiftPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\RGBShiftVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\testCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Release\TestMultiRTVPS.cso</FullPath>

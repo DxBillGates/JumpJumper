@@ -66,6 +66,9 @@ bool Game::LoadContents()
 	auto* pointShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"Point")),"PointShader");
 	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
 
+	auto* outlineShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
+	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
+
 	//î¬É|Éäê∂ê¨
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
 	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
@@ -108,11 +111,15 @@ bool Game::LoadContents()
 	graphicsDevice.GetMeshManager()->Add("Point")->Create(&graphicsDevice, testMeshData6);
 
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("uv_sphere", testModel);
+	MeshCreater::LoadModelData("tree", testModel);
 	graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
+	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, {1,1,1,1});
+	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
+	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, { 1,1,1,1 });
+	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
 
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
@@ -167,7 +174,7 @@ bool Game::Draw()
 	sceneManager->Draw();
 
 
-	graphicsDevice.ClearRenderTarget({1,1,1,0 }, true);
+	graphicsDevice.ClearRenderTarget({1,1,1,1 }, true,&resultRenderTex,&resultDepthTex);
 
 	graphicsDevice.GetShaderManager()->GetShader("MeshShadowShader")->Set();
 
@@ -181,6 +188,7 @@ bool Game::Draw()
 	//TestópÇÃGridÇ‚2Dï`âÊ
 	sceneManager->Draw();
 
+	graphicsDevice.ClearRenderTarget({ 1,1,1,1 }, true, &lateDrawResultRenderTex,&lateDrawResultDepthTex);
 	graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	graphicsDevice.GetShaderManager()->GetShader("Line")->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, app->GetMainCamera()->GetData());
@@ -188,12 +196,31 @@ bool Game::Draw()
 	for (int i = 0; i < 1; ++i)
 	{
 		graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,-20000.0f * i,0 }));
-		graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
+		graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
 		graphicsDevice.GetMeshManager()->GetMesh("Grid")->Draw();
 	}
 
 	gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
+
+	graphicsDevice.ClearRenderTarget({ 0,0,0,1 }, true);
+
+	graphicsDevice.GetShaderManager()->GetShader("PostEffect_OutlineShader")->Set();
+	graphicsDevice.GetCBVSRVUAVHeap()->Set();
+	graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10,10,1 }) * GatesEngine::Math::Matrix4x4::Translate({1920/2,1080/2,0}));
+	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))color = { 1,0,0,1 };
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D2))color = { 0,1,0,1 };
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D3))color = { 0,0,1,1 };
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D4))color = { 0,0,0,1 };
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, color);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	resultDepthTex.Set(3);
+	resultRenderTex.Set(4);
+	lateDrawResultDepthTex.Set(5);
+	lateDrawResultRenderTex.Set(6);
+	graphicsDevice.GetMeshManager()->GetMesh("2DPlane")->Draw();
 
 	if (!graphicsDevice.ScreenFlip())return false;
 

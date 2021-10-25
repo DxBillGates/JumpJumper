@@ -12,6 +12,12 @@ class Game : public GatesEngine::Application
 private:
 	GatesEngine::RenderTexture shadowRenderTex;
 	GatesEngine::DepthStencilTexture shadowDepthTex;
+
+	GatesEngine::RenderTexture resultRenderTex;
+	GatesEngine::DepthStencilTexture resultDepthTex;
+
+	GatesEngine::RenderTexture lateDrawResultRenderTex;
+	GatesEngine::DepthStencilTexture lateDrawResultDepthTex;
 public:
 	Game();
 	Game(const GatesEngine::Math::Vector2& wSize, const char* title);
