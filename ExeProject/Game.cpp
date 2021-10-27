@@ -115,7 +115,7 @@ bool Game::LoadContents()
 
 	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("barbara", testModel);
+	MeshCreater::LoadModelData("paimon", testModel);
 	graphicsDevice.GetMeshManager()->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });

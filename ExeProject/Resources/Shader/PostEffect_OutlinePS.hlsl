@@ -29,6 +29,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 		}
 	}
 
+	////円状に隣接ピクセル参照(微妙)
 	//for (int i = 6; i > 1; --i)
 	//{
 	//	for (int j = 0; j < 6; ++j)

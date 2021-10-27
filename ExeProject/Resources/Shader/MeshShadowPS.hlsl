@@ -9,12 +9,14 @@ float4 main(PSInput input) : SV_TARGET
 	float3 normal = normalize(input.normal);
 	float intensity = saturate(dot(-lightDir, normal));
 	float4 color = float4(intensity, intensity, intensity, 1);
+
+	////ŠÈˆÕƒgƒD[ƒ“
 	if (intensity > 0.95)
-		color = float4(1.0, 1, 1, 1.0);
-	else if (intensity > 0.5)
-		color = float4(0.7, 0.7, 0.7, 1.0);
-	else if (intensity > 0.05)
-		color = float4(0.35, 0.35, 0.35, 1.0);
+		color = float4(1, 1, 1, 1.0);
+	//else if (intensity > 0.5)
+	//	color = float4(0.7, 0.7, 0.7, 1.0);
+	else if (intensity > 0.005)
+		color = float4(0.5, 0.5, 0.5, 1.0);
 	else
 		color = float4(0.1, 0.1, 0.1, 1.0);
 
