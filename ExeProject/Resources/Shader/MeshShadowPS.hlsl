@@ -13,8 +13,8 @@ float4 main(PSInput input) : SV_TARGET
 	////ŠÈˆÕƒgƒD[ƒ“
 	if (intensity > 0.95)
 		color = float4(1, 1, 1, 1.0);
-	//else if (intensity > 0.5)
-	//	color = float4(0.7, 0.7, 0.7, 1.0);
+	else if (intensity > 0.3)
+		color = float4(0.7, 0.7, 0.7, 1.0);
 	else if (intensity > 0.005)
 		color = float4(0.5, 0.5, 0.5, 1.0);
 	else
