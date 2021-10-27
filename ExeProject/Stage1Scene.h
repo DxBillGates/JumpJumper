@@ -1,7 +1,6 @@
 #pragma once
 #include "Header/Scene/Scene.h"
 #include "Stage1.h"
-#include "SceneTranslater.h"
 #include "PlayerBehaviour.h"
 #include "Header/Graphics/GPUParticle/GPUParticleManager.h"
 #include "Header/Graphics/GPUParticle/GPUParticleEmitter.h"
@@ -10,7 +9,6 @@ class Stage1Scene : public GatesEngine::Scene
 {
 private:
 	Stage1 stage;
-	SceneTranslater sceneTranslater;
 	PlayerBehaviour* playerBehaviour;
 
 	GatesEngine::ComputePipeline* testCS;

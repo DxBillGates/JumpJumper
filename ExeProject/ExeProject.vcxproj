@@ -137,19 +137,13 @@
     <ClCompile Include="PlayerBehaviour.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="PlayerBulletBehaviour.cpp" />
-    <ClCompile Include="PlayerSceneTransAnimation.cpp" />
     <ClCompile Include="SampleScene.cpp" />
-    <ClCompile Include="SceneTranslater.cpp" />
-    <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="Stage1Scene.cpp" />
     <ClCompile Include="Stage2.cpp" />
-    <ClCompile Include="Stage2Scene.cpp" />
     <ClCompile Include="Stage3.cpp" />
     <ClCompile Include="StageManager.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="TrankingEnemyBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GatesEngine\GatesEngine.vcxproj">
@@ -164,19 +158,13 @@
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerBulletBehaviour.h" />
-    <ClInclude Include="PlayerSceneTransAnimation.h" />
     <ClInclude Include="SampleScene.h" />
-    <ClInclude Include="SceneTranslater.h" />
-    <ClInclude Include="SelectScene.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="Stage1Scene.h" />
     <ClInclude Include="Stage2.h" />
-    <ClInclude Include="Stage2Scene.h" />
     <ClInclude Include="Stage3.h" />
     <ClInclude Include="StageManager.h" />
-    <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="TrankingEnemyBehaviour.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BloomPS.hlsl">

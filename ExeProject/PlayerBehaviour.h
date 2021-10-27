@@ -10,12 +10,8 @@ class PlayerBehaviour : public GatesEngine::Behaviour
 private:
 	GatesEngine::Math::Vector3 vel;
 	bool isJump;
-	//int combo;
 	GatesEngine::Input* input;
 	GatesEngine::Camera* mainCamera;
-	//bool isAnimation;
-	//float animationTime;
-	//int killedValue;
 	float fuelValue;
 	const float MAX_FUEL;
 	const float CHARGE_FUEL;
@@ -32,8 +28,5 @@ public:
 	void OnCollision(GatesEngine::Collider* hitCollider) override;
 	void SetCamera(GatesEngine::Camera* pCamera);
 	GatesEngine::Camera* GetSetCamera();
-	bool GetSceneTransFlag();
-	void ResetKillCount();
-	int GetKillCount();
 	void AddBullet(PlayerBullet* newBullet);
 };

@@ -7,49 +7,6 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 	//ブロックとプレイヤー、敵、玉の当たり判定
 	for (auto b : blockColliders)
 	{
-		//一つのコライダーのみ対応
-		//for (auto p : playerColliders)
-		//{
-		//	GatesEngine::GameObject* block, * player;
-		//	block = b->GetGameObject();
-		//	player = p->GetGameObject();
-		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), player->GetCollider()))
-		//	{
-		//		block->Collision(player);
-		//		block->GetCollider()->SetColor({ 1,0,0,0 });
-		//		player->Collision(block);
-		//		player->GetCollider()->SetColor({ 1,0,0,0 });
-		//	}
-		//}
-
-		//for (auto p : enemyColliders)
-		//{
-		//	GatesEngine::GameObject* block, * enemy;
-		//	block = b->GetGameObject();
-		//	enemy = p->GetGameObject();
-		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), enemy->GetCollider()))
-		//	{
-		//		block->Collision(enemy);
-		//		block->GetCollider()->SetColor({ 1,0,0,0 });
-		//		enemy->Collision(block);
-		//		enemy->GetCollider()->SetColor({ 1,0,0,0 });
-		//	}
-		//}
-
-		//for (auto pb : playerBulletColliders)
-		//{
-		//	GatesEngine::GameObject* block, * playerBullet;
-		//	block = b->GetGameObject();
-		//	playerBullet = pb->GetGameObject();
-		//	if (GatesEngine::CollisionManager::CheckAABB(block->GetCollider(), playerBullet->GetCollider()))
-		//	{
-		//		block->Collision(playerBullet);
-		//		block->GetCollider()->SetColor({ 1,0,0,0 });
-		//		playerBullet->Collision(block);
-		//		playerBullet->GetCollider()->SetColor({ 1,0,0,0 });
-		//	}
-		//}
-
 		//複数コライダー対応
 		for (auto p : playerColliders)
 		{

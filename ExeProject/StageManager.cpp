@@ -15,14 +15,6 @@ StageManager::~StageManager()
 void StageManager::Update()
 {
 	isChangeScene = false;
-	if (player && currentStage)
-	{
-		if (player->GetKillCount() >= currentStage->GetNeedKillCount())
-		{
-			ChangeNextStage();
-			player->ResetKillCount();
-		}
-	}
 }
 
 void StageManager::Add(Stage* newStage)

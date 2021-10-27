@@ -18,8 +18,6 @@ BlockBehaviour::~BlockBehaviour()
 
 void BlockBehaviour::Start()
 {
-	//gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize();
-
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	mesh = graphicsDevice->GetMeshManager()->GetMesh("Cube");
 	shader = graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader");
@@ -38,13 +36,6 @@ void BlockBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{0.5f,0.5f,0.5f,1} });
 	mesh->Draw();
-
-	//GatesEngine::Math::Matrix4x4 lineCubeMatrix = GatesEngine::Math::Matrix4x4::Scale(gameObject->GetCollider()->GetSize());
-	//lineCubeMatrix *= GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position);
-	//graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	//graphicsDevice->GetShaderManager()->GetShader("Line")->Set();
-	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, lineCubeMatrix);
-	//graphicsDevice->GetMeshManager()->GetMesh("LineCube")->Draw();
 }
 
 void BlockBehaviour::OnCollision(GatesEngine::GameObject* other)

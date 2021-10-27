@@ -1,7 +1,6 @@
 #include "Stage1Scene.h"
 #include "Header/Application/Application.h"
 #include "NormalEnemyBehaviour.h"
-#include "TrankingEnemyBehaviour.h"
 #include "BlockBehaviour.h"
 #include "PlayerBehaviour.h"
 #include "PlayerBulletBehaviour.h"
@@ -22,13 +21,19 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	, gpuParticleManager(nullptr)
 	, gpuParticleEmitter({})
 {
+	//GPUパーティクル用のコンピュートシェーダー読み込み
 	testCS = new GatesEngine::ComputePipeline(graphicsDevice, L"test");
 	testCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV });
 
+	//GPUパーティクル用のマネージャー生成
 	gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
+	//GPUパーティクルマネージャーからパーティクル1万個確保
 	gpuParticleEmitter.Create(gpuParticleManager, 10000);
 
-	collisionManager.Initialize(5, { -10000,-100,-10000 }, { 10000 });
+	////八分木空間分割すり抜けバグ多発したため一旦なし
+	//collisionManager.Initialize(5, { -10000,-100,-10000 }, { 10000 });
+
+	//テスト用オブジェクト配置
 	using namespace GatesEngine;
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
@@ -59,8 +64,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	auto* g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
 	auto* e = g->AddComponent<NormalEnemyBehaviour>();
-	e->SetR(1000);
-	e->SetY(0);
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
 	g->SetCollider();
 	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
@@ -81,6 +84,28 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->SetTag("block");
 	g->GetTransform()->position = { 0,-10,0 };
 
+	g = gameObjectManager.Add(new GameObject());
+	g->SetGraphicsDevice(graphicsDevice);
+	g->AddComponent<BlockBehaviour>();
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
+	g->SetCollider();
+	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	g->GetCollider()->SetSize({ 1 });
+	g->GetTransform()->scale = { 500,100,500 };
+	g->SetTag("block");
+	g->GetTransform()->position = { 1000,700,2000 };
+
+	g = gameObjectManager.Add(new GameObject());
+	g->SetGraphicsDevice(graphicsDevice);
+	g->AddComponent<BlockBehaviour>();
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
+	g->SetCollider();
+	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	g->GetCollider()->SetSize({ 1 });
+	g->GetTransform()->scale = { 500,100,500 };
+	g->SetTag("block");
+	g->GetTransform()->position = { 1000,1500,2000 };
+
 }
 
 Stage1Scene::~Stage1Scene()
@@ -92,35 +117,17 @@ Stage1Scene::~Stage1Scene()
 void Stage1Scene::Initialize()
 {
 	gameObjectManager.Start();
-	sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::DOWN);
-	sceneTranslater.StartSceneTranslate(1);
 }
 
 void Stage1Scene::Update()
 {
 	gpuParticleEmitter.Update();
 	gameObjectManager.Update();
+	////八分木空間分割すり抜けバグ多発したため一旦なし
 	//collisionManager.Update();
 	stage.Update();
 
-	SceneTranslater::TranslateState sceneTranslaterState = sceneTranslater.GetTranslateState();
-	sceneTranslater.Update(app->GetTimer()->GetElapsedTime());
-
-	if (playerBehaviour)
-	{
-		if (playerBehaviour->GetKillCount() >= stage.GetNeedKillCount())
-		{
-			playerBehaviour->ResetKillCount();
-			sceneTranslater.SetTranslateState(SceneTranslater::TranslateState::UP);
-			sceneTranslater.StartSceneTranslate(1);
-		}
-	}
-
-	if (sceneTranslaterState == SceneTranslater::TranslateState::UP && sceneTranslaterState != sceneTranslater.GetTranslateState())
-	{
-		app->GetSceneManager()->ChangeScene("SelectScene");
-	}
-
+	//テスト用オブジェクト配置
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::UP))
 	{
 		using namespace GatesEngine;
@@ -130,7 +137,7 @@ void Stage1Scene::Update()
 			g->SetGraphicsDevice(graphicsDevice);
 			g->AddComponent<BlockBehaviour>();
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			//複数のコライダーに対応済み
+			////複数のコライダーに対応済み
 			//auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
 			//c->SetPosition({ 0,100,100 });
 			//c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
@@ -174,6 +181,8 @@ void Stage1Scene::Update()
 			}
 		}
 	}
+
+	//FPS表示120フレームに一度表示
 	static int i = 0;
 	if (i % 120 == 0)
 	{
@@ -189,7 +198,6 @@ void Stage1Scene::Update()
 void Stage1Scene::Draw()
 {
 	gameObjectManager.Draw();
-	sceneTranslater.Draw(graphicsDevice);
 }
 
 void Stage1Scene::LateDraw()
