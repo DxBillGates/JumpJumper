@@ -68,7 +68,7 @@ namespace GatesEngine
 		void SetResourceBarrier(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 		void SetViewport(const Vector2& size, const Vector2& pos = {});
 		void SetDescriptorHeap();
-		void SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets);
+		void SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets, DepthStencil* depthStencil = nullptr, const Math::Vector4& clearColor = {0,0,0,1});
 		void SetMainCamera(Camera* camera);
 
 		ID3D12Device* GetDevice();

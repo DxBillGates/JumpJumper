@@ -18,6 +18,8 @@ private:
 
 	GatesEngine::RenderTexture lateDrawResultRenderTex;
 	GatesEngine::DepthStencilTexture lateDrawResultDepthTex;
+
+	GatesEngine::RenderTexture resultRenderShadowTex;
 public:
 	Game();
 	Game(const GatesEngine::Math::Vector2& wSize, const char* title);

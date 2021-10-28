@@ -20,7 +20,7 @@ void BlockBehaviour::Start()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	mesh = graphicsDevice->GetMeshManager()->GetMesh("Cube");
-	shader = graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader");
+	shader = graphicsDevice->GetShaderManager()->GetShader("testMultiRTVShader");
 }
 
 void BlockBehaviour::Update()

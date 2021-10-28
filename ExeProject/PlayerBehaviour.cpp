@@ -108,7 +108,7 @@ void PlayerBehaviour::OnDraw()
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	graphicsDevice->GetShaderManager()->GetShader("MeshShadowShader")->Set();
+	graphicsDevice->GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
 

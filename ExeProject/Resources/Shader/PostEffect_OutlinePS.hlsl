@@ -4,6 +4,7 @@ Texture2D<float4> depthTex : register(t0);
 Texture2D<float4> tex : register(t1);
 Texture2D<float4> lateDrawDepthTex : register(t2);
 Texture2D<float4> lateDrawTex : register(t3);
+Texture2D<float4> shadowTex : register(t4);
 SamplerState smp : register(s0);
 
 float4 main(DefaultSpriteVSOutput input) : SV_TARGET
@@ -14,6 +15,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	float4 lateDrawDepthColor = pow(lateDrawDepthTex.Sample(smp, input.uv),512);
 
 	//サンプリング回数2以上でちゃんと表示される
+	//アウトライン工程
 	float SAMPLING_VALUE = 5;
 	float2 perPixel = float2(1 / 1920.0f, 1 / 1080.0f);
 	float2 offset = input.uv;
@@ -47,7 +49,23 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	float s = 0.00199f;
 	sub = step(c, s);
 
-	float4 resultColor = (depthColor.r < lateDrawDepthColor.r) ? texColor * sub : lateDrawColor;
+
+	//影に対してブラー
+	float BLUR_SAMPLING_VALUE = 5;
+	float4 blurShadowTex = float4(0, 0, 0, 0);
+	for (int k = 0; k < BLUR_SAMPLING_VALUE; ++k)
+	{
+		for (int j = 0; j < BLUR_SAMPLING_VALUE; ++j)
+		{
+			float2 uv = offset + perPixel * 2 * float2(k, -j);
+			blurShadowTex += shadowTex.Sample(smp, uv);
+		}
+	}
+	blurShadowTex /= BLUR_SAMPLING_VALUE * BLUR_SAMPLING_VALUE;
+
+
+	// 3Dモデルなどの描画結果と2Dやコライダーの描画結果を深度を比較してどっちを描画するか決定
+	float4 resultColor = (depthColor.r < lateDrawDepthColor.r) ? texColor * sub * blurShadowTex : lateDrawColor;
 	resultColor = (sub <= 0) ? color : resultColor;
 	//outline
 	return resultColor;

@@ -13,12 +13,12 @@ float4 main(PSInput input) : SV_TARGET
 	////ŠÈˆÕƒgƒD[ƒ“
 	if (intensity > 0.95)
 		color = float4(1, 1, 1, 1.0);
-	else if (intensity > 0.3)
+	else if (intensity > 0.2)
 		color = float4(0.7, 0.7, 0.7, 1.0);
-	else if (intensity > 0.005)
+	else if (intensity > 0.1)
 		color = float4(0.5, 0.5, 0.5, 1.0);
 	else
-		color = float4(0.1, 0.1, 0.1, 1.0);
+		color = float4(0.2, 0.2, 0.2, 1.0);
 
 	float4 result = float4(color.xyz, 1) * lightColor;
 
@@ -28,8 +28,8 @@ float4 main(PSInput input) : SV_TARGET
 		float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
 		float2 shadowUV = saturate((posFromLightVP.xy + float2(1, -1)) * float2(0.5, -0.5));
 		float4 depthFromLight = lightDepthTex.Sample(smp, shadowUV);
-		shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.001f) ? 0.5f : 1;
+		shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.001f) ? 0.7f : 1;
 	}
 
-	return float4(result.rgb * shadowWeight,1);
+	return float4(float3(shadowWeight, shadowWeight, shadowWeight)/*result.rgb * shadowWeight*/,1);
 }

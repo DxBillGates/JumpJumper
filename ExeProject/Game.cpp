@@ -38,7 +38,7 @@ bool Game::LoadContents()
 	defaultSpriteShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV });
 
 	auto* testMultiRTVShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"TestMultiRTV")), "testMultiRTVShader");
-	testMultiRTVShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false, 2);
+	testMultiRTVShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, true, 2);
 
 	auto* testVGaussBlurShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"VGaussBlur")), "VGaussBlurShader");
 	testVGaussBlurShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
@@ -65,7 +65,7 @@ bool Game::LoadContents()
 	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
 
 	auto* outlineShader = graphicsDevice.GetShaderManager()->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
-	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
+	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
 
 	//板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
@@ -124,6 +124,7 @@ bool Game::LoadContents()
 	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
 	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
 	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
+	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
@@ -166,7 +167,7 @@ bool Game::Draw()
 	GatesEngine::Math::Vector3 dir = GatesEngine::Math::Vector3(0, 0, 1).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
 	GatesEngine::Math::Vector3 up = GatesEngine::Math::Vector3(0, 1, 0).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
 	lightViewData.viewMatrix = GatesEngine::Math::Matrix4x4::GetViewMatrixLookTo({ GatesEngine::Math::Vector3(0,10000,0) + pos }, dir, up);
-	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1000,1000 }, 1, 20000);
+	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 2000,2000 }, 1, 20000);
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, lightViewData);
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,-1,0,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
 
@@ -174,10 +175,25 @@ bool Game::Draw()
 	sceneManager->Draw();
 
 
-	//深度テクスチャを利用してプレイヤー視点で描画
-	graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141,219,228,255)/255.0f, true, &resultRenderTex, &resultDepthTex);
+	////深度テクスチャを利用してプレイヤー視点で描画
 
-	graphicsDevice.GetShaderManager()->GetShader("MeshShadowShader")->Set();
+	//graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141,219,228,255)/255.0f, true, &resultRenderTex, &resultDepthTex);
+
+	//graphicsDevice.GetShaderManager()->GetShader("MeshShadowShader")->Set();
+
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
+	//GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
+	//shadowDepthTex.Set(5);
+
+	////シーンの描画
+	//sceneManager->Draw();
+
+
+	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
+	//深度テクスチャを利用してプレイヤー視点で描画
+	graphicsDevice.GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
@@ -187,6 +203,7 @@ bool Game::Draw()
 
 	//シーンの描画
 	sceneManager->Draw();
+
 
 	//グリッドの描画
 	graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f, true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
@@ -218,6 +235,7 @@ bool Game::Draw()
 	resultRenderTex.Set(4);
 	lateDrawResultDepthTex.Set(5);
 	lateDrawResultRenderTex.Set(6);
+	resultRenderShadowTex.Set(7);
 	graphicsDevice.GetMeshManager()->GetMesh("2DPlane")->Draw();
 
 	if (!graphicsDevice.ScreenFlip())return false;

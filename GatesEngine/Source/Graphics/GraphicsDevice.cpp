@@ -300,7 +300,7 @@ void GatesEngine::GraphicsDevice::SetDescriptorHeap()
 	descriptorHeapManager->Set();
 }
 
-void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets)
+void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets, DepthStencil* depthStencil, const Math::Vector4& clearColor)
 {
 	int renderTargetSize = (int)renderTargets.size();
 	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> handles;
@@ -328,12 +328,21 @@ void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*
 		rects[i].right = (int)resDesc.Width;
 
 		//useRenderTarget‚ðcolor‚Å“h‚è‚Â‚Ô‚·
-		float rgba[] = { 1,1,1,1 };
+		float rgba[] = { clearColor.x,clearColor.y,clearColor.z,clearColor.w };
 		mCmdList->ClearRenderTargetView(handles[i], rgba, 0, nullptr);
 	}
 
 
-	mCmdList->OMSetRenderTargets(renderTargetSize, handles.data(), false, nullptr);
+	if (depthStencil)
+	{
+		depthStencil->Clear();
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = depthStencil->GetHeap()->GetCPUDescriptorHandleForHeapStart();
+		mCmdList->OMSetRenderTargets(renderTargetSize, handles.data(), false, &dsvHandle);
+	}
+	else
+	{
+		mCmdList->OMSetRenderTargets(renderTargetSize, handles.data(), false, nullptr);
+	}
 
 	mCmdList->RSSetViewports(renderTargetSize, viewports.data());
 	mCmdList->RSSetScissorRects(renderTargetSize, rects.data());
