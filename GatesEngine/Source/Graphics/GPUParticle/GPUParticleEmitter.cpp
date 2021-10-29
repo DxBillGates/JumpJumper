@@ -41,7 +41,8 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 	ResourceManager::GetShaderManager()->GetShader("PointShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ pos }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, camera->GetData());
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, camera->GetData());
+	graphicsDevice->GetMainCamera()->Set(2);
 	graphicsDevice->GetCmdList()->SetGraphicsRootDescriptorTable(3, graphicsDevice->GetCBVSRVUAVHeap()->GetSRVHandleForSRV(srvValue));
 	ResourceManager::GetMeshManager()->GetMesh("Point")->Draw(useParticleValue);
 

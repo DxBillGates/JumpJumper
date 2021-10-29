@@ -3,6 +3,8 @@
 #include "Stage1Scene.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
+#include "Header/Graphics/Camera3D.h"
+#include "Header/Graphics/DebugCamera.h"
 
 Game::Game() :Application()
 {
@@ -120,7 +122,7 @@ bool Game::LoadContents()
 
 	//モデル読み込み
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("paimon", testModel);
+	MeshCreater::LoadModelData("uv_sphere", testModel);
 	meshManager->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
@@ -135,7 +137,12 @@ bool Game::LoadContents()
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->ChangeScene("Stage1Scene");
 
-	graphicsDevice.SetMainCamera(&mainCamera);
+
+	mainCamera = &camera;
+	mainCamera = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player")->GetComponent<PlayerBehaviour>()->GetSetCamera();
+	mainCamera->SetGraphicsDevice(&graphicsDevice);
+	mainCamera->SetMainWindow(&mainWindow);
+	graphicsDevice.SetMainCamera(mainCamera);
 
 	return true;
 }
@@ -150,6 +157,7 @@ bool Game::Initialize()
 
 bool Game::Update()
 {
+	//camera.Update();
 	gameObjectManager.Update();
 	sceneManager->Update();
 	return true;
@@ -204,7 +212,8 @@ bool Game::Draw()
 	//深度テクスチャを利用してプレイヤー視点で描画
 	shaderManager->GetShader("testMultiRTVShader")->Set();
 
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, mainCamera.GetData());
+	mainCamera->Set(2);
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
 	GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
@@ -223,7 +232,7 @@ bool Game::Draw()
 	meshManager->GetMesh("Grid")->Draw();
 
 	//スプライトやコライダーのワイヤーフレーム表示
-	gameObjectManager.LateDraw();
+	//gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
 
 	//描画結果から深度テクスチャを利用してアウトライン付与してを描画

@@ -60,7 +60,8 @@ void GatesEngine::Collider::OnLateDraw()
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	shader->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
+	graphicsDevice->GetMainCamera()->Set(2);
 
 
 	Math::Vector3 s = gameObject->GetTransform()->scale;

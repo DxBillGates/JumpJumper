@@ -23,7 +23,7 @@ namespace GatesEngine
 		GraphicsDevice graphicsDevice;
 		CBuffer<B3> worldLightInfo;
 
-		Camera mainCamera;
+		Camera* mainCamera;
 	public:
 		Application();
 		Application(const Math::Vector2& wSize, const char* title);

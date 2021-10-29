@@ -255,6 +255,15 @@
     <ClInclude Include="Header\Graphics\Manager\ResourceManager.h">
       <Filter>Header\Graphics\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Graphics\Camera2D.h">
+      <Filter>Header\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics\Camera3D.h">
+      <Filter>Header\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics\DebugCamera.h">
+      <Filter>Header\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -401,5 +410,12 @@
     <ClCompile Include="Source\Graphics\Manager\ResourceManager.cpp">
       <Filter>Source\Graphics\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Camera2D.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Camera3D.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Graphics\DebugCamera.cpp" />
   </ItemGroup>
 </Project>

@@ -30,12 +30,15 @@
     <ClInclude Include="Header\GameObject\GameObject.h" />
     <ClInclude Include="Header\GameObject\GameObjectManager.h" />
     <ClInclude Include="Header\Graphics\Camera.h" />
+    <ClInclude Include="Header\Graphics\Camera2D.h" />
+    <ClInclude Include="Header\Graphics\Camera3D.h" />
     <ClInclude Include="Header\Graphics\CBuffer.h" />
     <ClInclude Include="Header\Graphics\CBufferAllocater.h" />
     <ClInclude Include="Header\Graphics\CBufferStruct.h" />
     <ClInclude Include="Header\Graphics\CBVSRVUAVHeap.h" />
     <ClInclude Include="Header\Graphics\ComputePipeline.h" />
     <ClInclude Include="Header\Graphics\COMRelease.h" />
+    <ClInclude Include="Header\Graphics\DebugCamera.h" />
     <ClInclude Include="Header\Graphics\DepthStencil.h" />
     <ClInclude Include="Header\Graphics\DepthStencilTexture.h" />
     <ClInclude Include="Header\Graphics\DescriptorHeapManager.h" />
@@ -77,6 +80,7 @@
     <ClInclude Include="Header\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Header\Graphics\DebugCamera.cpp" />
     <ClCompile Include="Source\Application\Application.cpp" />
     <ClCompile Include="Source\Collision\CollisionManager.cpp" />
     <ClCompile Include="Source\Collision\CollisionTreeCell.cpp" />
@@ -88,6 +92,8 @@
     <ClCompile Include="Source\GameObject\GameObject.cpp" />
     <ClCompile Include="Source\GameObject\GameObjectManager.cpp" />
     <ClCompile Include="Source\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Graphics\Camera2D.cpp" />
+    <ClCompile Include="Source\Graphics\Camera3D.cpp" />
     <ClCompile Include="Source\Graphics\CBufferAllocater.cpp" />
     <ClCompile Include="Source\Graphics\CBVSRVUAVHeap.cpp" />
     <ClCompile Include="Source\Graphics\ComputePipeline.cpp" />

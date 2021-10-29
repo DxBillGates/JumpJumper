@@ -1,7 +1,5 @@
 #pragma once
 #include "GraphicsDevice.h"
-#include "Manager/ShaderManager.h"
-#include "Manager/MeshManager.h"
 #include "Helper/MeshCreater.h"
 #include "DescriptorHeapManager.h"
 #include "CBVSRVUAVHeap.h"
@@ -12,3 +10,6 @@
 #include "DepthStencil.h"
 #include "DepthStencilTexture.h"
 #include "Camera.h"
+#include "Manager/TextureManager.h"
+#include "Manager/ShaderManager.h"
+#include "Manager/MeshManager.h"

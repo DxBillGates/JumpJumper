@@ -6,6 +6,7 @@
 #include "Header/Graphics/Mesh.h"
 #include "Header/Graphics/RenderTexture.h"
 #include "Header/Graphics/DepthStencilTexture.h"
+#include "Header/Graphics/DebugCamera.h"
 
 class Game : public GatesEngine::Application
 {
@@ -20,6 +21,8 @@ private:
 	GatesEngine::DepthStencilTexture lateDrawResultDepthTex;
 
 	GatesEngine::RenderTexture resultRenderShadowTex;
+
+	GatesEngine::DebugCamera camera;
 public:
 	Game();
 	Game(const GatesEngine::Math::Vector2& wSize, const char* title);

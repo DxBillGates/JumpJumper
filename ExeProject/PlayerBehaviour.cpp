@@ -5,6 +5,7 @@
 #include "Header/Component/Collider.h"
 #include "Header/Math/Vector3.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
+#include "Header/Graphics/Camera2D.h"
 
 PlayerBehaviour::PlayerBehaviour()
 	: vel({})
@@ -15,10 +16,12 @@ PlayerBehaviour::PlayerBehaviour()
 	, MAX_FUEL(1000)
 	, CHARGE_FUEL(1)
 {
+	mainCamera = new PlayerCamera();
 }
 
 PlayerBehaviour::~PlayerBehaviour()
 {
+	delete mainCamera;
 }
 
 void PlayerBehaviour::Start()
@@ -44,33 +47,37 @@ void PlayerBehaviour::Update()
 	const float MAX_VEL_Y = 10;
 	if (vel.y >= MAX_VEL_Y)vel.y = MAX_VEL_Y;
 	//ˆÚ“®ˆ—
-	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation()->GetAxis();
+	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
 	GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
 
-	GatesEngine::Math::Vector3 moveVector = {};
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
+	if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
 	{
-		moveVector += playerAxis.z;
-	}
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
-	{
-		moveVector -= playerAxis.z;
-	}
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
-	{
-		moveVector += playerAxis.x;
-	}
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
-	{
-		moveVector -= playerAxis.x;
+		GatesEngine::Math::Vector3 moveVector = {};
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
+		{
+			moveVector += playerAxis.z;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
+		{
+			moveVector -= playerAxis.z;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
+		{
+			moveVector += playerAxis.x;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
+		{
+			moveVector -= playerAxis.x;
+		}
+
+		const float SPEED = 5;
+		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
 	}
 
-	const float SPEED = 5;
-	gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
 	if (vel.y <= -50)vel.y = -50;
 	gameObject->GetTransform()->position += vel;
 
-	GatesEngine::Math::Vector3 a = mainCamera->GetRotation()->GetAxis().z;
+	GatesEngine::Math::Vector3 a = mainCamera->GetRotation().GetAxis().z;
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
@@ -100,7 +107,6 @@ void PlayerBehaviour::Update()
 	GatesEngine::Math::Vector3 back = -gameObject->GetTransform()->GetForward();
 	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) });
 	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
-	mainCamera->Update();
 }
 
 void PlayerBehaviour::OnDraw()
@@ -117,8 +123,9 @@ void PlayerBehaviour::OnDraw()
 
 void PlayerBehaviour::OnLateDraw()
 {
-	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
+
+	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
@@ -153,12 +160,12 @@ void PlayerBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
 	}
 }
 
-void PlayerBehaviour::SetCamera(GatesEngine::Camera* pCamera)
+void PlayerBehaviour::SetCamera(PlayerCamera* pCamera)
 {
 	mainCamera = pCamera;
 }
 
-GatesEngine::Camera* PlayerBehaviour::GetSetCamera()
+PlayerCamera* PlayerBehaviour::GetSetCamera()
 {
 	return mainCamera;
 }

@@ -38,7 +38,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	auto* gp = gameObjectManager.Add(new GameObject());
 	gp->SetGraphicsDevice(graphicsDevice);
 	playerBehaviour = gp->AddBehavior<PlayerBehaviour>();
-	gp->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
+	//gp->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::PLAYER);
 	gp->SetCollider();
 	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);

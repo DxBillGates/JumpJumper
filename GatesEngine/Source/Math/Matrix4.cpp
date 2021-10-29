@@ -198,7 +198,7 @@ float GatesEngine::Math::Matrix4x4::Determinant(const Matrix4x4 & m)
 	return result;
 }
 
-GatesEngine::Math::Axis GatesEngine::Math::Matrix4x4::GetAxis()
+const GatesEngine::Math::Axis& GatesEngine::Math::Matrix4x4::GetAxis() const
 {
 	return GetAxis(*this);
 }

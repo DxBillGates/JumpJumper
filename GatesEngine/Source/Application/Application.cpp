@@ -13,6 +13,7 @@ GatesEngine::Application::Application(const Math::Vector2& wSize, const char* ti
 	, sceneManager(SceneManager::GetInstance())
 	, gameObjectManager(GameObjectManager())
 	, worldLightInfo({})
+	, mainCamera(nullptr)
 {
 	mainWindow.Create(wSize, title);
 	mainWindow.PreviewWindow();
@@ -22,8 +23,6 @@ GatesEngine::Application::Application(const Math::Vector2& wSize, const char* ti
 	worldLightInfo.Create(&graphicsDevice,3);
 	worldLightInfo.Map({ Math::Vector4(0,1,1,0).Normalize(),Math::Vector4(1,0,0,1) });
 
-	mainCamera.SetGraphicsDevice(&graphicsDevice);
-	mainCamera.SetMainWindow(&mainWindow);
 
 	ResourceManager::Initialize(&graphicsDevice);
 }
@@ -56,7 +55,6 @@ bool GatesEngine::Application::Draw()
 void GatesEngine::Application::Run()
 {
 	input->Initialize();
-	mainCamera.Initialize();
 
 	if (!LoadContents())return;
 	if (!Initialize())return;
@@ -66,7 +64,7 @@ void GatesEngine::Application::Run()
 	{
 		if (timer.Update())continue;
 		input->Update();
-		mainCamera.Update();
+		mainCamera->Update();
 		if (!Update())break;
 		if(!Draw())break;
 		if (!mainWindow.ProcessMessage())break;
@@ -100,5 +98,5 @@ GatesEngine::Input* GatesEngine::Application::GetInput()
 
 GatesEngine::Camera* GatesEngine::Application::GetMainCamera()
 {
-	return &mainCamera;
+	return mainCamera;
 }

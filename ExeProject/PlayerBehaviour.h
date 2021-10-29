@@ -4,6 +4,7 @@
 #include "Header/Input/Input.h"
 #include "Header/Graphics/Camera.h"
 #include "PlayerBullet.h"
+#include "PlayerCamera.h"
 
 class PlayerBehaviour : public GatesEngine::Behaviour
 {
@@ -11,7 +12,7 @@ private:
 	GatesEngine::Math::Vector3 vel;
 	bool isJump;
 	GatesEngine::Input* input;
-	GatesEngine::Camera* mainCamera;
+	PlayerCamera* mainCamera;
 	float fuelValue;
 	const float MAX_FUEL;
 	const float CHARGE_FUEL;
@@ -26,7 +27,7 @@ public:
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
 	void OnCollision(GatesEngine::Collider* hitCollider) override;
-	void SetCamera(GatesEngine::Camera* pCamera);
-	GatesEngine::Camera* GetSetCamera();
+	void SetCamera(PlayerCamera* pCamera);
+	PlayerCamera* GetSetCamera();
 	void AddBullet(PlayerBullet* newBullet);
 };
