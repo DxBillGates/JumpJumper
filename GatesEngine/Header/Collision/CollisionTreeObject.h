@@ -1,8 +1,8 @@
 #pragma once
-#include "..\..\Header\Component\Collider.h"
 
 namespace GatesEngine
 {
+	class Collider;
 	class CollisionTreeCell;
 	class CollisionTreeObject
 	{

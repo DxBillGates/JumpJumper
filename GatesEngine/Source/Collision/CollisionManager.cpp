@@ -1,5 +1,6 @@
 #include "..\..\Header\Collision\CollisionManager.h"
 #include "..\..\Header\Collision\CollisionTreeObject.h"
+#include "..\..\Header\Collision\CollisionTreeManager.h"
 #include "..\..\Header\GameObject\GameObject.h"
 #include <assert.h>
 

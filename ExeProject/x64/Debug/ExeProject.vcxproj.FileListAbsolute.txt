@@ -47,4 +47,5 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Debug\MeshShadowVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PointPS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PointVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\testCS.cso
-C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PointGS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PostEffect_OutlinePS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PostEffect_OutlineVS.cso

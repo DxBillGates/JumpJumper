@@ -1,6 +1,7 @@
 #include "PlayerBulletBehaviour.h"
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
+#include "Header/Graphics/Manager/ResourceManager.h"
 
 PlayerBulletBehaviour::PlayerBulletBehaviour()
 {
@@ -35,9 +36,9 @@ void PlayerBulletBehaviour::OnDraw()
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	graphicsDevice->GetShaderManager()->GetShader("testMultiRTVShader")->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetMeshManager()->GetMesh("Sphere")->Draw();
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Sphere")->Draw();
 }
 
 void PlayerBulletBehaviour::OnCollision(GatesEngine::GameObject* other)

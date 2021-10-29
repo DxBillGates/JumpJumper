@@ -2,6 +2,7 @@
 #include "..\..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\..\Header\Graphics\COMRelease.h"
 #include "..\..\..\Header\Graphics\Graphics.h"
+#include "..\..\..\Header\Graphics\Manager\ResourceManager.h"
 #include <vector>
 
 GatesEngine::GPUParticleEmitter::GPUParticleEmitter()
@@ -37,12 +38,12 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 
 	GraphicsDevice* graphicsDevice = manager->GetDevice();
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
-	graphicsDevice->GetShaderManager()->GetShader("PointShader")->Set();
+	ResourceManager::GetShaderManager()->GetShader("PointShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ pos }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, camera->GetData());
 	graphicsDevice->GetCmdList()->SetGraphicsRootDescriptorTable(3, graphicsDevice->GetCBVSRVUAVHeap()->GetSRVHandleForSRV(srvValue));
-	graphicsDevice->GetMeshManager()->GetMesh("Point")->Draw(useParticleValue);
+	ResourceManager::GetMeshManager()->GetMesh("Point")->Draw(useParticleValue);
 
 	ID3D12DescriptorHeap* heap = manager->GetHeap();
 	computeShader->Set();

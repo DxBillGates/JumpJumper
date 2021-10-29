@@ -3,7 +3,7 @@
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/CBufferStruct.h"
 #include "Header/Component/Collider.h"
-
+#include "Header/Graphics/Manager/ResourceManager.h"
 
 BlockBehaviour::BlockBehaviour()
 	: hp(10)
@@ -19,8 +19,8 @@ BlockBehaviour::~BlockBehaviour()
 void BlockBehaviour::Start()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	mesh = graphicsDevice->GetMeshManager()->GetMesh("Cube");
-	shader = graphicsDevice->GetShaderManager()->GetShader("testMultiRTVShader");
+	mesh = GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube");
+	shader = GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader");
 }
 
 void BlockBehaviour::Update()

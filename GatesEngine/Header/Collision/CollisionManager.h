@@ -1,9 +1,12 @@
 #pragma once
-#include "CollisionTreeManager.h"
-#include "..\..\Header\Component\Collider.h"
+#include "..\Math\Vector3.h"
+#include <vector>
 
 namespace GatesEngine
 {
+	class CollisionTreeObject;
+	class CollisionTreeManager;
+	class Collider;
 	class CollisionManager
 	{
 	private:

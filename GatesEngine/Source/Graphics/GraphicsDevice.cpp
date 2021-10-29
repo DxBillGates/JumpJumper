@@ -2,9 +2,6 @@
 #include "..\..\Header\Graphics\COMRelease.h"
 #include "..\..\Header\Graphics\RenderTarget.h"
 #include "..\..\Header\Graphics\DescriptorHeapManager.h"
-#include "..\..\Header\Graphics\Manager\MeshManager.h"
-#include "..\..\Header\Graphics\Manager\ShaderManager.h"
-#include "..\..\Header\Graphics\Manager\TextureManager.h"
 #include "..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\Header\Graphics\CBufferAllocater.h"
 #include "..\..\Header\Graphics\DepthStencil.h"
@@ -33,10 +30,9 @@ GatesEngine::GraphicsDevice::GraphicsDevice()
 	, mFence(nullptr)
 	, mFenceValue(0)
 	, descriptorHeapManager(nullptr)
-	, shaderManager(nullptr)
-	, meshManager(nullptr)
 	, cbvSrvUavHeap(nullptr)
 	, cBufferAllocater(nullptr)
+	, mainCamera(nullptr)
 {
 #ifdef _DEBUG
 	HRESULT result;
@@ -74,9 +70,6 @@ GatesEngine::GraphicsDevice::~GraphicsDevice()
 	COM_RELEASE(mFence);
 
 	delete descriptorHeapManager;
-	delete shaderManager;
-	delete meshManager;
-	delete textureManager;
 	delete cBufferAllocater;
 	delete cbvSrvUavHeap;
 }
@@ -93,9 +86,6 @@ bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
 	CreateFence();
 
 	descriptorHeapManager = new DescriptorHeapManager(this, 640, 64);
-	shaderManager = new ShaderManager(this);
-	meshManager = new MeshManager(this);
-	textureManager = new TextureManager(this);
 	cbvSrvUavHeap = new CBVSRVUAVHeap();
 	cBufferAllocater = new CBufferAllocater();
 
@@ -387,21 +377,6 @@ ID3D12DescriptorHeap* GatesEngine::GraphicsDevice::GetRtvHeap()
 GatesEngine::DescriptorHeapManager* GatesEngine::GraphicsDevice::GetDescriptorHeapManager()
 {
 	return descriptorHeapManager;
-}
-
-GatesEngine::ShaderManager* GatesEngine::GraphicsDevice::GetShaderManager()
-{
-	return shaderManager;
-}
-
-GatesEngine::MeshManager* GatesEngine::GraphicsDevice::GetMeshManager()
-{
-	return meshManager;
-}
-
-GatesEngine::TextureManager* GatesEngine::GraphicsDevice::GetTextureManager()
-{
-	return textureManager;
 }
 
 GatesEngine::CBVSRVUAVHeap* GatesEngine::GraphicsDevice::GetCBVSRVUAVHeap()

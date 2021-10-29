@@ -43,6 +43,8 @@ GatesEngine::Pipeline::Pipeline(GraphicsDevice* graphicsDevice, RootSignature* r
 	, inputLayout(inputLayouts)
 	, blendMode(blendMode)
 	, topologyType(topologyType)
+	, solidPso(nullptr)
+	, wirePso(nullptr)
 {
 }
 GatesEngine::Pipeline::~Pipeline()

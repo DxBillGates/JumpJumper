@@ -1,4 +1,5 @@
 #include "..\..\Header\Collision\CollisionTreeManager.h"
+#include "..\..\Header\Collision\CollisionTreeCell.h"
 #include "..\..\Header\GameObject\GameObject.h"
 #include "..\..\Header\Collision\CollisionTreeObject.h"
 #include <assert.h>
@@ -80,7 +81,7 @@ GatesEngine::CollisionTreeManager::CollisionTreeManager()
 	, cellCount(0)
 	, minLevel(0)
 {
-	pows.resize(MAX_LEVEL + 2);
+	pows.resize((int64_t)MAX_LEVEL + 2);
 }
 
 GatesEngine::CollisionTreeManager::~CollisionTreeManager()

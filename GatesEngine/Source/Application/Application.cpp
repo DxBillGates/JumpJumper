@@ -1,4 +1,5 @@
 #include "..\..\Header\Application\Application.h"
+#include "..\..\Header\Graphics\Manager\ResourceManager.h"
 
 GatesEngine::Application::Application()
 	:Application({ 1920,1080 }, "GatesEngine")
@@ -23,10 +24,13 @@ GatesEngine::Application::Application(const Math::Vector2& wSize, const char* ti
 
 	mainCamera.SetGraphicsDevice(&graphicsDevice);
 	mainCamera.SetMainWindow(&mainWindow);
+
+	ResourceManager::Initialize(&graphicsDevice);
 }
 
 GatesEngine::Application::~Application()
 {
+	ResourceManager::Terminate();
 }
 
 bool GatesEngine::Application::LoadContents()

@@ -45,6 +45,7 @@
     <ClInclude Include="Header\Graphics\GraphicsDevice.h" />
     <ClInclude Include="Header\Graphics\Helper\MeshCreater.h" />
     <ClInclude Include="Header\Graphics\Manager\MeshManager.h" />
+    <ClInclude Include="Header\Graphics\Manager\ResourceManager.h" />
     <ClInclude Include="Header\Graphics\Manager\ShaderManager.h" />
     <ClInclude Include="Header\Graphics\Manager\TextureManager.h" />
     <ClInclude Include="Header\Graphics\Mesh.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="Source\Graphics\GraphicsDevice.cpp" />
     <ClCompile Include="Source\Graphics\Helper\MeshCreater.cpp" />
     <ClCompile Include="Source\Graphics\Manager\MeshManager.cpp" />
+    <ClCompile Include="Source\Graphics\Manager\ResourceManager.cpp" />
     <ClCompile Include="Source\Graphics\Manager\ShaderManager.cpp" />
     <ClCompile Include="Source\Graphics\Manager\TextureManager.cpp" />
     <ClCompile Include="Source\Graphics\Mesh.cpp" />

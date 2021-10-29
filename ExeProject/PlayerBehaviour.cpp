@@ -4,6 +4,7 @@
 #include "NormalEnemyBehaviour.h"
 #include "Header/Component/Collider.h"
 #include "Header/Math/Vector3.h"
+#include "Header/Graphics/Manager/ResourceManager.h"
 
 PlayerBehaviour::PlayerBehaviour()
 	: vel({})
@@ -108,9 +109,9 @@ void PlayerBehaviour::OnDraw()
 
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	graphicsDevice->GetShaderManager()->GetShader("testMultiRTVShader")->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetMeshManager()->GetMesh("Cube")->Draw();
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
 }
 
@@ -118,12 +119,12 @@ void PlayerBehaviour::OnLateDraw()
 {
 	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	graphicsDevice->GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1,0,0,1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	graphicsDevice->GetMeshManager()->GetMesh("2DPlane")->Draw();
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)

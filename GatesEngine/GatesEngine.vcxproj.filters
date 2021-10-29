@@ -252,6 +252,9 @@
     <ClInclude Include="Header\Util\Random.h">
       <Filter>Header\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Graphics\Manager\ResourceManager.h">
+      <Filter>Header\Graphics\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="Source\Util\Random.cpp">
       <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Manager\ResourceManager.cpp">
+      <Filter>Source\Graphics\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

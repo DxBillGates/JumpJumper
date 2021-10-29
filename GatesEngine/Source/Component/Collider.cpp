@@ -3,6 +3,7 @@
 #include "..\..\Header\Graphics\Graphics.h"
 #include "..\..\Header\Collision\CollisionTreeObject.h"
 #include "..\..\Header\Graphics\CBufferStruct.h"
+#include "..\..\Header\Graphics\Manager\ResourceManager.h"
 
 GatesEngine::Collider::Collider()
 	: type(ColliderType::CUBE)
@@ -25,8 +26,8 @@ GatesEngine::Collider::~Collider()
 void GatesEngine::Collider::Start()
 {
 	GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	mesh = (type == ColliderType::CUBE) ? graphicsDevice->GetMeshManager()->GetMesh("LineCube") : graphicsDevice->GetMeshManager()->GetMesh("LineCircle");
-	shader = graphicsDevice->GetShaderManager()->GetShader("Line");
+	mesh = (type == ColliderType::CUBE) ? ResourceManager::GetMeshManager()->GetMesh("LineCube") : ResourceManager::GetMeshManager()->GetMesh("LineCircle");
+	shader = ResourceManager::GetShaderManager()->GetShader("Line");
 	//transform = (*gameObject->GetTransform());
 }
 
