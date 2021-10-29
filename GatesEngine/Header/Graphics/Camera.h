@@ -7,6 +7,7 @@
 #include "CBufferStruct.h"
 namespace GatesEngine
 {
+	//基本となるカメラクラス、基本定点カメラにしか使えない
 	class Camera
 	{
 	protected:

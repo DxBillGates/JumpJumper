@@ -139,7 +139,7 @@ bool Game::LoadContents()
 
 
 	mainCamera = &camera;
-	mainCamera = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player")->GetComponent<PlayerBehaviour>()->GetSetCamera();
+	//mainCamera = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player")->GetComponent<PlayerBehaviour>()->GetSetCamera();
 	mainCamera->SetGraphicsDevice(&graphicsDevice);
 	mainCamera->SetMainWindow(&mainWindow);
 	graphicsDevice.SetMainCamera(mainCamera);

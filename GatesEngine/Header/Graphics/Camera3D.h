@@ -3,6 +3,7 @@
 
 namespace GatesEngine
 {
+	//3DCameraを想定としたクラス、Setメンバによるカメラ操作が可能
 	class Camera3D : public Camera
 	{
 	protected:

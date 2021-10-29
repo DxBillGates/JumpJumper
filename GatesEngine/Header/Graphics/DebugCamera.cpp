@@ -21,13 +21,14 @@ void GatesEngine::DebugCamera::Update()
 {
 	Math::Axis axis = rotation.GetAxis();
 
-	//マウスの移動量を取得
+	float wheelValue = input->GetMouse()->GetWheelValue();
+	Math::Vector3 moveVector;
 	if (input->GetMouse()->GetCheckHitButton(MouseButtons::RIGHT_CLICK))
 	{
 		if (input->GetIsFocus())
 		{
 			input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
-
+			//マウスの移動量を取得
 			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() / 500.0f;
 
 			pitch -= inputValue.y;
@@ -37,7 +38,6 @@ void GatesEngine::DebugCamera::Update()
 			if (pitch > minMaxPitch)pitch = minMaxPitch;
 			if (pitch < -minMaxPitch)pitch = -minMaxPitch;
 
-			Math::Vector3 moveVector;
 
 			if (input->GetKeyboard()->CheckHitKey(Keys::W))
 			{
@@ -63,11 +63,11 @@ void GatesEngine::DebugCamera::Update()
 			{
 				moveVector -= axis.y;
 			}
-
-			moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
-
-			moveVector = moveVector.Normalize();
-			position += moveVector * moveSpeed;
 		}
 	}
+	moveVector += wheelValue * axis.z.Normalize();
+	moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
+
+	moveVector = moveVector.Normalize();
+	position += moveVector * moveSpeed;
 }

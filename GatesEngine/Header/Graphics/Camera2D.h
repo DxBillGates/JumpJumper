@@ -3,6 +3,7 @@
 
 namespace GatesEngine
 {
+	//2D用のカメラを想定したCamera2Dクラス
 	class Camera2D : public Camera
 	{
 	protected:
