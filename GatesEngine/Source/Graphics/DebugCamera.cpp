@@ -1,5 +1,5 @@
-#include "DebugCamera.h"
-#include "..\Input\Input.h"
+#include "..\..\Header\Graphics\DebugCamera.h"
+#include "..\..\Header\Input\Input.h"
 
 GatesEngine::DebugCamera::DebugCamera()
 	: input(nullptr)

@@ -416,6 +416,8 @@
     <ClCompile Include="Source\Graphics\Camera3D.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Graphics\DebugCamera.cpp" />
+    <ClCompile Include="Source\Graphics\DebugCamera.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

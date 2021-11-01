@@ -80,7 +80,6 @@
     <ClInclude Include="Header\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Header\Graphics\DebugCamera.cpp" />
     <ClCompile Include="Source\Application\Application.cpp" />
     <ClCompile Include="Source\Collision\CollisionManager.cpp" />
     <ClCompile Include="Source\Collision\CollisionTreeCell.cpp" />
@@ -97,6 +96,7 @@
     <ClCompile Include="Source\Graphics\CBufferAllocater.cpp" />
     <ClCompile Include="Source\Graphics\CBVSRVUAVHeap.cpp" />
     <ClCompile Include="Source\Graphics\ComputePipeline.cpp" />
+    <ClCompile Include="Source\Graphics\DebugCamera.cpp" />
     <ClCompile Include="Source\Graphics\DepthStencil.cpp" />
     <ClCompile Include="Source\Graphics\DepthStencilTexture.cpp" />
     <ClCompile Include="Source\Graphics\DescriptorHeapManager.cpp" />
