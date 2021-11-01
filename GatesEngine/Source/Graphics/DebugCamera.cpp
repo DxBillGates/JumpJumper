@@ -65,9 +65,9 @@ void GatesEngine::DebugCamera::Update()
 			}
 		}
 	}
-	moveVector += wheelValue * axis.z.Normalize();
 	moveSpeed = input->GetKeyboard()->CheckHitKey(Keys::LSHIFT) ? 10.0f : 1.0f;
 
 	moveVector = moveVector.Normalize();
+	moveVector += wheelValue * axis.z.Normalize();
 	position += moveVector * moveSpeed;
 }
