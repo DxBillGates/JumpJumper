@@ -261,4 +261,3 @@ bool Game::Draw()
 
 	return true;
 }
-
