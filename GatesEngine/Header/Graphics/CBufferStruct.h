@@ -19,6 +19,7 @@ namespace GatesEngine
 		Math::Matrix4x4 viewMatrix;
 		Math::Matrix4x4 projMatrix;
 		Math::Vector4 cameraPos;
+		Math::Matrix4x4 billboard;
 	};
 
 	struct B3

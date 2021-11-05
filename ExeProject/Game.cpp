@@ -281,7 +281,7 @@ bool Game::Draw()
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 10 }) * Matrix4x4::Translate({ 0,0,1000 }));
 	mainCamera->Set(2);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()));
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()));
 	parlinNoiseTex.Set(5);
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 

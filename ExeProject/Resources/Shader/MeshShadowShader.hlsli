@@ -15,6 +15,7 @@ cbuffer CameraInfo : register(b2)
 	matrix viewMatrix;
 	matrix projMatrix;
 	float4 cameraPos;
+	matrix billboard;
 }
 
 cbuffer LightInfo : register(b3)

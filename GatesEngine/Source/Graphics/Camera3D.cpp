@@ -24,8 +24,7 @@ void GatesEngine::Camera3D::Set(int setDescriptorIndex)
 	direction = Math::Matrix4x4::Transform(direction, rotation);
 	Math::Axis axis = rotation.GetAxis();
 	viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
-
-	pGraphicsDevice->GetCBufferAllocater()->BindAndAttach(setDescriptorIndex, B2{ viewMatrix,projectionMatrix,position });
+	pGraphicsDevice->GetCBufferAllocater()->BindAndAttach(setDescriptorIndex, B2{ viewMatrix,projectionMatrix,position,Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw) });
 }
 
 void GatesEngine::Camera3D::SetPosition(const Math::Vector3& pos)
