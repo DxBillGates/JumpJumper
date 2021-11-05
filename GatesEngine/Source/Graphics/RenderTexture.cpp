@@ -34,10 +34,10 @@ void GatesEngine::RenderTexture::Create(GraphicsDevice* graphicsDevice, const Ga
 
 	D3D12_CLEAR_VALUE clearValue;
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	clearValue.Color[0] = color.x;
-	clearValue.Color[1] = color.y;
-	clearValue.Color[2] = color.z;
-	clearValue.Color[3] = color.w;
+	clearValue.Color[0] = (color.x > 1) ? color.x / 255.0f : color.x;
+	clearValue.Color[1] = (color.y > 1) ? color.y / 255.0f : color.y;
+	clearValue.Color[2] = (color.z > 1) ? color.z / 255.0f : color.z;
+	clearValue.Color[3] = (color.w > 1) ? color.w / 255.0f : color.w;
 
 	graphicsDevice->GetDevice()->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearValue, IID_PPV_ARGS(&texBuff));
 

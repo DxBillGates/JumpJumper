@@ -318,7 +318,13 @@ void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*
 		rects[i].right = (int)resDesc.Width;
 
 		//useRenderTarget‚ðcolor‚Å“h‚è‚Â‚Ô‚·
-		float rgba[] = { clearColor.x,clearColor.y,clearColor.z,clearColor.w };
+		Vector4 setColor = clearColor;
+		if (setColor.x > 1)setColor.x /= 255.0f;
+		if (setColor.y > 1)setColor.y /= 255.0f;
+		if (setColor.z > 1)setColor.z /= 255.0f;
+		if (setColor.w > 1)setColor.w /= 255.0f;
+
+		float rgba[] = { setColor.x,setColor.y,setColor.z,setColor.w };
 		mCmdList->ClearRenderTargetView(handles[i], rgba, 0, nullptr);
 	}
 

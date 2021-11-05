@@ -127,11 +127,11 @@ bool Game::LoadContents()
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
+	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
+	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
+	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
@@ -208,7 +208,7 @@ bool Game::Draw()
 	//sceneManager->Draw();
 
 
-	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f);
+	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	//深度テクスチャを利用してプレイヤー視点で描画
 	shaderManager->GetShader("testMultiRTVShader")->Set();
 
@@ -224,7 +224,7 @@ bool Game::Draw()
 
 
 	//グリッドの描画
-	graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255) / 255.0f, true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
 	graphicsDevice.GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	shaderManager->GetShader("Line")->Set();
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
