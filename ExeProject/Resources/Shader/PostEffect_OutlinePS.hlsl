@@ -5,14 +5,18 @@ Texture2D<float4> tex : register(t1);
 Texture2D<float4> lateDrawDepthTex : register(t2);
 Texture2D<float4> lateDrawTex : register(t3);
 Texture2D<float4> shadowTex : register(t4);
-SamplerState smp : register(s0);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
 
 float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 {
-	float4 texColor = tex.Sample(smp, input.uv);
-	float4 depthColor = pow(depthTex.Sample(smp, input.uv),512);
-	float4 lateDrawColor = lateDrawTex.Sample(smp, input.uv);
-	float4 lateDrawDepthColor = pow(lateDrawDepthTex.Sample(smp, input.uv),512);
+	float4 texColor = tex.Sample(clampPointSampler, input.uv);
+	float4 depthColor = pow(depthTex.Sample(clampPointSampler, input.uv),512);
+	float4 lateDrawColor = lateDrawTex.Sample(clampPointSampler, input.uv);
+	float4 lateDrawDepthColor = pow(lateDrawDepthTex.Sample(clampPointSampler, input.uv),512);
 
 	//サンプリング回数2以上でちゃんと表示される
 	//アウトライン工程
@@ -27,7 +31,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 		for (int j = 0; j < SAMPLING_VALUE; ++j)
 		{
 			float2 uv = offset + perPixel * float2(i, -j);
-			samplingColor += pow(depthTex.Sample(smp,uv), 512);
+			samplingColor += pow(depthTex.Sample(clampPointSampler,uv), 512);
 		}
 	}
 
@@ -58,7 +62,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 		for (int j = 0; j < BLUR_SAMPLING_VALUE; ++j)
 		{
 			float2 uv = offset + perPixel * 2 * float2(k, -j);
-			blurShadowTex += shadowTex.Sample(smp, uv);
+			blurShadowTex += shadowTex.Sample(clampPointSampler, uv);
 		}
 	}
 	blurShadowTex /= BLUR_SAMPLING_VALUE * BLUR_SAMPLING_VALUE;

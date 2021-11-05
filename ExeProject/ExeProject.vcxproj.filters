@@ -210,6 +210,12 @@
     <FxCompile Include="Resources\Shader\PostEffect_OutlinePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\CreateParlinNoiseTextureVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CreateParlinNoiseTexturePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\DefaultShader.hlsli">
@@ -243,6 +249,9 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Resources\Shader\PointShader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\CreateParlinNoiseTextureShader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>

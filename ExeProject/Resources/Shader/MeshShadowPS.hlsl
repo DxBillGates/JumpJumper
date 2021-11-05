@@ -1,7 +1,11 @@
 #include "MeshShadowShader.hlsli"
 
 Texture2D<float4> lightDepthTex : register(t0);
-SamplerState smp : register(s0);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
 
 float4 main(PSInput input) : SV_TARGET
 {
@@ -27,7 +31,7 @@ float4 main(PSInput input) : SV_TARGET
 	{
 		float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
 		float2 shadowUV = saturate((posFromLightVP.xy + float2(1, -1)) * float2(0.5, -0.5));
-		float4 depthFromLight = lightDepthTex.Sample(smp, shadowUV);
+		float4 depthFromLight = lightDepthTex.Sample(clampPointSampler, shadowUV);
 		shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.001f) ? 0.7f : 1;
 	}
 
