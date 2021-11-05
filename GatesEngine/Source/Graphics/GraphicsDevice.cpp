@@ -149,6 +149,7 @@ void GatesEngine::GraphicsDevice::ClearRenderTarget(const Vector4& color, bool c
 		if (setColor.x > 1)setColor.x /= 255.0f;
 		if (setColor.y > 1)setColor.y /= 255.0f;
 		if (setColor.z > 1)setColor.z /= 255.0f;
+		if (setColor.w > 1)setColor.w /= 255.0f;
 
 		float rgba[] = { setColor.x,setColor.y,setColor.z,setColor.w };
 		mCmdList->ClearRenderTargetView(rtvHandle, rgba, 0, nullptr);
@@ -214,6 +215,7 @@ void GatesEngine::GraphicsDevice::ClearRenderTargetOutDsv(const Vector4& color, 
 		if (setColor.x > 1)setColor.x /= 255.0f;
 		if (setColor.y > 1)setColor.y /= 255.0f;
 		if (setColor.z > 1)setColor.z /= 255.0f;
+		if (setColor.w > 1)setColor.w /= 255.0f;
 
 		float rgba[] = { setColor.x,setColor.y,setColor.z,setColor.w };
 		mCmdList->ClearRenderTargetView(rtvHandle, rgba, 0, nullptr);
