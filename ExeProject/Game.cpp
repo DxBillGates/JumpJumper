@@ -29,7 +29,7 @@ bool Game::LoadContents()
 
 	//シェーダーのロード＆設定
 	auto* testTexShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Texture")), "Texture");
-	testTexShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
+	testTexShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
 
 	auto* testLineShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Line")), "Line");
 	//testLineShader->SetInputLayout({ InputLayout::POSITION,InputLayout::COLOR });
@@ -73,6 +73,12 @@ bool Game::LoadContents()
 
 	auto* outlineShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
 	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
+
+	auto* createParlinNoiseShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"CreateParlinNoiseTexture")), "CreateParlinNoiseTextureShader");
+	createParlinNoiseShader->SetInputLayout({ InputLayout::POSITION,InputLayout::TEXCOORD });
+	createParlinNoiseShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV });
+	createParlinNoiseShader->SetIsUseDepth(false);
+	createParlinNoiseShader->CreatePipeline();
 
 	//板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
@@ -132,6 +138,7 @@ bool Game::LoadContents()
 	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
 	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	parlinNoiseTex.Create(&graphicsDevice, { 1920,1080 });
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
@@ -153,6 +160,19 @@ bool Game::Initialize()
 	gameObjectManager.Start();
 	timer.SetFrameRate(144);
 	timer.SetIsShow(false);
+
+
+	graphicsDevice.GetCBufferAllocater()->ResetCurrentUseNumber();
+	graphicsDevice.GetCBVSRVUAVHeap()->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
+	graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
+	using namespace GatesEngine::Math;
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 10 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	graphicsDevice.ScreenFlip();
+
 	return true;
 }
 
@@ -256,6 +276,14 @@ bool Game::Draw()
 	lateDrawResultRenderTex.Set(6);
 	resultRenderShadowTex.Set(7);
 	meshManager->GetMesh("2DPlane")->Draw();
+
+	using namespace GatesEngine::Math;
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 10 }) * Matrix4x4::Translate({ 0,0,1000 }));
+	mainCamera->Set(2);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()));
+	parlinNoiseTex.Set(5);
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 
 	if (!graphicsDevice.ScreenFlip())return false;
 

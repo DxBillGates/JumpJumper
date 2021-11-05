@@ -14,6 +14,7 @@ GatesEngine::Util::Timer::Timer()
 	, endBuffer({})
 	, setFrameRate(0)
 	, isSetFrameRate(false)
+	, elapsedApplicationTime(0)
 {
 	QueryPerformanceFrequency(&timeFreq);
 	QueryPerformanceCounter(&timeStart);
@@ -31,6 +32,11 @@ void GatesEngine::Util::Timer::SetIsShow(bool b)
 float GatesEngine::Util::Timer::GetElapsedTime()
 {
 	return (float)frameTime;
+}
+
+float GatesEngine::Util::Timer::GetElapsedApplicationTime()
+{
+	return elapsedApplicationTime;
 }
 
 void GatesEngine::Util::Timer::Start()
@@ -65,6 +71,7 @@ bool GatesEngine::Util::Timer::Update()
 	}
 	timeStart = timeEnd;
 	fps = 1.0f / frameTime;
+	elapsedApplicationTime += (float)frameTime;
 #ifdef _DEBUG
 	if (isShow)printf("%3.3ffps\n", fps);
 #else

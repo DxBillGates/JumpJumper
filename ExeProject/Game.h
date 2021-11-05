@@ -22,6 +22,8 @@ private:
 
 	GatesEngine::RenderTexture resultRenderShadowTex;
 
+	GatesEngine::RenderTexture parlinNoiseTex;
+
 	GatesEngine::DebugCamera camera;
 public:
 	Game();
