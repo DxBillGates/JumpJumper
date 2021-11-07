@@ -7,7 +7,6 @@ cbuffer Time : register(b4)
 }
 
 Texture2D<float4> tex : register(t0);
-//Texture2D<float> depthTex : register(t1);
 
 SamplerState wrapPointSampler : register(s0);
 SamplerState clampPointSampler : register(s1);
@@ -18,8 +17,5 @@ float4 main(DefaultVSOutput vsOutput) : SV_TARGET
 {
 	float2 perPixel = float2(1.0f /1920.0f,1.0f/1080.0f);
 	float4 texColor = tex.Sample(wrapPointSampler,vsOutput.uv + time.xy);
-	//float dep = pow(depthTex.Sample(smp,vsOutput.uv),20);
-	//dep = 1 - dep;
 	return texColor;
-	//return float4(dep,dep,dep,1);
 }

@@ -74,7 +74,7 @@ void GatesEngine::MeshCreater::CreateGrid(Math::Vector2 size, float spaceInterva
 	for (int w = 0; w <= width; ++w)
 	{
 		float x = w * spaceInterval;
-		GatesEngine::Math::Vector4 color = { 1,1,1,0.8f };
+		GatesEngine::Math::Vector4 color = { 1,1,1,1 };
 		if (offset.x + x == 0)color = { 0,0,1,1 };
 		vertices->push_back({ Math::Vector3(offset.x + x,0,offset.y),color });
 		vertices->push_back({ Math::Vector3(offset.x + x,0,maxOffset.y),color });
@@ -83,7 +83,7 @@ void GatesEngine::MeshCreater::CreateGrid(Math::Vector2 size, float spaceInterva
 	for (int d = 0; d <= depth; ++d)
 	{
 		float z = d * spaceInterval;
-		GatesEngine::Math::Vector4 color = { 1,1,1,0.8f };
+		GatesEngine::Math::Vector4 color = { 1,1,1,1 };
 		if (offset.y + z == 0)color = { 1,0,0,1 };
 		vertices->push_back({ Math::Vector3(offset.x,0   ,offset.y + z),color });
 		vertices->push_back({ Math::Vector3(maxOffset.x,0,offset.y + z),color });
