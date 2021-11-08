@@ -13,10 +13,10 @@ cbuffer ScreenInfo : register(b2)
 	matrix projMatrix;
 }
 
-//cbuffer NoiseParameter : register(b3)
-//{
-//	float4 value1;
-//};
+cbuffer TimeParameter : register(b3)
+{
+	float4 time;
+};
 
 struct VSInput
 {

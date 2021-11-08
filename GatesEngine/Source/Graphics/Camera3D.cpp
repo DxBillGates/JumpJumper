@@ -17,7 +17,7 @@ GatesEngine::Camera3D::~Camera3D()
 
 void GatesEngine::Camera3D::Set(int setDescriptorIndex)
 {
-	projectionMatrix = Math::Matrix4x4::GetPerspectiveMatrix(90, pMainWindow->GetWindowAspect());
+	projectionMatrix = Math::Matrix4x4::GetPerspectiveMatrix(90, pMainWindow->GetWindowAspect(),1,20000);
 
 	direction = Math::Vector3(0, 0, 1);
 	rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);

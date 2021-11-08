@@ -58,7 +58,6 @@ void GatesEngine::Collider::OnLateDraw()
 
 	GatesEngine::Math::Matrix4x4 matrix = Math::Matrix4x4::Identity();
 
-	graphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	shader->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
 	graphicsDevice->GetMainCamera()->Set(2);

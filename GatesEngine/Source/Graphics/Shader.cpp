@@ -227,4 +227,18 @@ void GatesEngine::Shader::Set(bool wireFrame)
 	}
 	//ルートシグネチャのセット
 	pGraphicsDevice->GetCmdList()->SetGraphicsRootSignature(rootSignature->Get());
+
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = pipeline->GetTopologyType();
+	switch (topologyType)
+	{
+	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT:
+		pGraphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+		break;
+	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE:
+		pGraphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+		break;
+	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
+		pGraphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		break;
+	}
 }

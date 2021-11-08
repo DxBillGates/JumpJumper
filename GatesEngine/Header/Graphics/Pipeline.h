@@ -51,5 +51,6 @@ namespace GatesEngine
 
 		ID3D12PipelineState* GetSolidPso();
 		ID3D12PipelineState* GetWirePso();
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE GetTopologyType();
 	};
 }

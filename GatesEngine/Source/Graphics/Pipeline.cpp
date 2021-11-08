@@ -140,3 +140,8 @@ ID3D12PipelineState* GatesEngine::Pipeline::GetWirePso()
 	return wirePso;
 }
 
+D3D12_PRIMITIVE_TOPOLOGY_TYPE GatesEngine::Pipeline::GetTopologyType()
+{
+	return topologyType;
+}
+
