@@ -8,8 +8,10 @@ GatesEngine::Shader::Shader()
 	, pipeline(nullptr)
 	, rootSignature(nullptr)
 	, vsBlob(nullptr)
-	, psBlob(nullptr)
+	, hsBlob(nullptr)
+	, dsBlob(nullptr)
 	, gsBlob(nullptr)
+	, psBlob(nullptr)
 	, isCreate(false)
 	, isCreatePipelineOrRootSignature(false)
 	, blendMode(BlendMode::BLENDMODE_ADD)
@@ -89,6 +91,12 @@ bool GatesEngine::Shader::LoadShaderFile(const std::wstring& fileName)
 
 	fullFilename = firstPass + fileName + L"GS" + format;
 	result = D3DCompileFromFile(fullFilename.c_str(), nullptr, include, "main", "gs_5_0", flag, 0, &gsBlob, &errorBlob);
+
+	fullFilename = firstPass + fileName + L"DS" + format;
+	result = D3DCompileFromFile(fullFilename.c_str(), nullptr, include, "main", "ds_5_0", flag, 0, &dsBlob, &errorBlob);
+
+	fullFilename = firstPass + fileName + L"HS" + format;
+	result = D3DCompileFromFile(fullFilename.c_str(), nullptr, include, "main", "hs_5_0", flag, 0, &hsBlob, &errorBlob);
 	COM_RELEASE(errorBlob);
 
 	isLoadShaderFile = (!vsBlob || !psBlob) ? false : true;
@@ -163,11 +171,11 @@ bool GatesEngine::Shader::Check()
 		printf("インプットレイアウトがセットされていません\n");
 		isTrueReturn = false;
 	}
-	if (!isSetRootParamerters)
-	{
-		printf("ルートパラメータがセットされていません\n");
-		isTrueReturn = false;
-	}
+	//if (!isSetRootParamerters)
+	//{
+	//	printf("ルートパラメータがセットされていません\n");
+	//	isTrueReturn = false;
+	//}
 
 	if (!isTrueReturn)
 	{
@@ -208,7 +216,7 @@ void GatesEngine::Shader::CreatePipeline()
 	rootSignature->Create();
 
 	pipeline = new Pipeline(pGraphicsDevice, rootSignature, inputLayouts, blendMode, topologyType);
-	pipeline->Create({ vsBlob,psBlob,gsBlob }, depthFlag, rtvCount);
+	pipeline->Create({ vsBlob,psBlob,gsBlob,hsBlob,dsBlob }, depthFlag, rtvCount);
 
 	isCreate = true;
 	isCreatePipelineOrRootSignature = true;
@@ -239,6 +247,9 @@ void GatesEngine::Shader::Set(bool wireFrame)
 		break;
 	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
 		pGraphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		break;
+	case D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH:
+		pGraphicsDevice->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 		break;
 	}
 }

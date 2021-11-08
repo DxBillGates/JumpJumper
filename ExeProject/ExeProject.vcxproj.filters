@@ -24,6 +24,9 @@
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{539a8ab5-7ead-4c57-9fcc-637463519b7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\TestTesselation">
+      <UniqueIdentifier>{536091cd-653a-490d-a9d3-5f7baeab9a1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -216,6 +219,18 @@
     <FxCompile Include="Resources\Shader\CreateParlinNoiseTexturePS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\TestTesselationVS.hlsl">
+      <Filter>シェーダー\TestTesselation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TestTesselationPS.hlsl">
+      <Filter>シェーダー\TestTesselation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TestTesselationDS.hlsl">
+      <Filter>シェーダー\TestTesselation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TestTesselationHS.hlsl">
+      <Filter>シェーダー\TestTesselation</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\DefaultShader.hlsli">
@@ -253,6 +268,9 @@
     </None>
     <None Include="Resources\Shader\CreateParlinNoiseTextureShader.hlsli">
       <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Resources\Shader\TestTesselationShader.hlsli">
+      <Filter>シェーダー\TestTesselation</Filter>
     </None>
   </ItemGroup>
 </Project>

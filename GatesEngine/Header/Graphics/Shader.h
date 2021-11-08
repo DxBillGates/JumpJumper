@@ -15,8 +15,10 @@ namespace GatesEngine
 		RootSignature* rootSignature;
 
 		ID3DBlob* vsBlob;
-		ID3DBlob* psBlob;
+		ID3DBlob* hsBlob;
+		ID3DBlob* dsBlob;
 		ID3DBlob* gsBlob;
+		ID3DBlob* psBlob;
 
 		bool isCreate;
 		bool isCreatePipelineOrRootSignature;

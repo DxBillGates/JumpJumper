@@ -80,6 +80,14 @@ bool Game::LoadContents()
 	createParlinNoiseShader->SetIsUseDepth(false);
 	createParlinNoiseShader->CreatePipeline();
 
+	auto* testTesselationShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"TestTesselation")), "TestTesselationShader");
+	testTesselationShader->SetInputLayout({ InputLayout::POSITION,InputLayout::TEXCOORD,InputLayout::NORMAL });
+	testTesselationShader->SetIsUseDepth(true);
+	testTesselationShader->SetPrimitiveTopology(PrimiriveTopologyType::PATCH);
+	testTesselationShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
+	testTesselationShader->CreatePipeline();
+
+
 	//板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
 	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
@@ -138,11 +146,11 @@ bool Game::LoadContents()
 
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1,1,1, 255));
 	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
 	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1,1,1, 255));
 	parlinNoiseTex.Create(&graphicsDevice, { 1920,1080 });
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
@@ -215,7 +223,7 @@ bool Game::Draw()
 	sceneManager->Draw();
 
 
-	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1,1,1, 255));
 
 	using namespace GatesEngine::Math;
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
@@ -234,7 +242,21 @@ bool Game::Draw()
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
 	shadowDepthTex.Set(5);
 
+	shaderManager->GetShader("TestTesselationShader")->Set(false);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10 }) * GatesEngine::Math::Matrix4x4::Translate({ 0,500,1000 }));
+	mainCamera->Set(2);
+	static float a = 0;
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D0))
+	{
+		++a;
+	}
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4,Vector4(a,0,0,0));
+	parlinNoiseTex.Set(5);
+	meshManager->GetMesh("Plane")->Draw();
+
 	//シーンの描画
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
+	shadowDepthTex.Set(5);
 	sceneManager->Draw();
 
 	//グリッドの描画

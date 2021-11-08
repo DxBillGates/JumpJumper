@@ -92,6 +92,17 @@ void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag,
 		psoDesc.GS.BytecodeLength = blobs[2]->GetBufferSize();
 		psoDesc.GS.pShaderBytecode = blobs[2]->GetBufferPointer();
 	}
+	if (blobs[3])
+	{
+		psoDesc.HS.BytecodeLength = blobs[3]->GetBufferSize();
+		psoDesc.HS.pShaderBytecode = blobs[3]->GetBufferPointer();
+	}
+	if (blobs[4])
+	{
+		psoDesc.DS.BytecodeLength = blobs[4]->GetBufferSize();
+		psoDesc.DS.pShaderBytecode = blobs[4]->GetBufferPointer();
+	}
+
 	psoDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 	psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
@@ -112,7 +123,7 @@ void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag,
 	psoDesc.BlendState.RenderTarget[0] = blendDesc;
 	psoDesc.InputLayout.pInputElementDescs = inputDesc;
 	psoDesc.InputLayout.NumElements = (int)inputLayout.size();
-	psoDesc.PrimitiveTopologyType = topologyType;
+	psoDesc.PrimitiveTopologyType = (blobs[3] && blobs[4]) ? D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH : topologyType;
 	psoDesc.NumRenderTargets = rtvCount;
 	//psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 

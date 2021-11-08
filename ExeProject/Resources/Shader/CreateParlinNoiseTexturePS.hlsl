@@ -77,7 +77,7 @@ static const float clouddark = 0.5;
 static const float cloudlight = 0.3;
 static const float cloudcover = 0.2;
 static const float cloudalpha = -1.0f;
-static const float skytint = 10.0;
+static const float skytint = 0.5;
 static const float3 skycolour1 = float3(0.2, 0.4, 0.6);
 static const float3 skycolour2 = float3(0.4, 0.7, 1.0);
 static const float2x2 m = float2x2(1.6, 1.2, -1.2, 1.6);
@@ -160,7 +160,7 @@ float4 main(VSOutput input) : SV_TARGET
 	uv *= cloudscale * 2.0f;
 	uv -= q - iTime.x;
 	weight = 0.4f;
-	for (int i = 0; i < SAMPLING_VALUE; ++i)
+	for (int i = 0; i < SAMPLING_VALUE-1; ++i)
 	{
 		c += abs(weight * noise(uv));
 		uv = mul(m, uv) + iTime.x;
@@ -173,7 +173,7 @@ float4 main(VSOutput input) : SV_TARGET
 	uv *= cloudscale * 3.0f;
 	uv -= q - iTime.x;
 	weight = 0.4f;
-	for (int i = 0; i < SAMPLING_VALUE; ++i)
+	for (int i = 0; i < SAMPLING_VALUE-1; ++i)
 	{
 		c1 += abs(weight * noise(uv));
 		uv = mul(m, uv) + iTime.x;
@@ -183,16 +183,15 @@ float4 main(VSOutput input) : SV_TARGET
 	c += c1;
 	//float a = r * f * c * c1;
 
-	float a = length(float2(0.5,0.5) - input.uv);
-	float3 skycolor1 = lerp(skycolour1 * a, skycolour2 * a, input.uv.x);
-	float3 skycolor2 = lerp(skycolour1 * a, skycolour2 * a, input.uv.y);
-	float3 skycolor = lerp(skycolor1, skycolor2, 0.5f);
+	//float a = length(float2(0.5,0.5) - input.uv);
+	//float3 skycolor1 = lerp(skycolour1, skycolour2, input.uv.x);
+	//float3 skycolor2 = lerp(skycolour1, skycolour2, input.uv.y);
+	float3 skycolor = lerp(skycolour2, skycolour1, input.uv.y);
 	float3 cloudcolor = float3(1.1f, 1.1f, 0.9f) * clamp((clouddark + cloudlight * c), 0.0f, 1.0f);
 	f = cloudcover + cloudalpha * f * r;
 
 	float3 result = lerp(skycolor,clamp(skytint * skycolor + cloudcolor, 0.0f, 1.0f), clamp(f + c, 0.0f, 1.0f));
-	//float3 cloudcolor = float3(1.1f, 1.1f, 0.9f) * clamp(skytint * skycolor + cloudcolor, 0.0f, 1.0f), clamp(f + c, 0.0f, 1.0f));
-
+	float3 heightmap = lerp(float3(0,0,0), clamp(skytint * skycolor + cloudcolor, 0.0f, 1.0f), clamp(f + c, 0.0f, 1.0f));
 
 	return float4(result,1);
 }
