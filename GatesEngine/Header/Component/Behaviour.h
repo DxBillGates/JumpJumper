@@ -7,7 +7,14 @@ namespace GatesEngine
 	{
 	private:
 	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		Behaviour();
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
 		virtual ~Behaviour();
 	};
 }

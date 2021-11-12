@@ -7,6 +7,121 @@
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Graphics/Camera2D.h"
 
+void PlayerBehaviour::SetVelocity()
+{
+	const float G = 0.25f;
+	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3(10, 10, 10);
+	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10, -50, -10);
+
+	jetVel -= GatesEngine::Math::Vector3(0, G, 0);
+
+	// 各ベクトルの値を補正
+	moveVel = GatesEngine::Math::Vector3::Max(moveVel, MAX_VELOCITY);
+	moveVel = GatesEngine::Math::Vector3::Min(moveVel, MIN_VELOCITY);
+	jetVel = GatesEngine::Math::Vector3::Max(jetVel, MAX_VELOCITY);
+	jetVel = GatesEngine::Math::Vector3::Min(jetVel, MIN_VELOCITY);
+
+	vel = moveVel + jetVel;
+}
+
+void PlayerBehaviour::SetPosition()
+{
+	gameObject->GetTransform()->position += vel;
+}
+
+void PlayerBehaviour::SetRotation()
+{
+	GatesEngine::Math::Vector3 a = mainCamera->GetRotation().GetAxis().z;
+	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
+}
+
+void PlayerBehaviour::UseJet()
+{
+	// 1フレームに何ピクセル移動するか
+	const float JET_FACTOR = 1;
+	// 1フレームにfuelValueをどれだけ使用するか
+	const float USE_FUEL_VALUE = 10;
+	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
+	if (keyboard->CheckHitKey(GatesEngine::Keys::SPACE))
+	{
+		if (fuelValue > 0)
+		{
+			fuelValue -= USE_FUEL_VALUE;
+			jetVel.y += JET_FACTOR;
+		}
+	}
+}
+
+void PlayerBehaviour::Move()
+{
+	const float G = 0.25f;
+	const float MOVE_SPEED = 5;
+	const float DAMPING_FACTOR = 1;
+
+	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
+	GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
+	GatesEngine::Math::Vector3 moveVector;
+
+	// 移動処理
+	bool isInputMoveKey = false;
+	if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	{
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
+		{
+			isInputMoveKey = true;
+			moveVector += playerAxis.z;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
+		{
+			isInputMoveKey = true;
+			moveVector -= playerAxis.z;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
+		{
+			isInputMoveKey = true;
+			moveVector += playerAxis.x;
+		}
+		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
+		{
+			isInputMoveKey = true;
+			moveVector -= playerAxis.x;
+		}
+	}
+
+	moveVel = moveVector.Normalize() * MOVE_SPEED;
+
+	UseJet();
+	SetVelocity();
+	SetRotation();
+	SetPosition();
+}
+
+void PlayerBehaviour::Attack()
+{
+	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
+
+	bool isInputLeftClick = (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK)) ? true : false;
+	bool isShot = false;
+
+	// 使っていない弾を走査したのち移動ベクトルを設定する
+	// その後の走査はプレイヤーの位置にセットする
+	for (int i = 0; i < (int)bullets.size(); ++i)
+	{
+		if (!isShot && isInputLeftClick)
+		{
+			if (!(*bullets[i]).IsUse())
+			{
+				(*bullets[i]).Shot(cameraAxis.z.Normalize());
+				isShot = true;
+			}
+		}
+		else
+		{
+			(*bullets[i]).SetPos(gameObject->GetTransform()->position);
+		}
+	}
+}
+
 PlayerBehaviour::PlayerBehaviour()
 	: vel({})
 	, isJump(false)
@@ -34,79 +149,12 @@ void PlayerBehaviour::Start()
 
 void PlayerBehaviour::Update()
 {
-	vel.y -= 0.25f;
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::SPACE))
-	{
-		if (fuelValue > 0)
-		{
-			vel.y += 1;
-			fuelValue -= CHARGE_FUEL;
-		}
-	}
+	Move();
+	Attack();
 
-	const float MAX_VEL_Y = 10;
-	if (vel.y >= MAX_VEL_Y)vel.y = MAX_VEL_Y;
-	//移動処理
-	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
-	GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
-
-	if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
-	{
-		GatesEngine::Math::Vector3 moveVector = {};
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
-		{
-			moveVector += playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
-		{
-			moveVector -= playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
-		{
-			moveVector += playerAxis.x;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
-		{
-			moveVector -= playerAxis.x;
-		}
-
-		const float SPEED = 5;
-		gameObject->GetTransform()->position += moveVector.Normalize() * SPEED;
-	}
-
-	if (vel.y <= -50)vel.y = -50;
-	gameObject->GetTransform()->position += vel;
-
-	GatesEngine::Math::Vector3 a = mainCamera->GetRotation().GetAxis().z;
-	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
-
+	// カメラのポジション更新
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-
-	//攻撃
-	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK))
-	{
-		for (int i = 0; i < (int)bullets.size(); ++i)
-		{
-			if (!(*bullets[i]).IsUse())
-			{
-				(*bullets[i]).Shot(cameraAxis.z.Normalize());
-				break;
-			}
-		}
-	}
-	for (int i = 0; i < (int)bullets.size(); ++i)
-	{
-		if (!(*bullets[i]).IsUse())
-		{
-			(*bullets[i]).SetPos(gameObject->GetTransform()->position);
-		}
-	}
-
-	//カメラの処理
-	GatesEngine::Math::Vector3 oldCameraPos = mainCamera->GetPosition();
-	GatesEngine::Math::Vector3 back = -gameObject->GetTransform()->GetForward();
 	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) });
-	GatesEngine::Math::Vector3 newCameraPos = mainCamera->GetPosition();
 }
 
 void PlayerBehaviour::OnDraw()
@@ -150,7 +198,7 @@ void PlayerBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
 		GatesEngine::Math::Vector3 colliderSize = gameObject->GetCollider()->GetTransform()->scale;
 
 		gameObject->GetTransform()->position.y = otherColliderPos.y + (otherGameObjectSize.y * otherColliderSize.y / 2 + gameObjectSize.y * colliderSize.y / 2);
-		vel = {};
+		jetVel = {};
 		isJump = false;
 		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
 		fuelValue += CHARGE_FUEL;

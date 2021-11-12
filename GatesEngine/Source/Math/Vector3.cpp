@@ -61,6 +61,24 @@ GatesEngine::Math::Vector3 GatesEngine::Math::Vector3::Lerp(const Vector3 & s, c
 	return s * (1.0f - t) + e * t;
 }
 
+GatesEngine::Math::Vector3 GatesEngine::Math::Vector3::Max(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 result;
+	result.x = (v1.x >= v2.x) ? v2.x : v1.x;
+	result.y = (v1.y >= v2.y) ? v2.y : v1.y;
+	result.z = (v1.z >= v2.z) ? v2.z : v1.z;
+	return result;
+}
+
+GatesEngine::Math::Vector3 GatesEngine::Math::Vector3::Min(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 result;
+	result.x = (v1.x <= v2.x) ? v2.x : v1.x;
+	result.y = (v1.y <= v2.y) ? v2.y : v1.y;
+	result.z = (v1.z <= v2.z) ? v2.z : v1.z;
+	return result;
+}
+
 GatesEngine::Math::Vector3 GatesEngine::Math::Vector3::operator+()
 {
 	return *this;
