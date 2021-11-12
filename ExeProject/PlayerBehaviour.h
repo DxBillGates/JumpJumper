@@ -10,6 +10,9 @@ class PlayerBehaviour : public GatesEngine::Behaviour
 {
 private:
 	GatesEngine::Math::Vector3 vel;
+	GatesEngine::Math::Vector3 moveVel;
+	GatesEngine::Math::Vector3 jetVel;
+	GatesEngine::Math::Vector3 gVel;
 	bool isJump;
 	GatesEngine::Input* input;
 	PlayerCamera* mainCamera;
@@ -18,6 +21,36 @@ private:
 	const float CHARGE_FUEL;
 
 	std::vector<PlayerBullet*> bullets;
+private:
+	/// <summary>
+	/// moveVelとjetVelの補正とvelに対してセットする関数
+	/// </summary>
+	void SetVelocity();
+
+	/// <summary>
+	/// 補正したvelをポジションに加算する関数
+	/// </summary>
+	void SetPosition();
+
+	/// <summary>
+	/// mainCameraの視点をプレイヤーの回転行列に反映する関数
+	/// </summary>
+	void SetRotation();
+
+	/// <summary>
+	/// fuelValueを使用してjetVelに対してVector3(0,const float,0)を加算する関数
+	/// </summary>
+	void UseJet();
+
+	/// <summary>
+	/// 上記のprivate関数を使って移動を行う関数
+	/// </summary>
+	void Move();
+
+	/// <summary>
+	/// 攻撃をする関数
+	/// </summary>
+	void Attack();
 public:
 	PlayerBehaviour();
 	~PlayerBehaviour();

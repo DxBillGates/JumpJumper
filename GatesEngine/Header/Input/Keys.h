@@ -1,6 +1,9 @@
 #pragma once
 namespace GatesEngine
 {
+	/// <summary>
+	/// ÉLÅ[ÇÃEnum
+	/// </summary>
 	enum class Keys
 	{
 		ESC = 0x01,

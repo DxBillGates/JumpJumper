@@ -51,3 +51,7 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PostEffect_OutlinePS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\PostEffect_OutlineVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\CreateParlinNoiseTexturePS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Debug\CreateParlinNoiseTextureVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\TestTesselationDS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\TestTesselationHS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\TestTesselationPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Debug\TestTesselationVS.cso
