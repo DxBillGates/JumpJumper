@@ -78,8 +78,8 @@ static const float cloudlight = 0.3;
 static const float cloudcover = 0.2;
 static const float cloudalpha = -1.0f;
 static const float skytint = 0.5;
-static const float3 skycolour1 = float3(0.2, 0.4, 0.6);
-static const float3 skycolour2 = float3(0.4, 0.7, 1.0);
+static const float3 skycolour1 = float3(141, 219, 228)/255;
+static const float3 skycolour2 = float3(141, 219, 228) / 255;
 static const float2x2 m = float2x2(1.6, 1.2, -1.2, 1.6);
 
 float2 hash(float2 p)
@@ -117,7 +117,7 @@ float circle(float2 p, float r)
 	return length(p) - r;
 }
 
-float4 main(VSOutput input) : SV_TARGET
+PSOutput main(VSOutput input)
 {
 	const int SAMPLING_VALUE = 6;
 	//float r = Random(input.uv);
@@ -181,11 +181,7 @@ float4 main(VSOutput input) : SV_TARGET
 	}
 
 	c += c1;
-	//float a = r * f * c * c1;
 
-	//float a = length(float2(0.5,0.5) - input.uv);
-	//float3 skycolor1 = lerp(skycolour1, skycolour2, input.uv.x);
-	//float3 skycolor2 = lerp(skycolour1, skycolour2, input.uv.y);
 	float3 skycolor = lerp(skycolour2, skycolour1, input.uv.y);
 	float3 cloudcolor = float3(1.1f, 1.1f, 0.9f) * clamp((clouddark + cloudlight * c), 0.0f, 1.0f);
 	f = cloudcover + cloudalpha * f * r;
@@ -193,5 +189,9 @@ float4 main(VSOutput input) : SV_TARGET
 	float3 result = lerp(skycolor,clamp(skytint * skycolor + cloudcolor, 0.0f, 1.0f), clamp(f + c, 0.0f, 1.0f));
 	float3 heightmap = lerp(float3(0,0,0), clamp(skytint * skycolor + cloudcolor, 0.0f, 1.0f), clamp(f + c, 0.0f, 1.0f));
 
-	return float4(result,1);
+	PSOutput output;
+	output.color = float4(result, 1);
+	output.heightMap = float4(heightmap, 1);
+
+	return output;
 }

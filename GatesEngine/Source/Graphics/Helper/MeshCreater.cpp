@@ -41,6 +41,45 @@ void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMa
 	indices->push_back(0);
 }
 
+void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMax, float divide, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
+{
+	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
+
+	const int point = 12;
+	const float eage = 100.0f;
+	const float uvsize = 1.0f;
+	for (int y = 0; y < point + 1; y++)
+	{
+		for (int x = 0; x < point + 1; x++)
+		{
+			VertexInfo::Vertex_UV_Normal v;
+			v.point = Math::Vector3(size.x * x / point, size.y * y / point, 0.0f);
+			v.uv = uvsize * Math::Vector2(v.point.x / size.x, 1.0f - (v.point.y / size.y));
+			v.normal = Math::Vector3(0, 0, -1);
+			vertices->emplace_back(v);
+		}
+	}
+	for (auto& v : (*vertices))
+	{
+		v.point.x -= size.x * 0.5f;
+		v.point.y -= size.y * 0.5f;
+	}
+	for (int y = 0; y < point; y++)
+	{
+		for (int x = 0; x < point; x++)
+		{
+			const unsigned short rows = point + 1;
+			unsigned short v0 = x + rows * y;
+			unsigned short v1 = x + 1 + rows * y;
+			indices->emplace_back(v0 + rows);
+			indices->emplace_back(v1 + rows);
+			indices->emplace_back(v0);
+			indices->emplace_back(v1);
+		}
+	}
+}
+
 void GatesEngine::MeshCreater::Create2DQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
@@ -502,6 +541,79 @@ void GatesEngine::MeshCreater::LoadModelData(const std::string& filename, MeshDa
 				indices->push_back(startIndex + 2);
 				startIndex += vCount;
 			}
+		}
+	}
+	file.close();
+}
+
+void GatesEngine::MeshCreater::LoadGates3DModelData(const std::string& filename, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
+{
+	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
+
+	std::string  filepath = "Resources/Model/" + filename + ".g3m";
+	int count = 0;
+
+	std::ifstream file;
+	file.open(filepath);
+	if (file.fail())return;
+	std::string line;
+	// ファイルから1行づつ読み込む
+	while (std::getline(file, line))
+	{
+		// getlineで読み込めるようにstringからstreamに変換する
+		std::istringstream line_stream(line);
+		std::string key;
+		// line_streamから空白文字が出力されるまでkeyに入力する
+		std::getline(line_stream, key, ' ');
+		if (key == "Vertices_Size")
+		{
+			count = 0;
+			unsigned int n = 0;
+			line_stream >> n;
+			(*vertices).resize(n);
+		}
+		if (key == "Indices_Size")
+		{
+			count = 0;
+			unsigned int n = 0;
+			line_stream >> n;
+			(*indices).resize(n);
+		}
+		// 頂点座標の読み込み
+		if (key == "v")
+		{
+			Math::Vector3 pos;
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+			(*vertices)[count].point = pos;
+		}
+		// テクスチャ座標の読み込み
+		if (key == "vt")
+		{
+			Math::Vector2 uv;
+			line_stream >> uv.x;
+			line_stream >> uv.y;
+			(*vertices)[count].uv = uv;
+		}
+		// 法線情報の読み込み
+		if (key == "vn")
+		{
+			Math::Vector3 normal;
+			line_stream >> normal.x;
+			line_stream >> normal.y;
+			line_stream >> normal.z;
+			(*vertices)[count].normal = normal;
+			++count;
+		}
+		// 頂点インデックス読み込み
+		if (key == "i")
+		{
+			unsigned int n = 0;
+			line_stream >> n;
+			(*indices)[count] = n;
+			++count;
 		}
 	}
 	file.close();

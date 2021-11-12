@@ -58,7 +58,7 @@ void GatesEngine::RootSignature::CreateStaticSampler(D3D12_STATIC_SAMPLER_DESC* 
 	(*pSamplerDesc).MaxLOD = D3D12_FLOAT32_MAX;
 	(*pSamplerDesc).MinLOD = 0.0f;
 	(*pSamplerDesc).ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	(*pSamplerDesc).ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	(*pSamplerDesc).ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	(*pSamplerDesc).MaxAnisotropy = 16;
 	(*pSamplerDesc).ShaderRegister = count;
 }

@@ -23,6 +23,7 @@ private:
 	GatesEngine::RenderTexture resultRenderShadowTex;
 
 	GatesEngine::RenderTexture parlinNoiseTex;
+	GatesEngine::RenderTexture parlinNoiseHeightMapTex;
 
 	GatesEngine::DebugCamera camera;
 public:

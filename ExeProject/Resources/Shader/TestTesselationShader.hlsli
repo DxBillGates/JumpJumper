@@ -23,8 +23,8 @@ struct HS_CONTROL_POINT_OUTPUT
 
 struct HS_CONSTANT_DATA_OUTPUT
 {
-	float EdgeTessFactor[3]			: SV_TessFactor;
-	float InsideTessFactor : SV_InsideTessFactor;
+	float EdgeTessFactor[4]			: SV_TessFactor;
+	float InsideTessFactor[2] : SV_InsideTessFactor;
 };
 
 struct DSOutput
@@ -32,6 +32,7 @@ struct DSOutput
 	float4 svpos : SV_POSITION;
 	float2 uv : TEXCOORD;
 	float3 normal : NORMAL;
+	float3 color :COLOR;
 };
 
 cbuffer Model : register(b0)
@@ -63,4 +64,13 @@ cbuffer LightInfo : register(b3)
 cbuffer TesselationInfo : register(b4)
 {
 	float4 tesselationInfo;
+	float4 factor;
 }
+
+Texture2D<float4> tex : register(t0);
+Texture2D<float4> heightMapTex : register(t1);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);

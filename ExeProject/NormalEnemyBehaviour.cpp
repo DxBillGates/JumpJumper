@@ -31,7 +31,7 @@ void NormalEnemyBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();

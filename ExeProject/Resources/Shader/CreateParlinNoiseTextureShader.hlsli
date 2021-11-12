@@ -29,3 +29,9 @@ struct VSOutput
 	float4 svpos : SV_POSITION;
 	float2 uv : TEXCOORD;
 };
+
+struct PSOutput
+{
+	float4 color : SV_TARGET0;
+	float4 heightMap : SV_TARGET1;
+};

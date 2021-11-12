@@ -78,13 +78,14 @@ bool Game::LoadContents()
 	createParlinNoiseShader->SetInputLayout({ InputLayout::POSITION,InputLayout::TEXCOORD });
 	createParlinNoiseShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV,RangeType::CBV });
 	createParlinNoiseShader->SetIsUseDepth(false);
+	createParlinNoiseShader->SetRtvCount(2);
 	createParlinNoiseShader->CreatePipeline();
 
 	auto* testTesselationShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"TestTesselation")), "TestTesselationShader");
 	testTesselationShader->SetInputLayout({ InputLayout::POSITION,InputLayout::TEXCOORD,InputLayout::NORMAL });
 	testTesselationShader->SetIsUseDepth(true);
 	testTesselationShader->SetPrimitiveTopology(PrimiriveTopologyType::PATCH);
-	testTesselationShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
+	testTesselationShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV });
 	testTesselationShader->CreatePipeline();
 
 
@@ -92,6 +93,10 @@ bool Game::LoadContents()
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
 	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
 	meshManager->Add("Plane")->Create(&graphicsDevice, testMeshData);
+
+	MeshData<VertexInfo::Vertex_UV_Normal> testMeshDataa;
+	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, 10, testMeshDataa);
+	meshManager->Add("DividePlane")->Create(&graphicsDevice, testMeshDataa);
 
 	//画面サイズ板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData2;
@@ -136,7 +141,7 @@ bool Game::LoadContents()
 
 	//モデル読み込み
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("uv_sphere", testModel);
+	MeshCreater::LoadModelData("paimon", testModel);
 	meshManager->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	//モデル読み込み
@@ -144,14 +149,22 @@ bool Game::LoadContents()
 	MeshCreater::LoadModelData("skydome", skydomeModel);
 	meshManager->Add("skydome")->Create(&graphicsDevice, skydomeModel);
 
+	////モデル読み込み
+	//MeshData<VertexInfo::Vertex_UV_Normal> testG3M;
+	//MeshCreater::LoadGates3DModelData("testModel", testG3M);
+	//meshManager->Add("testG3M")->Create(&graphicsDevice, testG3M);
+
+
+
 	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
 	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1,1,1, 255));
+	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
 	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
 	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1,1,1, 255));
+	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	parlinNoiseTex.Create(&graphicsDevice, { 1920,1080 });
+	parlinNoiseHeightMapTex.Create(&graphicsDevice, { 1920,1080 });
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
@@ -195,7 +208,8 @@ bool Game::Draw()
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
 
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
-	graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
+	//graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
+	graphicsDevice.SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
 	using namespace GatesEngine::Math;
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 10 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
@@ -223,15 +237,15 @@ bool Game::Draw()
 	sceneManager->Draw();
 
 
-	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1,1,1, 255));
+	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1, 1, 1, 255));
 
-	using namespace GatesEngine::Math;
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
-	mainCamera->Set(2);
-	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()/10));
-	parlinNoiseTex.Set(5);
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+	//using namespace GatesEngine::Math;
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
+	//mainCamera->Set(2);
+	////graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()/10));
+	//parlinNoiseTex.Set(5);
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 
 	//深度テクスチャを利用してプレイヤー視点で描画
 	shaderManager->GetShader("testMultiRTVShader")->Set();
@@ -241,18 +255,6 @@ bool Game::Draw()
 	GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
 	shadowDepthTex.Set(5);
-
-	shaderManager->GetShader("TestTesselationShader")->Set(false);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10 }) * GatesEngine::Math::Matrix4x4::Translate({ 0,500,1000 }));
-	mainCamera->Set(2);
-	static float a = 0;
-	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D0))
-	{
-		++a;
-	}
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4,Vector4(a,0,0,0));
-	parlinNoiseTex.Set(5);
-	meshManager->GetMesh("Plane")->Draw();
 
 	//シーンの描画
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
@@ -270,13 +272,29 @@ bool Game::Draw()
 	//gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
 
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
+	{
+		shaderManager->GetShader("TestTesselationShader")->Set(true);
+	}
+	else
+	{
+		shaderManager->GetShader("TestTesselationShader")->Set(false);
+	}
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
+	mainCamera->Set(2);
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, GatesEngine::B3{ Vector4(),Vector4(0,10000,10000,1) });
+	parlinNoiseTex.Set(5);
+	parlinNoiseHeightMapTex.Set(6);
+
+	meshManager->GetMesh("DividePlane")->Draw();
+
 	//描画結果から深度テクスチャを利用してアウトライン付与してを描画
 	graphicsDevice.ClearRenderTarget({ 0,0,0,1 }, true);
 
 	shaderManager->GetShader("PostEffect_OutlineShader")->Set();
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10,10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };	
+	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))color = { 1,0,0,1 };
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D2))color = { 0,1,0,1 };
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D3))color = { 0,0,1,1 };
