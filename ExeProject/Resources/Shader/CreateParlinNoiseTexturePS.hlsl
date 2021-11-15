@@ -16,60 +16,60 @@ float GetRamdomNoise(float2 fact)
 	return Random(fact);
 }
 
-float GetBlockNoise(float2 fact, float size)
-{
-	float2 uv = floor(fact * size) / size;
-	return Random(uv);
-}
-
-float GetBlurBlockNoise(float2 fact, float size)
-{
-	float v00 = Random(floor(fact * size));
-	float v01 = Random(floor(fact * size)) + float2(0, 1);
-	float v10 = Random(floor(fact * size)) + float2(1, 0);
-	float v11 = Random(floor(fact * size)) + float2(1, 1);
-	float2 p = frac(fact * size);
-	float v0010 = lerp(v00, v10, p.x);
-	float v0111 = lerp(v01, v11, p.x);
-
-	float lerpNoise = lerp(v0010, v0111, p.y);
-	return lerpNoise;
-}
-
-float GetParlinNoise(float2 uv, float size)
-{
-	float2 uvFloor = floor(uv * size);
-	float2 uvFrac = frac(uv * size);
-
-	float2 v00 = RandomVector2(uvFloor + float2(0, 0));
-	float2 v01 = RandomVector2(uvFloor + float2(0, 1));
-	float2 v10 = RandomVector2(uvFloor + float2(1, 0));
-	float2 v11 = RandomVector2(uvFloor + float2(1, 1));
-
-	float c00 = dot(v00, uvFrac - float2(0, 0));
-	float c01 = dot(v01, uvFrac - float2(0, 1));
-	float c10 = dot(v10, uvFrac - float2(1, 0));
-	float c11 = dot(v11, uvFrac - float2(1, 1));
-
-	float2 u = uvFrac * uvFrac * (3 - 2 * uvFrac);
-
-	float v0010 = lerp(c00, c10, u.x);
-	float v0111 = lerp(c01, c11, u.x);
-
-	return lerp(v0010, v0111, u.y) / 2 + 0.5f;
-}
-
-float GetFractalSumNoise(float2 uv, float size)
-{
-	float fn = 0;
-	int j = 1;
-	for (int i = 0; i < 4; ++i)
-	{
-		fn += GetParlinNoise(uv,size * j) * 1.0f / j;
-		j *= 2;
-	}
-	return fn;
-}
+//float GetBlockNoise(float2 fact, float size)
+//{
+//	float2 uv = floor(fact * size) / size;
+//	return Random(uv);
+//}
+//
+//float GetBlurBlockNoise(float2 fact, float size)
+//{
+//	float v00 = Random(floor(fact * size));
+//	float v01 = Random(floor(fact * size)) + float2(0, 1);
+//	float v10 = Random(floor(fact * size)) + float2(1, 0);
+//	float v11 = Random(floor(fact * size)) + float2(1, 1);
+//	float2 p = frac(fact * size);
+//	float v0010 = lerp(v00, v10, p.x);
+//	float v0111 = lerp(v01, v11, p.x);
+//
+//	float lerpNoise = lerp(v0010, v0111, p.y);
+//	return lerpNoise;
+//}
+//
+//float GetParlinNoise(float2 uv, float size)
+//{
+//	float2 uvFloor = floor(uv * size);
+//	float2 uvFrac = frac(uv * size);
+//
+//	float2 v00 = RandomVector2(uvFloor + float2(0, 0));
+//	float2 v01 = RandomVector2(uvFloor + float2(0, 1));
+//	float2 v10 = RandomVector2(uvFloor + float2(1, 0));
+//	float2 v11 = RandomVector2(uvFloor + float2(1, 1));
+//
+//	float c00 = dot(v00, uvFrac - float2(0, 0));
+//	float c01 = dot(v01, uvFrac - float2(0, 1));
+//	float c10 = dot(v10, uvFrac - float2(1, 0));
+//	float c11 = dot(v11, uvFrac - float2(1, 1));
+//
+//	float2 u = uvFrac * uvFrac * (3 - 2 * uvFrac);
+//
+//	float v0010 = lerp(c00, c10, u.x);
+//	float v0111 = lerp(c01, c11, u.x);
+//
+//	return lerp(v0010, v0111, u.y) / 2 + 0.5f;
+//}
+//
+//float GetFractalSumNoise(float2 uv, float size)
+//{
+//	float fn = 0;
+//	int j = 1;
+//	for (int i = 0; i < 4; ++i)
+//	{
+//		fn += GetParlinNoise(uv,size * j) * 1.0f / j;
+//		j *= 2;
+//	}
+//	return fn;
+//}
 
 static const float cloudscale = 1.0;
 static const float speed = 0.03;
@@ -125,7 +125,7 @@ PSOutput main(VSOutput input)
 	////float a = r < 0.8f ? 0.1f : 1;
 	//r = noise(input.uv);
 	float2 uv = input.uv;
-	float2 iTime = time * speed;
+	float2 iTime = time.xy * speed;
 	float q = fbm(input.uv * cloudscale * 0.5f);
 
 	float r = 0;
@@ -145,7 +145,7 @@ PSOutput main(VSOutput input)
 	uv *= cloudscale;
 	uv -= q - iTime.x;
 	weight = 0.7f;
-	for (int i = 0; i < SAMPLING_VALUE; ++i)
+	for (int j = 0; j < SAMPLING_VALUE; ++j)
 	{
 		f += abs(weight * noise(uv));
 		uv = mul(m, uv) + iTime.x;
@@ -160,7 +160,7 @@ PSOutput main(VSOutput input)
 	uv *= cloudscale * 2.0f;
 	uv -= q - iTime.x;
 	weight = 0.4f;
-	for (int i = 0; i < SAMPLING_VALUE-1; ++i)
+	for (int k = 0; k < SAMPLING_VALUE-1; ++k)
 	{
 		c += abs(weight * noise(uv));
 		uv = mul(m, uv) + iTime.x;
@@ -173,7 +173,7 @@ PSOutput main(VSOutput input)
 	uv *= cloudscale * 3.0f;
 	uv -= q - iTime.x;
 	weight = 0.4f;
-	for (int i = 0; i < SAMPLING_VALUE-1; ++i)
+	for (int l = 0; l < SAMPLING_VALUE-1; ++l)
 	{
 		c1 += abs(weight * noise(uv));
 		uv = mul(m, uv) + iTime.x;
