@@ -15,11 +15,45 @@ namespace GatesEngine
 		bool isCreated;
 	public:
 		~CBufferAllocater();
+
+		/// <summary>
+		/// GraphicsDeviceのポインタをセットする関数
+		/// </summary>
+		/// <param name="pGraphicsDevice">GraphicsDeviceのポインタ</param>
 		void SetGraphicsDevice(GraphicsDevice* pGraphicsDevice);
+
+		/// <summary>
+		/// バカでかいディスクリプタヒープのポインタをセットする関数
+		/// </summary>
+		/// <param name="pHeap">ヒープのポインタ</param>
 		void SetHeap(CBVSRVUAVHeap* pHeap);
+
+		/// <summary>
+		/// アロケータの生成関数
+		/// </summary>
 		void Create();
+
+		/// <summary>
+		/// 使用しているバッファの番号情報を初期化する関数
+		/// </summary>
 		void ResetCurrentUseNumber();
+
+		/// <summary>
+		/// セットするレジスタ番号、セットするデータのポインタ、データサイズを指定して
+		/// これから使う定数バッファの番地の計算を行ったのちデータを
+		/// シェーダにデータをセットする関数、主に配列データをセットしたいときに使用
+		/// </summary>
+		/// <param name="descIndex">レジスタ番号</param>
+		/// <param name="data">データポインタ</param>
+		/// <param name="size">データサイズ</param>
 		void BindAndAttachData(int descIndex, const void* data, int size);
+
+		/// <summary>
+		/// セットするレジスタ番号、データを指定してこれから使う定数バッファの番地の計算を行ったのちデータをシェーダにセットする関数
+		/// </summary>
+		/// <typeparam name="T">セットするデータの型</typeparam>
+		/// <param name="descIndex">レジスタ番号</param>
+		/// <param name="data">データ</param>
 		template<typename T>
 		void BindAndAttach(int descIndex,const T& data);
 	};

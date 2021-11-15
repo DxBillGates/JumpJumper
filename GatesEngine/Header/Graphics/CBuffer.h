@@ -6,6 +6,10 @@
 namespace GatesEngine
 {
 	template<typename T>
+	/// <summary>
+	/// GPUにセットするデータの型を明示的に設定して生成、使用するクラス
+	/// </summary>
+	/// <typeparam name="T">GPUにセットするデータの型</typeparam>
 	class CBuffer
 	{
 	private:
@@ -16,12 +20,40 @@ namespace GatesEngine
 		ID3D12Resource* buffer;		//定数バッファ
 		bool isCreate;
 	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		CBuffer();
 		~CBuffer();
+
+		/// <summary>
+		/// 設定された型サイズ(256byteアライメント)の定数バッファを生成する関数
+		/// </summary>
+		/// <param name="pDevice">GraphicsDeviceのポインタ</param>
+		/// <param name="rangeNumber">セットするレジスタ番号</param>
 		void Create(GraphicsDevice* pDevice, int rangeNumber);
+
+		/// <summary>
+		/// GPUBufferにコピーするデータ
+		/// </summary>
+		/// <param name="mappinData">GPUBufferにコピーするデータの参照</param>
 		void Map(const T& mappinData);
+
+		/// <summary>
+		/// 設定されているディスクリプタヒープの何番目にセットされているかを返す関数
+		/// </summary>
+		/// <returns>ヒープの何番目にセットされているか</returns>
 		int GetCbvNumber();
+
+		/// <summary>
+		/// 何番レジスタにセットされる予定になっているのか返す関数
+		/// </summary>
+		/// <returns>設定されているレジスタ番号</returns>
 		int GetRangeNumber();
+
+		/// <summary>
+		/// シェーダにデータをセットする関数
+		/// </summary>
 		void Set();
 	};
 
