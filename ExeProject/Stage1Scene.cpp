@@ -55,7 +55,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->SetCollider();
 		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 		bullet->GetCollider()->SetSize({ 1 });
-		bullet->GetTransform()->scale = 1;
+		bullet->GetTransform()->scale = 5;
 		bullet->SetName("playerBullet");
 
 		playerBehaviour->AddBullet(bulletBehaviour);

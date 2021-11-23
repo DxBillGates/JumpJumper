@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "SampleScene.h"
+#include "TitleScene.h"
 #include "Stage1Scene.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
@@ -167,13 +168,19 @@ bool Game::LoadContents()
 	parlinNoiseHeightMapTex.Create(&graphicsDevice, { 1920,1080 });
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
+	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->ChangeScene("Stage1Scene");
+	sceneManager->ChangeScene("TitleScene");
 	//sceneManager->ChangeScene("SampleScene");
 
 
 	mainCamera = &camera;
-	//mainCamera = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player")->GetComponent<PlayerBehaviour>()->GetSetCamera();
+
+	GameObject* playerObject = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
+	if (playerObject)mainCamera = playerObject->GetComponent<PlayerBehaviour>()->GetSetCamera();
+	else mainCamera = &camera;
+
 	mainCamera->SetGraphicsDevice(&graphicsDevice);
 	mainCamera->SetMainWindow(&mainWindow);
 	graphicsDevice.SetMainCamera(mainCamera);
@@ -184,6 +191,7 @@ bool Game::LoadContents()
 bool Game::Initialize()
 {
 	gameObjectManager.Start();
+	sceneManager->GetCurrentScene()->Initialize();
 	timer.SetFrameRate(144);
 	timer.SetIsShow(false);
 

@@ -31,6 +31,7 @@ void PlayerBehaviour::SetPosition()
 
 void PlayerBehaviour::SetRotation()
 {
+	// カメラ向いている方向にプレイヤーモデルを回転させる
 	GatesEngine::Math::Vector3 a = mainCamera->GetRotation().GetAxis().z;
 	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
 }
@@ -39,8 +40,8 @@ void PlayerBehaviour::UseJet()
 {
 	// 1フレームに何ピクセル移動するか
 	const float JET_FACTOR = 1;
-	// 1フレームにfuelValueをどれだけ使用するか
-	const float USE_FUEL_VALUE = 10;
+	// 1秒間にfuelValueをどれだけ使用するか 消費量 * (1.0f / frameRate)
+	const float USE_FUEL_VALUE = 1 * (1.0f / 144.0f);
 	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
 	if (keyboard->CheckHitKey(GatesEngine::Keys::SPACE))
 	{
