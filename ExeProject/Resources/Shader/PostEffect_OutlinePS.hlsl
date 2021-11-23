@@ -25,7 +25,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	float2 offset = input.uv;
 	float4 samplingColor = float4(0, 0, 0, 0);
 	offset.x -= perPixel.x * SAMPLING_VALUE / 2.0f;
-	offset.y += perPixel.x * SAMPLING_VALUE / 2.0f;
+	offset.y += perPixel.y * SAMPLING_VALUE / 2.0f;
 	for (int i = 0; i < SAMPLING_VALUE; ++i)
 	{
 		for (int j = 0; j < SAMPLING_VALUE; ++j)

@@ -16,16 +16,22 @@ TitleScene::TitleScene(const char* sceneName)
 TitleScene::TitleScene(const char* sceneName, GatesEngine::Application* app)
 	: Scene(sceneName,app)
 	, mainCamera(nullptr)
+	, input(nullptr)
 {
 }
 
 void TitleScene::Initialize()
 {
 	mainCamera = app->GetMainCamera();
+	input = GatesEngine::Input::GetInstance();
 }
 
 void TitleScene::Update()
 {
+	if (input->GetKeyboard()->CheckHitKeyAll())
+	{
+		//app->GetSceneManager()->ChangeScene("Stage1Scene");
+	}
 }
 
 void TitleScene::Draw()
