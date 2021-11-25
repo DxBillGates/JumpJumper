@@ -59,6 +59,7 @@ void GatesEngine::Collider::OnLateDraw()
 	GatesEngine::Math::Matrix4x4 matrix = Math::Matrix4x4::Identity();
 
 	shader->Set();
+	graphicsDevice->GetCBVSRVUAVHeap()->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
 	graphicsDevice->GetMainCamera()->Set(2);
 

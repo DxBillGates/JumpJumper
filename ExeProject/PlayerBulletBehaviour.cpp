@@ -21,7 +21,22 @@ void PlayerBulletBehaviour::Update()
 {
 	if (isUse)
 	{
-		gameObject->GetTransform()->position += vel * 10;
+		if (!isHoming)
+		{
+			vel += shotVector;
+			gameObject->GetTransform()->position += vel * 10;
+		}
+		else
+		{
+			GatesEngine::Math::Vector3 diff = target - gameObject->GetTransform()->position;
+			GatesEngine::Math::Vector3 acc;
+			acc += (diff - vel * homingTime) * 2.0f / (homingTime * homingTime);
+
+			homingTime -= 0.016f / 2.0f;
+
+			vel += acc * 0.016f / 2.0f;
+			gameObject->GetTransform()->position += vel * 0.016f / 2.0f;
+		}
 	}
 	else
 	{
@@ -41,9 +56,17 @@ void PlayerBulletBehaviour::OnDraw()
 
 void PlayerBulletBehaviour::OnCollision(GatesEngine::GameObject* other)
 {
-	if (other->GetTag() == "enemy")
-	{
-		isUse = false;
-	}
+}
 
+void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
+{
+	if (otherCollider->GetGameObject()->GetTag() == "enemy")
+	{
+		Initialize();
+	}
+	//if (otherCollider->GetGameObject()->GetTag() == "block")
+	//{
+	//	isUse = false;
+	//	Initialize();
+	//}
 }

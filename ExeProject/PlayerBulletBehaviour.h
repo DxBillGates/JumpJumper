@@ -12,4 +12,5 @@ public:
 	void Update() override;
 	void OnDraw() override;
 	void OnCollision(GatesEngine::GameObject* other) override;
+	void OnCollision(GatesEngine::Collider* otherCollider) override;
 };

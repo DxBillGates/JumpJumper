@@ -4,6 +4,7 @@
 #include "BlockBehaviour.h"
 #include "PlayerBehaviour.h"
 #include "PlayerBulletBehaviour.h"
+#include "GPUParticleEmitterBehaviour.h"
 #include "Header/Util/Random.h"
 
 Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
@@ -28,7 +29,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	//GPUパーティクル用のマネージャー生成
 	gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
 	//GPUパーティクルマネージャーからパーティクル1万個確保
-	gpuParticleEmitter.Create(gpuParticleManager, 10000);
+	gpuParticleEmitter.Create(gpuParticleManager, 1000);
 
 	////八分木空間分割すり抜けバグ多発したため一旦なし
 	//collisionManager.Initialize(5, { -10000,-100,-10000 }, { 10000 });
@@ -40,6 +41,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	playerBehaviour = gp->AddBehavior<PlayerBehaviour>();
 	//gp->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::PLAYER);
+	stage.GetCollisionManager()->SetPlayerBehaviour(playerBehaviour);
 	gp->SetCollider();
 	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	gp->GetCollider()->SetSize({ 1 });
@@ -51,26 +53,38 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		auto* bullet = gameObjectManager.Add(new GameObject());
 		bullet->SetGraphicsDevice(graphicsDevice);
 		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1000);
+		gParticleEmitter->SetComputeShader(testCS);
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
 		bullet->SetCollider();
 		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 		bullet->GetCollider()->SetSize({ 1 });
-		bullet->GetTransform()->scale = 5;
+		bullet->GetTransform()->scale = 10;
 		bullet->SetName("playerBullet");
 
 		playerBehaviour->AddBullet(bulletBehaviour);
 	}
 
-	auto* g = gameObjectManager.Add(new GameObject());
-	g->SetGraphicsDevice(graphicsDevice);
-	auto* e = g->AddComponent<NormalEnemyBehaviour>();
-	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
-	g->SetCollider();
-	g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	g->GetCollider()->SetSize({ 2 });
-	g->GetTransform()->scale = 100;
-	g->SetTag("enemy");
-	g->GetTransform()->position = { 1000,100,1000 };
+	GatesEngine::GameObject* g = nullptr;
+	//auto* g = gameObjectManager.Add(new GameObject());
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			g = gameObjectManager.Add(new GameObject());
+			//auto* g = gameObjectManager.Add(new GameObject());
+			g->SetGraphicsDevice(graphicsDevice);
+			auto* e = g->AddComponent<NormalEnemyBehaviour>();
+			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
+			g->SetCollider();
+			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+			g->GetCollider()->SetSize({ 2 });
+			g->GetTransform()->scale = 100;
+			g->SetTag("enemy");
+			g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
+		}
+	}
 
 
 	g = gameObjectManager.Add(new GameObject());
@@ -117,6 +131,7 @@ Stage1Scene::~Stage1Scene()
 void Stage1Scene::Initialize()
 {
 	gameObjectManager.Start();
+	stage.GetCollisionManager()->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 }
 
 void Stage1Scene::Update()

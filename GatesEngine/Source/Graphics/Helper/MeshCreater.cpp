@@ -135,6 +135,21 @@ void GatesEngine::MeshCreater::CreateGrid(Math::Vector2 size, float spaceInterva
 	}
 }
 
+void GatesEngine::MeshCreater::CreateLine(Math::Vector3 size, const Math::Vector4& color, MeshData<VertexInfo::Vertex_Color>& meshData)
+{
+	using namespace GatesEngine::Math;
+	std::vector<VertexInfo::Vertex_Color>* vertices = meshData.GetVertices();
+	std::vector<unsigned int>* indices = meshData.GetIndices();
+
+	Vector4 white = color;
+
+	vertices->push_back({ Vector3(0,0,0),white });
+	vertices->push_back({ Vector3(0,0,1),white });
+
+	indices->push_back(0);
+	indices->push_back(1);
+}
+
 void GatesEngine::MeshCreater::CreateLineCube(Math::Vector3 size, const Math::Vector4& color, MeshData<VertexInfo::Vertex_Color>& meshData)
 {
 	using namespace GatesEngine::Math;

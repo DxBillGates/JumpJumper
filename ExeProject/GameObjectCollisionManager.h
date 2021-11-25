@@ -1,5 +1,7 @@
 #pragma once
 #include "Header/Component/Collider.h"
+#include "Header/Graphics/Camera3D.h"
+#include "PlayerBehaviour.h"
 
 enum class GColliderType
 {
@@ -16,11 +18,16 @@ private:
 	std::vector<GatesEngine::Collider*> enemyColliders;
 	std::vector<GatesEngine::Collider*> playerColliders;
 	std::vector<GatesEngine::Collider*> playerBulletColliders;
+	GatesEngine::Camera3D* mainCamera;
+	PlayerBehaviour* playerBehaviour;
 private:
 	void CheckCollisionHitBlockTo();
 	void CheckCollisionHitEnemyTo();
+	void CheckCollisionHitEnemyToCameraRay();
 public:
 	void Update();
 	GatesEngine::Collider* AddCollider(GatesEngine::Collider* collider, GColliderType type);
+	void SetCamera(GatesEngine::Camera3D* mainCamera);
+	void SetPlayerBehaviour(PlayerBehaviour* behaviour);
 };
 

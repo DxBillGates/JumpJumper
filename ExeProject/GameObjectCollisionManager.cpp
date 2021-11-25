@@ -1,6 +1,7 @@
 #include "GameObjectCollisionManager.h"
 #include "Header/Collision/CollisionManager.h"
 #include "Header/GameObject/GameObject.h"
+#include "Header/Input/Input.h"
 
 void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 {
@@ -87,10 +88,29 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyTo()
 	}
 }
 
+void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
+{
+	if (!mainCamera)return;
+	if (!playerBehaviour)return;
+	if (GatesEngine::Input::GetInstance()->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	{
+		for (auto e : enemyColliders)
+		{
+			GatesEngine::Math::Vector3 cameraDir = mainCamera->GetRotation().GetAxis().z;
+			if (GatesEngine::CollisionManager::CheckAABBToRay(e,mainCamera->GetPosition(), cameraDir))
+			{
+				playerBehaviour->AddTarget(e->GetGameObject());
+				e->SetColor({ 1,0,0,0 });
+			}
+		}
+	}
+}
+
 void GameObjectCollisionManager::Update()
 {
 	CheckCollisionHitBlockTo();
 	CheckCollisionHitEnemyTo();
+	CheckCollisionHitEnemyToCameraRay();
 }
 
 GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Collider* collider, GColliderType type)
@@ -114,4 +134,14 @@ GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Coll
 	}
 
 	return collider;
+}
+
+void GameObjectCollisionManager::SetCamera(GatesEngine::Camera3D* mainCamera)
+{
+	this->mainCamera = mainCamera;
+}
+
+void GameObjectCollisionManager::SetPlayerBehaviour(PlayerBehaviour* behaviour)
+{
+	playerBehaviour = behaviour;
 }

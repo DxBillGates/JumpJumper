@@ -1,5 +1,6 @@
 #pragma once
 #include "Header/Scene/Scene.h"
+#include "Header/Graphics/Camera3D.h"
 #include "Header/Input/Input.h"
 
 class TitleScene : public GatesEngine::Scene
@@ -9,7 +10,7 @@ private:
 	using Vector4 = GatesEngine::Math::Vector4;
 	using Matrix4x4 = GatesEngine::Math::Matrix4x4;
 private:
-	GatesEngine::Camera* mainCamera;
+	GatesEngine::Camera3D* mainCamera;
 	GatesEngine::Input* input;
 public:
 	TitleScene();

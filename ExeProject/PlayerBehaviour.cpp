@@ -32,8 +32,8 @@ void PlayerBehaviour::SetPosition()
 void PlayerBehaviour::SetRotation()
 {
 	// カメラ向いている方向にプレイヤーモデルを回転させる
-	GatesEngine::Math::Vector3 a = mainCamera->GetRotation().GetAxis().z;
-	gameObject->GetTransform()->rotation.y = atan2f(a.x, a.z);
+	GatesEngine::Math::Vector3 zRotate = mainCamera->GetRotation().GetAxis().z;
+	gameObject->GetTransform()->rotation.y = atan2f(zRotate.x, zRotate.z);
 }
 
 void PlayerBehaviour::UseJet()
@@ -123,6 +123,56 @@ void PlayerBehaviour::Attack()
 	}
 }
 
+void PlayerBehaviour::LockOnAttack()
+{
+	if (currentFrameTargetCount <= 0)return;
+	if (input->GetMouse()->GetCheckReleaseTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))
+	{
+		int unusedBulletCount = 0;
+		// 使っていない弾の総量を取得
+		for (auto& b : bullets)
+		{
+			if (!b->IsUse())
+			{
+				++unusedBulletCount;
+			}
+		}
+		int useBulletForOneEnemy = (int)bullets.size() / currentFrameTargetCount;
+		const int MAX_USE_BULLET_FOR_ONE_ENEMY = 2;
+
+		int useBulletCount = 0;
+		for (auto& t : targets)
+		{
+			if (!t)break;
+			GatesEngine::Math::Vector3 targetDir = t->GetTransform()->position - gameObject->GetTransform()->position;
+			targetDir = GatesEngine::Math::Vector3::Normalize(targetDir);
+			for (auto& b : bullets)
+			{
+				if (b->IsUse())continue;
+				b->SetTarget(t->GetTransform()->position);
+
+				++useBulletCount;
+				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
+				{
+					useBulletCount = 0;
+					break;
+				}
+			}
+		}
+
+		currentFrameTargetCount = 0;
+		ClearTargets();
+	}
+}
+
+void PlayerBehaviour::ClearTargets()
+{
+	for (auto& g : targets)
+	{
+		g = nullptr;
+	}
+}
+
 PlayerBehaviour::PlayerBehaviour()
 	: vel({})
 	, isJump(false)
@@ -131,8 +181,11 @@ PlayerBehaviour::PlayerBehaviour()
 	, fuelValue(1000)
 	, MAX_FUEL(1000)
 	, CHARGE_FUEL(1)
+	, MAX_TARGET(100)
+	, currentFrameTargetCount(0)
 {
 	mainCamera = new PlayerCamera();
+	targets.resize(MAX_TARGET);
 }
 
 PlayerBehaviour::~PlayerBehaviour()
@@ -152,10 +205,13 @@ void PlayerBehaviour::Update()
 {
 	Move();
 	Attack();
+	LockOnAttack();
 
 	// カメラのポジション更新
 	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y,pos.z) });
+	GatesEngine::Math::Axis pAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
+	GatesEngine::Math::Axis cAxis = mainCamera->GetRotation().GetAxis();
+	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y + 100,pos.z) - cAxis.z * 300 });
 }
 
 void PlayerBehaviour::OnDraw()
@@ -175,7 +231,7 @@ void PlayerBehaviour::OnLateDraw()
 	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1,0,0,1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 }
@@ -219,4 +275,26 @@ PlayerCamera* PlayerBehaviour::GetSetCamera()
 void PlayerBehaviour::AddBullet(PlayerBullet* newBullet)
 {
 	bullets.push_back(newBullet);
+}
+
+void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
+{
+	for (auto& g : targets)
+	{
+		// ロックオン中の敵がいた場合スキップ
+		if (g == other)
+		{
+			return;
+		}
+
+		// 登録されてなければターゲットに設定
+		if (!g)
+		{
+			g = other;
+			++currentFrameTargetCount;
+			break;
+		}
+	}
+
+
 }

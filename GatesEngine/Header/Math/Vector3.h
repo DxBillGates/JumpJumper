@@ -32,7 +32,7 @@ namespace GatesEngine
 			/// このインスタンスの長さを返す関数
 			/// </summary>
 			/// <returns>長さ</returns>
-			float Length();
+			float Length() const;
 
 			/// <summary>
 			/// このインスタンスの正規化ベクトルを返す関数

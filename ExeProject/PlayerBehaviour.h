@@ -21,6 +21,10 @@ private:
 	const float CHARGE_FUEL;
 
 	std::vector<PlayerBullet*> bullets;
+
+	std::vector<GatesEngine::GameObject*> targets;
+	const int MAX_TARGET;
+	int currentFrameTargetCount;
 private:
 	/// <summary>
 	/// moveVelとjetVelの補正とvelに対してセットする関数
@@ -51,6 +55,16 @@ private:
 	/// 攻撃をする関数
 	/// </summary>
 	void Attack();
+
+	/// <summary>
+	/// ロックオンしたターゲットに対して総攻撃する関数
+	/// </summary>
+	void LockOnAttack();
+
+	/// <summary>
+	/// ロックオンした敵情報をクリアする関数
+	/// </summary>
+	void ClearTargets();
 public:
 	PlayerBehaviour();
 	~PlayerBehaviour();
@@ -63,4 +77,5 @@ public:
 	void SetCamera(PlayerCamera* pCamera);
 	PlayerCamera* GetSetCamera();
 	void AddBullet(PlayerBullet* newBullet);
+	void AddTarget(GatesEngine::GameObject* other);
 };

@@ -145,6 +145,57 @@ bool GatesEngine::CollisionManager::CheckSphereToSphere(Collider* collider1, Col
 	return false;
 }
 
+bool GatesEngine::CollisionManager::CheckAABBToRay(Collider* collider,const Math::Vector3& linePos, const Math::Vector3& lineDir)
+{
+	Math::Vector3 min1, min2, max1, max2;
+	Transform* mTransform = collider->GetGameObject()->GetTransform();
+	Transform* mcTransform = collider->GetTransform();
+	Math::Vector3 mColliderSize, oColliderSize;
+	mColliderSize = { mTransform->scale.x * mcTransform->scale.x,mTransform->scale.y * mcTransform->scale.y,mTransform->scale.z * mcTransform->scale.z };
+	min1 = mTransform->position + mcTransform->position - mColliderSize / 2;
+	max1 = mTransform->position + mcTransform->position + mColliderSize / 2;
+
+	Math::Vector3 a = min1 - max1;
+
+	float p[3], d[3], _min[3], _max[3];
+	memcpy(p, &linePos, sizeof(Math::Vector3));
+	memcpy(d, &lineDir, sizeof(Math::Vector3));
+	memcpy(_min, &min1, sizeof(Math::Vector3));
+	memcpy(_max, &max1, sizeof(Math::Vector3));
+
+	float t = -FLT_MAX;
+	float t_max = FLT_MAX;
+
+	for (int i = 0; i < 3; ++i) 
+	{
+		if (abs(d[i]) < FLT_EPSILON) 
+		{
+			if (p[i] < _min[i] || p[i] > _max[i])
+			{
+				return false;
+			}
+		}
+		else 
+		{
+			float odd = 1.0f / d[i];
+			float t1 = (_min[i] - p[i]) * odd;
+			float t2 = (_max[i] - p[i]) * odd;
+			if (t1 > t2) {
+				float tmp = t1; t1 = t2; t2 = tmp;
+			}
+
+			if (t1 > t) t = t1;
+			if (t2 < t_max) t_max = t2;
+
+			if (t >= t_max)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 void GatesEngine::CollisionManager::Initialize(int level, const Math::Vector3& min, const Math::Vector3& max)
 {
 	collisionTreeManager = new CollisionTreeManager();

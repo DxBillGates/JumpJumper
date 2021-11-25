@@ -124,6 +124,10 @@ bool Game::LoadContents()
 	MeshCreater::CreateSphere({ 50,50,50 }, 16, 16, testMeshData5);
 	meshManager->Add("Sphere")->Create(&graphicsDevice, testMeshData5);
 
+	MeshData<VertexInfo::Vertex_Color> lineMeshData;
+	MeshCreater::CreateLine({}, {1,1,1,1}, lineMeshData);
+	meshManager->Add("Line")->Create(&graphicsDevice, lineMeshData);
+
 	//BOXコライダー用のLineCube生成
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData6;
 	MeshCreater::CreateLineCube({ 1,1,1 }, Math::Vector4(0, 0, 0, 1), testLineMeshData6);
@@ -142,7 +146,7 @@ bool Game::LoadContents()
 
 	//モデル読み込み
 	MeshData<VertexInfo::Vertex_UV_Normal> testModel;
-	MeshCreater::LoadModelData("paimon", testModel);
+	MeshCreater::LoadModelData("uv_sphere", testModel);
 	meshManager->Add("testModel")->Create(&graphicsDevice, testModel);
 
 	//モデル読み込み
@@ -171,7 +175,7 @@ bool Game::LoadContents()
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->ChangeScene("Stage1Scene");
-	sceneManager->ChangeScene("TitleScene");
+	//sceneManager->ChangeScene("TitleScene");
 	//sceneManager->ChangeScene("SampleScene");
 
 
@@ -233,11 +237,11 @@ bool Game::Draw()
 	GatesEngine::GameObject* player = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
 	GatesEngine::Math::Vector3 pos = (player) ? player->GetTransform()->position : GatesEngine::Math::Vector3();
 	GatesEngine::B2 lightViewData;
-	float angle = 90;
+	float angle = 45;
 	GatesEngine::Math::Vector3 dir = GatesEngine::Math::Vector3(0, 0, 1).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
 	GatesEngine::Math::Vector3 up = GatesEngine::Math::Vector3(0, 1, 0).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
 	lightViewData.viewMatrix = GatesEngine::Math::Matrix4x4::GetViewMatrixLookTo({ GatesEngine::Math::Vector3(0,10000,0) + pos }, dir, up);
-	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 2000,2000 }, 1, 20000);
+	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 20000,20000 }, 1, 20000);
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, lightViewData);
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,-1,0,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
 
@@ -279,7 +283,7 @@ bool Game::Draw()
 	//スプライトやコライダーのワイヤーフレーム表示
 	//gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
-
+	graphicsDevice.GetCBVSRVUAVHeap()->Set();
 	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
 	{
 		shaderManager->GetShader("TestTesselationShader")->Set(true);

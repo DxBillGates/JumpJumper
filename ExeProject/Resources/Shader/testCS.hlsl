@@ -13,19 +13,34 @@ struct TestData
 float3 GetRandomVector(float x)
 {
 	float3 returnData = float3(0, 0, 0);
-	returnData.x = frac(sin(dot(float2(0.016f * x, 0), float2(12.9898, 7.233))) * 43758.5453);
-	returnData.y = frac(sin(dot(float2(0, 0.016f * x), float2(12.9898, 7.233))) * 43758.5453);
-	returnData.z = frac(sin(dot(float2(0.016f * x, 0.016f * x), float2(12.9898, 7.233))) * 43758.5453);
+	returnData.x = frac(sin(dot(float2(0.016f * x, 0), float2(12.9898, 78.233))) * 43758.5453);
+	returnData.y = frac(sin(dot(float2(0, 0.016f * x), float2(12.9898, 78.233))) * 43758.5453);
+	returnData.z = frac(sin(dot(float2(0.016f * x, 0.016f * x), float2(12.9898, 78.233))) * 43758.5453);
 	return returnData;
 }
 
-float3 GetRandomVectorPosBase(float3 pos)
+float3 GetRandomVector(float3 vec)
 {
-	float3 returnData = float3(0, 0, 0);
-	returnData.x = frac(sin(dot(float2(pos.x, 0), float2(12.9898, 7.233))) * 43758.5453);
-	returnData.y = frac(sin(dot(float2(0, pos.y), float2(12.9898, 7.233))) * 43758.5453);
-	returnData.z = frac(sin(dot(float2(pos.z, pos.z), float2(12.9898, 7.233))) * 43758.5453);
-	return returnData;
+	float3 result = float3(0,0,0);
+	result.x = frac(sin(dot(vec.zy + vec.x, float2(12.9898, 78.233))) * 43758.5453);
+	result.y = frac(sin(dot(vec.yz + vec.x, float2(12.9898, 78.233))) * 43758.5453);
+	result.z = frac(sin(dot(vec.xy + vec.z, float2(12.9898, 78.233))) * 43758.5453);
+	return result;
+}
+
+float3 GetRandomVector(float3 vec, float3 minValue, float3 maxValue)
+{
+	float3 result = float3(0, 0, 0);
+	result = GetRandomVector(vec);
+	result = (result / 1.0f * maxValue) - (-minValue) / 2.0f;
+	return result;
+}
+
+float GetRandom(float2 vec)
+{
+	float result = 0;
+	result = frac(sin(dot(vec, float2(12.9898, 78.233))) * 43758.5453);
+	return result;
 }
 
 RWStructuredBuffer<UAVData> real : register(u0);
@@ -35,14 +50,14 @@ StructuredBuffer<TestData> addVector : register(t0);
 void main(uint3 DTid : SV_DispatchThreadID)
 {
 	//寿命の設定
-	float maxSec = 100;
+	float maxSec = 10;
 
 	//寿命の加算
-	real[DTid.x].vel.w += GetRandomVector(DTid.x).x;
+	real[DTid.x].vel.w += GetRandomVector(DTid.x).x + 0.001f;
 
 	//ランダムベクトルの作成
 	float4 randomVector = float4(0, 0, 0, 0);
-	randomVector.xyz = GetRandomVector(DTid.x);
+	randomVector.xyz = GetRandomVector(GetRandomVector(DTid.x),float3(-1,-0.5f,-1),float3(1, 0.5f,0));
 	randomVector = normalize(randomVector);
 
 	////ターゲットベクトルの計算
@@ -57,7 +72,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
 
 	//ベクトルの加算
 	real[DTid.x].vel.xyz += randomVector.xyz;
-	real[DTid.x].vel.y -= real[DTid.x].vel.w * 0.016f;
+	//real[DTid.x].vel.y -= real[DTid.x].vel.w * 0.016f;
 
 	//float4 vec = targetVec;
 	//real[DTid.x].vel += vec;

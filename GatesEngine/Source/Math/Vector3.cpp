@@ -12,7 +12,7 @@ GatesEngine::Math::Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z
 {
 }
 
-float GatesEngine::Math::Vector3::Length()
+float GatesEngine::Math::Vector3::Length() const
 {
 	return sqrtf(x * x + y * y + z * z);
 }
