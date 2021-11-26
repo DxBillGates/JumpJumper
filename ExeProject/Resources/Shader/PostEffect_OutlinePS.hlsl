@@ -57,11 +57,18 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	//âeÇ…ëŒÇµÇƒÉuÉâÅ[
 	float BLUR_SAMPLING_VALUE = 5;
 	float4 blurShadowTex = float4(0, 0, 0, 0);
+	float perPixelValue = 1;
+
+	offset = input.uv;
+	offset.x -= perPixel.x * SAMPLING_VALUE / 2.0f;
+	offset.y += perPixel.y * SAMPLING_VALUE / 2.0f;
+
 	for (int k = 0; k < BLUR_SAMPLING_VALUE; ++k)
 	{
 		for (int j = 0; j < BLUR_SAMPLING_VALUE; ++j)
 		{
-			float2 uv = offset + perPixel * 2 * float2(k, -j);
+			perPixelValue = (1 - depthColor.r) * 10;
+			float2 uv = offset + perPixel * perPixelValue * float2(k, -j);
 			blurShadowTex += shadowTex.Sample(clampPointSampler, uv);
 		}
 	}
