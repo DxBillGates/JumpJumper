@@ -266,8 +266,6 @@ void PlayerBehaviour::OnLateDraw()
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 	}
-
-
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
