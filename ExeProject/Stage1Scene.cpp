@@ -70,7 +70,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	//auto* g = gameObjectManager.Add(new GameObject());
 	for (int i = 0; i < 5; ++i)
 	{
-		for (int j = 0; j < 10; ++j)
+		for (int j = 0; j < 1; ++j)
 		{
 			g = gameObjectManager.Add(new GameObject());
 			//auto* g = gameObjectManager.Add(new GameObject());
