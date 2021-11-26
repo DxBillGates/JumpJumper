@@ -25,6 +25,8 @@ private:
 	std::vector<GatesEngine::GameObject*> targets;
 	const int MAX_TARGET;
 	int currentFrameTargetCount;
+
+	int unuseBulletCount;
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”

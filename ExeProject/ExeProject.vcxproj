@@ -140,6 +140,7 @@
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="PlayerBulletBehaviour.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="PlayerCameraBehaviour.cpp" />
     <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Stage1.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerBulletBehaviour.h" />
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="PlayerCameraBehaviour.h" />
     <ClInclude Include="SampleScene.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Stage1.h" />

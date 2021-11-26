@@ -7,6 +7,7 @@
 
 NormalEnemyBehaviour::NormalEnemyBehaviour()
 	: hp(10)
+	, t(0)
 {
 }
 
@@ -25,6 +26,9 @@ void NormalEnemyBehaviour::Update()
 	{
 		gameObject->SetEnabled(false);
 	}
+
+	gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
+	t += 0.016f;
 }
 
 void NormalEnemyBehaviour::OnDraw()

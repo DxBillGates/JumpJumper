@@ -42,3 +42,16 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Release\TexturePS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TextureVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\VGaussBlurPS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\VGaussBlurVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\CreateParlinNoiseTexturePS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\CreateParlinNoiseTextureVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\MeshShadowPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\MeshShadowVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\PointPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\PointVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\PostEffect_OutlinePS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\PostEffect_OutlineVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\testCS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationDS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationHS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationVS.cso

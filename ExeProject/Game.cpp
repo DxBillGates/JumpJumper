@@ -92,7 +92,7 @@ bool Game::LoadContents()
 
 	//板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData;
-	MeshCreater::CreateQuad({ 100,100 }, { 1,1 }, testMeshData);
+	MeshCreater::CreateQuad({ 1,1 }, { 1,1 }, testMeshData);
 	meshManager->Add("Plane")->Create(&graphicsDevice, testMeshData);
 
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshDataa;
@@ -106,7 +106,7 @@ bool Game::LoadContents()
 
 	//画面サイズ / 10 板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData3;
-	MeshCreater::Create2DQuad({ 192,108 }, { 1,1 }, testMeshData3);
+	MeshCreater::Create2DQuad({ 1,1 }, { 1,1 }, testMeshData3);
 	meshManager->Add("2DPlane")->Create(&graphicsDevice, testMeshData3);
 
 	//グリッド生成
@@ -223,7 +223,7 @@ bool Game::Draw()
 	//graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
 	graphicsDevice.SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
 	using namespace GatesEngine::Math;
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 10 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 1920,1080,0 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, Vector4(timer.GetElapsedApplicationTime()));
@@ -305,7 +305,7 @@ bool Game::Draw()
 
 	shaderManager->GetShader("PostEffect_OutlineShader")->Set();
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10,10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1  }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))color = { 1,0,0,1 };
 	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D2))color = { 0,1,0,1 };

@@ -7,6 +7,7 @@ class NormalEnemyBehaviour : public GatesEngine::Behaviour
 {
 private:
 	float hp;
+	float t;
 public:
 	NormalEnemyBehaviour();
 	~NormalEnemyBehaviour();

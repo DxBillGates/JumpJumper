@@ -50,6 +50,20 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 				pb->SetColor({ 1,0,0,0 });
 			}
 		}
+
+		{
+			GatesEngine::GameObject* block, *cameraObject;
+			block = b->GetGameObject();
+			cameraObject = mainCameraCollider->GetGameObject();
+			if (GatesEngine::CollisionManager::CheckAABB(b, mainCameraCollider))
+			{
+				block->Collision(mainCameraCollider);
+				b->SetColor({ 1,0,0,0 });
+				cameraObject->Collision(b);
+				mainCameraCollider->SetColor({ 1,0,0,0 });
+			}
+
+		}
 	}
 }
 
@@ -128,6 +142,9 @@ GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Coll
 		break;
 	case GColliderType::PLAYER_BULLET:
 		playerBulletColliders.push_back(collider);
+		break;
+	case GColliderType::PLAYER_CAMERA:
+		mainCameraCollider = collider;
 		break;
 	default:
 		break;

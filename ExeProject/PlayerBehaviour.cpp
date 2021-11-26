@@ -103,6 +103,7 @@ void PlayerBehaviour::Attack()
 
 	bool isInputLeftClick = (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK)) ? true : false;
 	bool isShot = false;
+	unuseBulletCount = 0;
 
 	// 使っていない弾を走査したのち移動ベクトルを設定する
 	// その後の走査はプレイヤーの位置にセットする
@@ -119,6 +120,11 @@ void PlayerBehaviour::Attack()
 		else
 		{
 			(*bullets[i]).SetPos(gameObject->GetTransform()->position);
+		}
+
+		if (!(*bullets[i]).IsUse())
+		{
+			++unuseBulletCount;
 		}
 	}
 }
@@ -183,6 +189,7 @@ PlayerBehaviour::PlayerBehaviour()
 	, CHARGE_FUEL(1)
 	, MAX_TARGET(100)
 	, currentFrameTargetCount(0)
+	, unuseBulletCount(0)
 {
 	mainCamera = new PlayerCamera();
 	targets.resize(MAX_TARGET);
@@ -222,6 +229,20 @@ void PlayerBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
+
+	static float time = 0;
+	time += 0.016f;
+	GatesEngine::Math::Quaternion rotate = GatesEngine::Math::Quaternion({ {0,0,1},time });
+	for (auto& t : targets)
+	{
+		if (!t)continue;
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 }) * GatesEngine::Math::Quaternion::Rotation(rotate) *  mainCamera->GetRotation() *  GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
+		mainCamera->Set(2);
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+	}
+
 }
 
 void PlayerBehaviour::OnLateDraw()
@@ -230,10 +251,23 @@ void PlayerBehaviour::OnLateDraw()
 
 	float persent = fuelValue / MAX_FUEL;
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1,persent * 10,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 100,persent * 1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080/2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+
+	// 残弾数の表示
+	float h = 1080.0f / (int)bullets.size();
+
+	for (int i = 0; i < unuseBulletCount; ++i)
+	{
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 100,h,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 0,(float)i * h,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	}
+
+
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)
