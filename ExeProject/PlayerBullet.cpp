@@ -68,12 +68,18 @@ void PlayerBullet::SetPos(const GatesEngine::Math::Vector3& p)
 	setPos = p;
 }
 
-void PlayerBullet::SetTarget(const GatesEngine::Math::Vector3& t)
+void PlayerBullet::SetTarget(const GatesEngine::Math::Vector3& t, const GatesEngine::Math::Axis& axis)
 {
 	float range = 32767;
-	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(1000,range) ,GatesEngine::Random::Rand(-range,0) };
+	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(10000,range) ,GatesEngine::Random::Rand(-range,-10000) };
+
 	randomVector = randomVector.Normalize();
-	vel = randomVector * 1000;
+
+	GatesEngine::Math::Vector3 xVector = axis.x * randomVector.x;
+	GatesEngine::Math::Vector3 yVector = axis.y * randomVector.y;
+	GatesEngine::Math::Vector3 zVector = axis.z * randomVector.z;
+	GatesEngine::Math::Vector3 vector = xVector + yVector + zVector;
+	vel = vector.Normalize() * 1000;
 
 	isUse = true;
 	isHoming = true;

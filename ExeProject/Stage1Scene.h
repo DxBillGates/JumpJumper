@@ -10,6 +10,7 @@ class Stage1Scene : public GatesEngine::Scene
 private:
 	Stage1 stage;
 	PlayerBehaviour* playerBehaviour;
+	GatesEngine::GameObject* boss;
 
 	GatesEngine::ComputePipeline* testCS;
 	GatesEngine::GPUParticleManager* gpuParticleManager;

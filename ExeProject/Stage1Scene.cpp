@@ -2,6 +2,7 @@
 #include "Header/Application/Application.h"
 #include "NormalEnemyBehaviour.h"
 #include "BlockBehaviour.h"
+#include "BossBehaviour.h"
 #include "PlayerBehaviour.h"
 #include "PlayerBulletBehaviour.h"
 #include "GPUParticleEmitterBehaviour.h"
@@ -62,28 +63,48 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 		bullet->GetCollider()->SetSize({ 1 });
 		bullet->GetTransform()->scale = 10;
+		bullet->SetTag("playerBullet");
 		bullet->SetName("playerBullet");
 
 		playerBehaviour->AddBullet(bulletBehaviour);
 	}
 
+	gp = gameObjectManager.Add(new GameObject());
+	gp->SetGraphicsDevice(graphicsDevice);
+	BossBehaviour* bossBehaviour = gp->AddBehavior<BossBehaviour>();
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::BOSS);
+	gp->SetCollider();
+	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	gp->GetCollider()->SetSize({ 2 });
+	gp->GetTransform()->scale = 500;
+	gp->GetTransform()->position = { 0,1000,-5000 };
+	gp->SetTag("Boss");
+	boss = gp;
+
 	GatesEngine::GameObject* g = nullptr;
 	//auto* g = gameObjectManager.Add(new GameObject());
 	for (int i = 0; i < 5; ++i)
 	{
-		for (int j = 0; j < 1; ++j)
+		for (int j = 0; j < 10; ++j)
 		{
 			g = gameObjectManager.Add(new GameObject());
 			//auto* g = gameObjectManager.Add(new GameObject());
 			g->SetGraphicsDevice(graphicsDevice);
 			auto* e = g->AddComponent<NormalEnemyBehaviour>();
+			e->SetBoss(boss);
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 			g->GetCollider()->SetSize({ 2 });
+			auto* secondCollider = g->AddComponent<Collider>();
+			secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
+			secondCollider->SetSize(10);
+			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
 			g->GetTransform()->scale = 100;
 			g->SetTag("enemy");
 			g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
+
+			bossBehaviour->AddNormalEnemy(g);
 		}
 	}
 
@@ -166,11 +187,11 @@ void Stage1Scene::Update()
 			g->SetGraphicsDevice(graphicsDevice);
 			g->AddComponent<BlockBehaviour>();
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			////複数のコライダーに対応済み
-			//auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			//c->SetPosition({ 0,100,100 });
-			//c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			//c->SetPosition({ 0,200,200 });
+			//複数のコライダーに対応済み
+			auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
+			c->SetPosition({ 0,100,100 });
+			c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
+			c->SetPosition({ 0,200,200 });
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 			g->GetTransform()->scale = { 500,100,500 };
@@ -214,12 +235,19 @@ void Stage1Scene::Update()
 		{
 			auto* g = gameObjectManager.Add(new GameObject());
 			g->SetGraphicsDevice(graphicsDevice);
-			g->AddComponent<NormalEnemyBehaviour>();
+			auto* e = g->AddComponent<NormalEnemyBehaviour>();
+			e->SetBoss(boss);
 			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
 			g->SetCollider();
 			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 			g->GetTransform()->scale = { 100 };
 			g->GetCollider()->SetSize(2);
+
+			auto* secondCollider = g->AddComponent<Collider>();
+			secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
+			secondCollider->SetSize(10);
+			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
+
 			g->SetTag("enemy");
 			float x, y, z;
 			float range = 3000;

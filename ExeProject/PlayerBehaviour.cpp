@@ -155,7 +155,8 @@ void PlayerBehaviour::LockOnAttack()
 			for (auto& b : bullets)
 			{
 				if (b->IsUse())continue;
-				b->SetTarget(t->GetTransform()->position);
+				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
+				b->SetTarget(t->GetTransform()->position,axis);
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -229,20 +230,6 @@ void PlayerBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
-
-	static float time = 0;
-	time += 0.016f;
-	GatesEngine::Math::Quaternion rotate = GatesEngine::Math::Quaternion({ {0,0,1},time });
-	for (auto& t : targets)
-	{
-		if (!t)continue;
-		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 }) * GatesEngine::Math::Quaternion::Rotation(rotate) *  mainCamera->GetRotation() *  GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
-		mainCamera->Set(2);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
-		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
-	}
-
 }
 
 void PlayerBehaviour::OnLateDraw()
@@ -265,6 +252,19 @@ void PlayerBehaviour::OnLateDraw()
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	}
+
+	static float time = 0;
+	time += 0.016f;
+	GatesEngine::Math::Quaternion rotate = GatesEngine::Math::Quaternion({ {0,0,1},time });
+	for (auto& t : targets)
+	{
+		if (!t)continue;
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
+		mainCamera->Set(2);
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 }
 

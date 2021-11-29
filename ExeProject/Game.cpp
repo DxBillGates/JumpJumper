@@ -174,7 +174,7 @@ bool Game::LoadContents()
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
-	sceneManager->ChangeScene("Stage1Scene");
+	sceneManager->ChangeSceneWithoutInitialize("Stage1Scene");
 	//sceneManager->ChangeScene("TitleScene");
 	//sceneManager->ChangeScene("SampleScene");
 

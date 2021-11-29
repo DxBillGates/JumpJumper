@@ -44,6 +44,7 @@ void GatesEngine::GameObjectManager::Start()
 {
 	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
 	{
+		if (!(*itr)->GetEnabled())continue;
 		(*itr)->Start();
 	}
 }

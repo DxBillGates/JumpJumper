@@ -6,15 +6,17 @@
 void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 {
 	//ブロックとプレイヤー、敵、玉の当たり判定
-	for (auto b : blockColliders)
+	for (auto& b : blockColliders)
 	{
+		if (!b->GetEnabled())continue;
 		//複数コライダー対応
-		for (auto p : playerColliders)
+		for (auto& p : playerColliders)
 		{
+			if (!p->GetEnabled())continue;
 			GatesEngine::GameObject* block, * player;
 			block = b->GetGameObject();
 			player = p->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(b,p))
+			if (GatesEngine::CollisionManager::CheckAABB(b, p))
 			{
 				block->Collision(p);
 				b->SetColor({ 1,0,0,0 });
@@ -23,22 +25,27 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 			}
 		}
 
-		for (auto e : enemyColliders)
+		for (auto& e : enemyColliders)
 		{
+			if (!e->GetEnabled())continue;
 			GatesEngine::GameObject* block, * enemy;
 			block = b->GetGameObject();
 			enemy = e->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(b,e))
+			if (e->GetType() == GatesEngine::ColliderType::CUBE)
 			{
-				block->Collision(e);
-				b->SetColor({1,0,0,0});
-				enemy->Collision(b);
-				e->SetColor({ 1,0,0,0 });
+				if (GatesEngine::CollisionManager::CheckAABB(b, e))
+				{
+					block->Collision(e);
+					b->SetColor({ 1,0,0,0 });
+					enemy->Collision(b);
+					e->SetColor({ 1,0,0,0 });
+				}
 			}
 		}
 
-		for (auto pb : playerBulletColliders)
+		for (auto& pb : playerBulletColliders)
 		{
+			if (!pb->GetEnabled())continue;
 			GatesEngine::GameObject* block, * playerBullet;
 			block = b->GetGameObject();
 			playerBullet = pb->GetGameObject();
@@ -52,7 +59,7 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 		}
 
 		{
-			GatesEngine::GameObject* block, *cameraObject;
+			GatesEngine::GameObject* block, * cameraObject;
 			block = b->GetGameObject();
 			cameraObject = mainCameraCollider->GetGameObject();
 			if (GatesEngine::CollisionManager::CheckAABB(b, mainCameraCollider))
@@ -70,33 +77,53 @@ void GameObjectCollisionManager::CheckCollisionHitBlockTo()
 void GameObjectCollisionManager::CheckCollisionHitEnemyTo()
 {
 	//敵とプレイヤー、玉
-	for (auto e : enemyColliders)
+	for (auto& e : enemyColliders)
 	{
-		for (auto p : playerColliders)
+		if (!e->GetEnabled())continue;
+		for (auto& p : playerColliders)
 		{
+			if (!p->GetEnabled())continue;
 			GatesEngine::GameObject* enemy, * player;
 			enemy = e->GetGameObject();
 			player = p->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(enemy->GetCollider(), player->GetCollider()))
+
+			if (e->GetType() == GatesEngine::ColliderType::CUBE)
 			{
-				enemy->Collision(p);
-				e->SetColor({ 1,0,0,0 });
-				player->Collision(e);
-				p->SetColor({ 1,0,0,0 });
+				if (GatesEngine::CollisionManager::CheckAABB(e, p))
+				{
+					enemy->Collision(p);
+					e->SetColor({ 1,0,0,0 });
+					player->Collision(e);
+					p->SetColor({ 1,0,0,0 });
+				}
+			}
+			else
+			{
+				if (GatesEngine::CollisionManager::CheckAABBToSphere(p, e))
+				{
+					enemy->Collision(p);
+					e->SetColor({ 1,0,0,0 });
+					player->Collision(e);
+					p->SetColor({ 1,0,0,0 });
+				}
 			}
 		}
 
-		for (auto pb : playerBulletColliders)
+		for (auto& pb : playerBulletColliders)
 		{
+			if (!pb->GetEnabled())continue;
 			GatesEngine::GameObject* enemy, * playerBullet;
 			enemy = e->GetGameObject();
 			playerBullet = pb->GetGameObject();
-			if (GatesEngine::CollisionManager::CheckAABB(enemy->GetCollider(), playerBullet->GetCollider()))
+			if (e->GetType() == GatesEngine::ColliderType::CUBE)
 			{
-				enemy->Collision(pb);
-				e->SetColor({ 1,0,0,0 });
-				playerBullet->Collision(e);
-				pb->SetColor({ 1,0,0,0 });
+				if (GatesEngine::CollisionManager::CheckAABB(e, pb))
+				{
+					enemy->Collision(pb);
+					e->SetColor({ 1,0,0,0 });
+					playerBullet->Collision(e);
+					pb->SetColor({ 1,0,0,0 });
+				}
 			}
 		}
 	}
@@ -108,13 +135,39 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
 	if (!playerBehaviour)return;
 	if (GatesEngine::Input::GetInstance()->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
 	{
-		for (auto e : enemyColliders)
+		for (auto& e : enemyColliders)
 		{
+			if (!e->GetEnabled())continue;
 			GatesEngine::Math::Vector3 cameraDir = mainCamera->GetRotation().GetAxis().z;
-			if (GatesEngine::CollisionManager::CheckAABBToRay(e,mainCamera->GetPosition(), cameraDir))
+			if (e->GetType() == GatesEngine::ColliderType::CUBE)
 			{
-				playerBehaviour->AddTarget(e->GetGameObject());
+				if (GatesEngine::CollisionManager::CheckAABBToRay(e, mainCamera->GetPosition(), cameraDir))
+				{
+					playerBehaviour->AddTarget(e->GetGameObject());
+					e->SetColor({ 1,0,0,0 });
+				}
+			}
+		}
+	}
+}
+
+void GameObjectCollisionManager::CheckCollisionHitBossTo()
+{
+	for (auto& e : enemyColliders)
+	{
+		if (!e->GetEnabled())continue;
+		GatesEngine::GameObject* enemy, * boss;
+		enemy = e->GetGameObject();
+		boss = bossCollider->GetGameObject();
+
+		if (e->GetType() == GatesEngine::ColliderType::CUBE)
+		{
+			if (GatesEngine::CollisionManager::CheckAABB(e,bossCollider))
+			{
+				enemy->Collision(bossCollider);
 				e->SetColor({ 1,0,0,0 });
+				boss->Collision(e);
+				bossCollider->SetColor({ 1,0,0,0 });
 			}
 		}
 	}
@@ -125,6 +178,7 @@ void GameObjectCollisionManager::Update()
 	CheckCollisionHitBlockTo();
 	CheckCollisionHitEnemyTo();
 	CheckCollisionHitEnemyToCameraRay();
+	CheckCollisionHitBossTo();
 }
 
 GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Collider* collider, GColliderType type)
@@ -145,6 +199,9 @@ GatesEngine::Collider* GameObjectCollisionManager::AddCollider(GatesEngine::Coll
 		break;
 	case GColliderType::PLAYER_CAMERA:
 		mainCameraCollider = collider;
+		break;
+	case GColliderType::BOSS:
+		bossCollider = collider;
 		break;
 	default:
 		break;

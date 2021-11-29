@@ -160,6 +160,14 @@ GatesEngine::Collider* GatesEngine::GameObject::GetCollider()
 void GatesEngine::GameObject::SetEnabled(bool flag)
 {
 	enabled = flag;
+	for (auto itr = components.begin(); itr != components.end(); ++itr)
+	{
+		(*itr)->SetEnabled(enabled);
+	}
+	for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+	{
+		(*itr)->SetEnabled(enabled);
+	}
 }
 
 bool GatesEngine::GameObject::GetEnabled()

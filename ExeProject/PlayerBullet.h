@@ -24,5 +24,5 @@ public:
 	void RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector);
 	bool IsUse();
 	void SetPos(const GatesEngine::Math::Vector3& p);
-	void SetTarget(const GatesEngine::Math::Vector3& t);
+	void SetTarget(const GatesEngine::Math::Vector3& t, const GatesEngine::Math::Axis& axis = {});
 };

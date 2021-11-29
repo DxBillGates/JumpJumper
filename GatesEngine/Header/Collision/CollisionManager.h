@@ -23,6 +23,7 @@ namespace GatesEngine
 		static bool CheckAABB(Collider* collider1, Collider* collider2);
 		static bool CheckSphereToSphere(Collider* collider1, Collider* collider2);
 		static bool CheckAABBToRay(Collider* collider,const Math::Vector3& linePos, const Math::Vector3& lineDir);
+		static bool CheckAABBToSphere(Collider* collider1, Collider* collider2);
 		void Initialize(int level, const Math::Vector3& min, const Math::Vector3& max);
 	};
 }

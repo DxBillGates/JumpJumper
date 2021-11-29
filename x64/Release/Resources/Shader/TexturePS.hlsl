@@ -1,14 +1,21 @@
 #include "DefaultShader.hlsli"
 
+cbuffer Time : register(b4)
+{
+	// cpu deltaTime
+	float4 time;
+}
+
 Texture2D<float4> tex : register(t0);
-Texture2D<float> depthTex : register(t1);
-SamplerState smp : register(s0);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
 
 float4 main(DefaultVSOutput vsOutput) : SV_TARGET
 {
-	float4 texColor = tex.Sample(smp,vsOutput.uv);
-	//float dep = pow(depthTex.Sample(smp,vsOutput.uv),20);
-	//dep = 1 - dep;
+	float2 perPixel = float2(1.0f /1920.0f,1.0f/1080.0f);
+	float4 texColor = tex.Sample(wrapPointSampler,vsOutput.uv + time.xy);
 	return texColor;
-	//return float4(dep,dep,dep,1);
 }

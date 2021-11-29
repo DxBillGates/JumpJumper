@@ -62,6 +62,7 @@ void GatesEngine::Collider::OnLateDraw()
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, graphicsDevice->GetMainCamera()->GetData());
 	graphicsDevice->GetMainCamera()->Set(2);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),color });
 
 
 	Math::Vector3 s = gameObject->GetTransform()->scale;
@@ -75,20 +76,19 @@ void GatesEngine::Collider::OnLateDraw()
 	else
 	{
 		matrix = Math::Matrix4x4::Scale({ s.x * transform.scale.x,s.y * transform.scale.y,s.z * transform.scale.z }) * Math::Matrix4x4::Translate(p + transform.position);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix * transform.GetMatrix());
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix);
 		mesh->Draw();
 
 		matrix = Math::Matrix4x4::Scale({ s.x * transform.scale.x,s.y * transform.scale.y,s.z * transform.scale.z }) * Math::Matrix4x4::RotationX(Math::ConvertToRadian(90)) * Math::Matrix4x4::Translate(p + transform.position);
 
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix * transform.GetMatrix());
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix);
 		mesh->Draw();
 
 
 		matrix = Math::Matrix4x4::Scale({ s.x * transform.scale.x,s.y * transform.scale.y,s.z * transform.scale.z }) * Math::Matrix4x4::RotationZ(Math::ConvertToRadian(90)) * Math::Matrix4x4::Translate(p + transform.position);
 
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix * transform.GetMatrix());
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, matrix);
 	}
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),color });
 	mesh->Draw();
 #endif
 }

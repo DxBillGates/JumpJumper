@@ -15,15 +15,15 @@ PSOutput main(VSOutput input)
 	float3 normal = normalize(input.normal);
 	float intensity = saturate(dot(-lightDir, normal));
 	float4 color = float4(intensity, intensity, intensity, 1);
-	////ŠÈˆÕƒgƒD[ƒ“
-	if (intensity > 0.95)
-		color = float4(1, 1, 1, 1.0);
-	else if (intensity > 0.2)
-		color = float4(0.7, 0.7, 0.7, 1.0);
-	else if (intensity > 0.1)
-		color = float4(0.5, 0.5, 0.5, 1.0);
-	else
-		color = float4(0.2, 0.2, 0.2, 1.0);
+	//////ŠÈˆÕƒgƒD[ƒ“
+	//if (intensity > 0.95)
+	//	color = float4(1, 1, 1, 1.0);
+	//else if (intensity > 0.2)
+	//	color = float4(0.7, 0.7, 0.7, 1.0);
+	//else if (intensity > 0.1)
+	//	color = float4(0.5, 0.5, 0.5, 1.0);
+	//else
+	//	color = float4(0.2, 0.2, 0.2, 1.0);
 
 	output.result = color;
 

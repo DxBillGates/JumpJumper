@@ -1,34 +1,40 @@
 #include "TestMultiRTVShader.hlsli"
 
-Texture2D<float4> tex : register(t0);
-SamplerState smp : register(s0);
+Texture2D<float4> lightDepthTex : register(t0);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
 
 PSOutput main(VSOutput input)
 {
-	float4 texColor = tex.Sample(smp, saturate(input.uv));
 	PSOutput output;
-	//色反転
-	output.rtv0 = float4(1,1,1,1) - texColor.rgba;
-	output.rtv0.a = 1;
 
-	//平均ぼかし
-	float2 pixel = float2(1 / 1920.0f, 1 / 1080.0f);
-	float4 addNearPixelColor = float4(0, 0, 0, 0);
+	float3 lightDir = normalize(worldLightDir.xyz);
+	float3 normal = normalize(input.normal);
+	float intensity = saturate(dot(-lightDir, normal));
+	float4 color = float4(intensity, intensity, intensity, 1);
+	////簡易トゥーン
+	if (intensity > 0.95)
+		color = float4(1, 1, 1, 1.0);
+	else if (intensity > 0.2)
+		color = float4(0.7, 0.7, 0.7, 1.0);
+	else if (intensity > 0.1)
+		color = float4(0.5, 0.5, 0.5, 1.0);
+	else
+		color = float4(0.2, 0.2, 0.2, 1.0);
 
-	//サンプリング回数
-	float sampleCount = 10;
-	float2 offset = input.uv + float2(-pixel.x, -pixel.y) * sampleCount;
-	float count = 0;
-	for (int j = 0; j < sampleCount * 2; ++j)
+	output.result = color;
+
+	float shadowWeight = 1;
+	if (input.tpos.x < 1 && input.tpos.x > -1 && input.tpos.y < 1 && input.tpos.y > -1 && input.tpos.z < 1 && input.tpos.z > -1)
 	{
-		for (int k = 0; k < sampleCount * 2; ++k)
-		{
-			addNearPixelColor += tex.Sample(smp, saturate(offset + float2(pixel.x * j, pixel.y * k)));
-			++count;
-		}
+		float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
+		float2 shadowUV = saturate((posFromLightVP.xy + float2(1, -1)) * float2(0.5, -0.5));
+		float4 depthFromLight = lightDepthTex.Sample(clampPointSampler, shadowUV);
+		shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.0001f) ? 0.7f : 1;
 	}
-	float4 r = addNearPixelColor / count;
-
-	output.rtv1 = saturate(r);
+	output.shadow = float4(shadowWeight, shadowWeight, shadowWeight, 1);
 	return output;
 }

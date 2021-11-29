@@ -196,6 +196,33 @@ bool GatesEngine::CollisionManager::CheckAABBToRay(Collider* collider,const Math
 	return true;
 }
 
+bool GatesEngine::CollisionManager::CheckAABBToSphere(Collider* collider1, Collider* collider2)
+{
+	Math::Vector3 min1, max1;
+	Transform* mTransform = collider1->GetGameObject()->GetTransform();
+	Transform* oTransform = collider2->GetGameObject()->GetTransform();
+	Transform* mcTransform = collider1->GetTransform();
+	Transform* ocTransform = collider2->GetTransform();
+	Math::Vector3 sPos = ocTransform->position + oTransform->position;
+	Math::Vector3 mColliderSize, oColliderSize;
+	mColliderSize = { mTransform->scale.x * mcTransform->scale.x,mTransform->scale.y * mcTransform->scale.y,mTransform->scale.z * mcTransform->scale.z };
+	oColliderSize = { oTransform->scale.x * ocTransform->scale.x,oTransform->scale.y * ocTransform->scale.y,oTransform->scale.z * ocTransform->scale.z };
+	min1 = mTransform->position + mcTransform->position - mColliderSize / 2;
+	max1 = mTransform->position + mcTransform->position + mColliderSize / 2;
+
+	float minLength, maxLength;
+	minLength = Math::Vector3::Distance(sPos, min1);
+	maxLength = Math::Vector3::Distance(sPos, max1);
+
+	float r = powf(oColliderSize.x / 2, 2);
+	if (minLength * minLength <= r || maxLength * maxLength <= r)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void GatesEngine::CollisionManager::Initialize(int level, const Math::Vector3& min, const Math::Vector3& max)
 {
 	collisionTreeManager = new CollisionTreeManager();

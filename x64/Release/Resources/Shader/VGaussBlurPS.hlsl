@@ -1,7 +1,11 @@
 #include "GaussBlurShader.hlsli"
 
 Texture2D<float4> tex : register(t0);
-SamplerState smp : register(s0);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
 
 float4 main(VSOutput input) : SV_TARGET
 {
@@ -13,7 +17,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float perPixel = 1;
 	float2 pixel = float2(perPixel / w, perPixel / h);
 
-	float4 texColor = tex.Sample(smp, input.uv);
+	float4 texColor = tex.Sample(clampPointSampler, input.uv);
 	float4 resultColor = float4(0, 0, 0, 0);
 
 	resultColor += blurData[0] * texColor;
@@ -21,8 +25,8 @@ float4 main(VSOutput input) : SV_TARGET
 	//ècï˚å¸Ç…ÉuÉâÅ[ÇÇ©ÇØÇÈ
 	for (uint i = 0; i < 8; ++i)
 	{
-		resultColor += blurData[i >> 2][i % 4] * tex.Sample(smp, saturate(input.uv + float2(0,  pixel.x * i)));
-		resultColor += blurData[i >> 2][i % 4] * tex.Sample(smp, saturate(input.uv + float2(0, -pixel.y * i)));
+		resultColor += blurData[i >> 2][i % 4] * tex.Sample(clampPointSampler, saturate(input.uv + float2(0,  pixel.x * i)));
+		resultColor += blurData[i >> 2][i % 4] * tex.Sample(clampPointSampler, saturate(input.uv + float2(0, -pixel.y * i)));
 	}
 
 	return float4(resultColor.rgb,texColor.a);
