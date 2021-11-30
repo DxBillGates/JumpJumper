@@ -129,7 +129,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetSize({ 1 });
 	g->GetTransform()->scale = { 500,100,500 };
 	g->SetTag("block");
-	g->GetTransform()->position = { 1000,700,2000 };
+	g->GetTransform()->position = { 2000,1000,0 };
 
 	g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
@@ -140,7 +140,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetSize({ 1 });
 	g->GetTransform()->scale = { 500,100,500 };
 	g->SetTag("block");
-	g->GetTransform()->position = { 1000,1500,2000 };
+	g->GetTransform()->position = { -2000,1000,0 };
 
 	g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
