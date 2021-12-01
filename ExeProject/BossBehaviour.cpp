@@ -23,6 +23,7 @@ void BossBehaviour::CallEnemy(const GatesEngine::Math::Vector3& centerPos, int c
 
 		flag = ((int)GatesEngine::Random::Rand(-10, 10));
 		GatesEngine::Math::Vector3 offset = (flag > 0) ? left : right;
+		e.enemyBehaviour->SetPosition(gameObject->GetTransform()->position + offset);
 		e.gameObject->GetTransform()->position = gameObject->GetTransform()->position + offset;
 		++loopCount;
 	}
@@ -52,18 +53,18 @@ void BossBehaviour::Start()
 		if (!e.gameObject)break;
 		e.gameObject->SetEnabled(false);
 	}
-
-	int r = 5000;
-	GatesEngine::Math::Vector3 pos;
-	GatesEngine::Math::Vector3 offset;
-	const int CALL_ENEMY = 10;
-	for (int i = 0; i < CALL_ENEMY; ++i)
-	{
-		pos.x = r * sinf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.x;
-		pos.y = 100;
-		pos.z = r * cosf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.z;
-		CallEnemy(pos, 1);
-	}
+//
+//	int r = 5000;
+//	GatesEngine::Math::Vector3 pos;
+//	GatesEngine::Math::Vector3 offset;
+//	const int CALL_ENEMY = 10;
+//	for (int i = 0; i < CALL_ENEMY; ++i)
+//	{
+//		pos.x = r * sinf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.x;
+//		pos.y = 100;
+//		pos.z = r * cosf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.z;
+//		CallEnemy(pos, 1);
+//	}
 }
 
 void BossBehaviour::Update()

@@ -79,7 +79,7 @@ void PlayerBullet::SetTarget(const GatesEngine::Math::Vector3& t, const GatesEng
 	GatesEngine::Math::Vector3 yVector = axis.y * randomVector.y;
 	GatesEngine::Math::Vector3 zVector = axis.z * randomVector.z;
 	GatesEngine::Math::Vector3 vector = xVector + yVector + zVector;
-	vel = vector.Normalize() * 1000;
+	vel = vector.Normalize() * 2500;
 
 	isUse = true;
 	isHoming = true;

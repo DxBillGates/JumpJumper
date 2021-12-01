@@ -24,7 +24,14 @@ NormalEnemyBehaviour::~NormalEnemyBehaviour()
 
 void NormalEnemyBehaviour::Start()
 {
+
 	hp = 10;
+	t = 0;
+	deadPos = {};
+	isBossAttack = false;
+	isAnimetion = false;
+	animationTime = 0;
+	//hp = 10;
 	//Enemy::Initialize();
 	Enemy::pos = gameObject->GetTransform()->position;
 }
@@ -38,69 +45,68 @@ void NormalEnemyBehaviour::Update()
 
 	if (!Enemy::GetIsTarget())
 	{
+		GatesEngine::Math::Vector3 moveVector;
+		if (hp <= 0 && !isBossAttack && !isAnimetion)
+		{
+			isAnimetion = true;
+			deadPos = gameObject->GetTransform()->position;
+		}
 
+		const float ANIMATION_TIME = 2;
+		if (isAnimetion)
+		{
+			bool isBreak = (animationTime >= ANIMATION_TIME) ? true : false;
+
+			if (!isBreak)
+			{
+				gameObject->GetTransform()->position = deadPos;
+				//moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
+				//moveVector = moveVector.Normalize();
+				float range = 32767;
+				GatesEngine::Math::Vector3 randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) };
+				moveVector = randomVector;
+				moveVector = moveVector.Normalize() * 20;
+			}
+			else
+			{
+				isAnimetion = false;
+				isBossAttack = true;
+				animationTime = 0;
+			}
+			animationTime += 0.016f;
+		}
+
+		if (isBossAttack)
+		{
+			moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
+			moveVector = moveVector.Normalize() * 10 * animationTime;
+			animationTime += 0.016f;
+		}
+
+		bool isMove = false;
+		//if (target)
+		//{
+		//	moveVector = target->GetTransform()->position - gameObject->GetTransform()->position;
+		//	moveVector = moveVector.Normalize();
+
+		//}
+		isMove = true;
+
+		//if (isMove)
+		//{
+		//	gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
+		//	t += 0.016f / 2.0f;
+		//}
+
+		//gameObject->GetTransform()->scale = gameObject->GetTransform()->scale + moveVector.Normalize();
+		gameObject->GetTransform()->position += moveVector;
+
+		target = nullptr;
 	}
 
-	Enemy::SetPosition(gameObject->GetTransform()->position);
 	//Enemy::SetPosition(fixPos);
 
-	//GatesEngine::Math::Vector3 moveVector;
-	//if (hp <= 0 && !isBossAttack && !isAnimetion)
-	//{
-	//	isAnimetion = true;
-	//	deadPos = gameObject->GetTransform()->position;
-	//}
-
-	//const float ANIMATION_TIME = 2;
-	//if (isAnimetion)
-	//{
-	//	bool isBreak = (animationTime >= ANIMATION_TIME) ? true : false;
-
-	//	if (!isBreak)
-	//	{
-	//		gameObject->GetTransform()->position = deadPos;
-	//		//moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
-	//		//moveVector = moveVector.Normalize();
-	//		float range = 32767;
-	//		GatesEngine::Math::Vector3 randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) };
-	//		moveVector = randomVector;
-	//		moveVector = moveVector.Normalize() * 20;
-	//	}
-	//	else
-	//	{
-	//		isAnimetion = false;
-	//		isBossAttack = true;
-	//		animationTime = 0;
-	//	}
-	//	animationTime += 0.016f;
-	//}
-
-	//if (isBossAttack)
-	//{
-	//	moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
-	//	moveVector = moveVector.Normalize() * 10 * animationTime;
-	//	animationTime += 0.016f;
-	//}
-
-	//bool isMove = false;
-	////if (target)
-	////{
-	////	moveVector = target->GetTransform()->position - gameObject->GetTransform()->position;
-	////	moveVector = moveVector.Normalize();
-
-	////}
-	//isMove = true;
-
-	//if (isMove)
-	//{
-	//	gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
-	//	t += 0.016f;
-	//}
-
-	////gameObject->GetTransform()->scale = gameObject->GetTransform()->scale + moveVector.Normalize();
-	//gameObject->GetTransform()->position += moveVector;
-
-	//target = nullptr;
+	Enemy::SetPosition(gameObject->GetTransform()->position);
 }
 
 void NormalEnemyBehaviour::OnDraw()
@@ -132,6 +138,7 @@ void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	if (other->GetTag() == "Boss")
 	{
 		Enemy::Initialize();
+		Start();
 		gameObject->SetEnabled(false);
 	}
 

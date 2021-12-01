@@ -56,7 +56,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->SetGraphicsDevice(graphicsDevice);
 		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
 		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
-		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 128);
+		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 256);
 		gParticleEmitter->SetComputeShader(testCS);
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
 		bullet->SetCollider();

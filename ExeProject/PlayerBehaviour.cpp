@@ -260,8 +260,10 @@ void PlayerBehaviour::OnLateDraw()
 	for (auto& t : targets)
 	{
 		if (!t)continue;
+		float d = GatesEngine::Math::Vector3::Distance(t->GetTransform()->position,mainCamera->GetPosition());
+		d /= 2500;
 		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
 		graphicsDevice->GetMainCamera()->Set(2);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
