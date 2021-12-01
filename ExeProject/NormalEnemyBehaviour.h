@@ -2,8 +2,9 @@
 #include "Header/Component/Behaviour.h"
 #include "Header/Math/Math.h"
 #include "Header/Graphics/Camera.h"
+#include "Enemy.h"
 
-class NormalEnemyBehaviour : public GatesEngine::Behaviour
+class NormalEnemyBehaviour : public GatesEngine::Behaviour, public Enemy
 {
 private:
 	GatesEngine::GameObject* target;

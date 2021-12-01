@@ -2,18 +2,28 @@
 #include "Header/GameObject/GameObject.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
+#include "Header/Util/Random.h"
 
 void BossBehaviour::CallEnemy(const GatesEngine::Math::Vector3& centerPos, int count)
 {
+	GatesEngine::Math::Vector3 left, right;
+	left = { -1000,0,0 };
+	right = { 1000,0,0 };
 	int loopCount = 0;
+	int flag;
 	for (auto& e : normalEnemies)
 	{
 		if (loopCount >= count)break;
-		if (!e)break;
-		if (e->GetEnabled())continue;
-		e->SetEnabled(true);
-		e->Start();
-		e->GetTransform()->position = centerPos;
+		if (!e.gameObject)break;
+		if (e.gameObject->GetEnabled())continue;
+		e.gameObject->SetEnabled(true);
+		e.gameObject->Start();
+		e.enemyBehaviour->SetTarget(centerPos, { 0,10000,0 });
+		e.enemyBehaviour->SetTime(3);
+
+		flag = ((int)GatesEngine::Random::Rand(-10, 10));
+		GatesEngine::Math::Vector3 offset = (flag > 0) ? left : right;
+		e.gameObject->GetTransform()->position = gameObject->GetTransform()->position + offset;
 		++loopCount;
 	}
 }
@@ -25,6 +35,8 @@ BossBehaviour::BossBehaviour()
 	, callEnemyFlag(false)
 	, MAX_NORMAL_ENEMY(100)
 	, normalEnemyAddedCount(0)
+	, callEnemyInterval(0)
+	, n(0)
 {
 	normalEnemies.resize(MAX_NORMAL_ENEMY);
 }
@@ -37,11 +49,11 @@ void BossBehaviour::Start()
 {
 	for (auto& e : normalEnemies)
 	{
-		if (!e)break;
-		e->SetEnabled(false);
+		if (!e.gameObject)break;
+		e.gameObject->SetEnabled(false);
 	}
 
-	int r = 2000;
+	int r = 5000;
 	GatesEngine::Math::Vector3 pos;
 	GatesEngine::Math::Vector3 offset;
 	const int CALL_ENEMY = 10;
@@ -60,6 +72,23 @@ void BossBehaviour::Update()
 	{
 		mainCamera = dynamic_cast<GatesEngine::Camera3D*>(gameObject->GetGraphicsDevice()->GetMainCamera());
 	}
+	const int MAX_TIME = 3;
+	if (callEnemyInterval >= MAX_TIME)
+	{
+		int r = 5000;
+		GatesEngine::Math::Vector3 pos;
+		GatesEngine::Math::Vector3 offset;
+		const int CALL_ENEMY = 10;
+		if (n > CALL_ENEMY)n = 0;
+		pos.x = r * sinf((2.0f * 3.1415f / CALL_ENEMY) * n) / 2 + offset.x;
+		pos.y = 100;
+		pos.z = r * cosf((2.0f * 3.1415f / CALL_ENEMY) * n) / 2 + offset.z;
+		CallEnemy(pos, 1);
+		++n;
+		callEnemyInterval = 0;
+	}
+
+	callEnemyInterval += 0.016f / 2.0f;
 }
 
 void BossBehaviour::OnDraw()
@@ -70,6 +99,23 @@ void BossBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
+
+
+	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(500);
+	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(1000, 0, 0));
+
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+
+
+	posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(-1000, 0, 0));
+
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 }
 
 void BossBehaviour::OnLateDraw()
@@ -109,9 +155,10 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	}
 }
 
-void BossBehaviour::AddNormalEnemy(GatesEngine::GameObject* enemy)
+void BossBehaviour::AddNormalEnemy(GatesEngine::GameObject* enemy, Enemy* enemyBehaviour)
 {
 	if (normalEnemyAddedCount > (int)normalEnemies.size())return;
-	normalEnemies[normalEnemyAddedCount] = enemy;
+	normalEnemies[normalEnemyAddedCount].enemyBehaviour = enemyBehaviour;
+	normalEnemies[normalEnemyAddedCount].gameObject = enemy;
 	++normalEnemyAddedCount;
 }

@@ -56,8 +56,9 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	real[DTid.x].vel.w += GetRandomVector(DTid.x).x + 0.001f;
 
 	//ランダムベクトルの作成
+	float range = 1;
 	float4 randomVector = float4(0, 0, 0, 0);
-	randomVector.xyz = GetRandomVector(GetRandomVector(DTid.x),float3(-1,-0.5f,-1),float3(1, 0.5f,0));
+	randomVector.xyz = GetRandomVector(GetRandomVector(DTid.x),float3(-range, -range, -range),float3(range, range, range));
 	randomVector = normalize(randomVector);
 
 	////ターゲットベクトルの計算

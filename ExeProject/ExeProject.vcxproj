@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="BlockBehaviour.cpp" />
     <ClCompile Include="BossBehaviour.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjectCollisionManager.cpp" />
     <ClCompile Include="GPUParticleEmitterBehaviour.cpp" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="BlockBehaviour.h" />
     <ClInclude Include="BossBehaviour.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjectCollisionManager.h" />
     <ClInclude Include="GPUParticleEmitterBehaviour.h" />

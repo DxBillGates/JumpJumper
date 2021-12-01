@@ -25,67 +25,82 @@ NormalEnemyBehaviour::~NormalEnemyBehaviour()
 void NormalEnemyBehaviour::Start()
 {
 	hp = 10;
+	//Enemy::Initialize();
+	Enemy::pos = gameObject->GetTransform()->position;
 }
 
 void NormalEnemyBehaviour::Update()
 {
-	GatesEngine::Math::Vector3 moveVector;
-	if (hp <= 0 && !isBossAttack && !isAnimetion)
+	//Enemy::vel = {1,0,0};
+	Enemy::Update();
+	GatesEngine::Math::Vector3 fixPos = Enemy::pos;
+	gameObject->GetTransform()->position = fixPos;
+
+	if (!Enemy::GetIsTarget())
 	{
-		isAnimetion = true;
-		deadPos = gameObject->GetTransform()->position;
+
 	}
 
-	const float ANIMATION_TIME = 2;
-	if (isAnimetion)
-	{
-		bool isBreak = (animationTime >= ANIMATION_TIME) ? true : false;
+	Enemy::SetPosition(gameObject->GetTransform()->position);
+	//Enemy::SetPosition(fixPos);
 
-		if (!isBreak)
-		{
-			gameObject->GetTransform()->position = deadPos;
-			//moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
-			//moveVector = moveVector.Normalize();
-			float range = 32767;
-			GatesEngine::Math::Vector3 randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) };
-			moveVector = randomVector;
-			moveVector = moveVector.Normalize() * 20;
-		}
-		else
-		{
-			isAnimetion = false;
-			isBossAttack = true;
-			animationTime = 0;
-		}
-		animationTime += 0.016f;
-	}
+	//GatesEngine::Math::Vector3 moveVector;
+	//if (hp <= 0 && !isBossAttack && !isAnimetion)
+	//{
+	//	isAnimetion = true;
+	//	deadPos = gameObject->GetTransform()->position;
+	//}
 
-	if (isBossAttack)
-	{
-		moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
-		moveVector = moveVector.Normalize() * 10 * animationTime;
-		animationTime += 0.016f;
-	}
+	//const float ANIMATION_TIME = 2;
+	//if (isAnimetion)
+	//{
+	//	bool isBreak = (animationTime >= ANIMATION_TIME) ? true : false;
 
-	bool isMove = false;
-	if (target)
-	{
-		moveVector = target->GetTransform()->position - gameObject->GetTransform()->position;
-		moveVector = moveVector.Normalize();
+	//	if (!isBreak)
+	//	{
+	//		gameObject->GetTransform()->position = deadPos;
+	//		//moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
+	//		//moveVector = moveVector.Normalize();
+	//		float range = 32767;
+	//		GatesEngine::Math::Vector3 randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) };
+	//		moveVector = randomVector;
+	//		moveVector = moveVector.Normalize() * 20;
+	//	}
+	//	else
+	//	{
+	//		isAnimetion = false;
+	//		isBossAttack = true;
+	//		animationTime = 0;
+	//	}
+	//	animationTime += 0.016f;
+	//}
 
-		isMove = true;
-	}
+	//if (isBossAttack)
+	//{
+	//	moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
+	//	moveVector = moveVector.Normalize() * 10 * animationTime;
+	//	animationTime += 0.016f;
+	//}
 
-	if (isMove)
-	{
-		gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
-		t += 0.016f;
-	}
+	//bool isMove = false;
+	////if (target)
+	////{
+	////	moveVector = target->GetTransform()->position - gameObject->GetTransform()->position;
+	////	moveVector = moveVector.Normalize();
 
-	//gameObject->GetTransform()->scale = gameObject->GetTransform()->scale + moveVector.Normalize();
-	gameObject->GetTransform()->position += moveVector;
+	////}
+	//isMove = true;
 
-	target = nullptr;
+	//if (isMove)
+	//{
+	//	gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
+	//	t += 0.016f;
+	//}
+
+	////gameObject->GetTransform()->scale = gameObject->GetTransform()->scale + moveVector.Normalize();
+	//gameObject->GetTransform()->position += moveVector;
+
+	//target = nullptr;
 }
 
 void NormalEnemyBehaviour::OnDraw()
@@ -116,6 +131,7 @@ void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 
 	if (other->GetTag() == "Boss")
 	{
+		Enemy::Initialize();
 		gameObject->SetEnabled(false);
 	}
 

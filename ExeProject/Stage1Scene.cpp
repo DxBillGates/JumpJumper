@@ -104,7 +104,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 			g->SetTag("enemy");
 			g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
 
-			bossBehaviour->AddNormalEnemy(g);
+			bossBehaviour->AddNormalEnemy(g,e);
 		}
 	}
 
@@ -231,7 +231,7 @@ void Stage1Scene::Update()
 		//	}
 		//}
 
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			auto* g = gameObjectManager.Add(new GameObject());
 			g->SetGraphicsDevice(graphicsDevice);
