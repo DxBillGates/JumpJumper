@@ -118,7 +118,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetSize({ 1 });
 	g->GetTransform()->scale = { 10000,1000,10000 };
 	g->SetTag("block");
-	g->GetTransform()->position = { 0,-500,0 };
+	g->GetTransform()->position = { 0,-600,0 };
 
 	g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
