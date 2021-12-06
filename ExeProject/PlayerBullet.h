@@ -1,4 +1,5 @@
 #pragma once
+#include "Header/GameObject/GameObject.h"
 #include "Header/Math/Math.h"
 
 class PlayerBullet
@@ -12,9 +13,10 @@ protected:
 	GatesEngine::Math::Vector3 randomVector;
 	GatesEngine::Math::Vector3 shotVector;
 
-	GatesEngine::Math::Vector3 target;
+	GatesEngine::GameObject* target;
 	float homingTime;
-protected:
+	float maxHomingTime;
+public:
 	void Initialize();
 	void Update();
 public:
@@ -24,5 +26,5 @@ public:
 	void RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector);
 	bool IsUse();
 	void SetPos(const GatesEngine::Math::Vector3& p);
-	void SetTarget(const GatesEngine::Math::Vector3& t, const GatesEngine::Math::Axis& axis = {});
+	void SetTarget(GatesEngine::GameObject* t, float maxTime = 0 , const GatesEngine::Math::Axis& axis = {});
 };

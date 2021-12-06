@@ -44,6 +44,11 @@ namespace GatesEngine
 		virtual void OnLateDraw();
 
 		/// <summary>
+		/// 自動で描画せずプログラマが呼び出して描画できる関数
+		/// </summary>
+		virtual void ExternalDraw();
+
+		/// <summary>
 		/// 他のゲームオブジェクトとゲームオブジェクトが衝突した際に呼ばれる関数
 		/// </summary>
 		/// <param name="other">衝突したゲームオブジェクト</param>

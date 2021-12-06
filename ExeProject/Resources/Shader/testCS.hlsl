@@ -50,16 +50,21 @@ StructuredBuffer<TestData> addVector : register(t0);
 void main(uint3 DTid : SV_DispatchThreadID)
 {
 	//寿命の設定
-	float maxSec = 10;
+	float maxSec = 1;
 
 	//寿命の加算
-	real[DTid.x].vel.w += GetRandomVector(DTid.x).x + 0.001f;
+	float frame = 1.0f / 60.0f;
+	float minR = frame / 10;
+	float maxR = frame;
+
+	float3 random = GetRandomVector(GetRandomVector(DTid.x), float3(minR, minR, minR), float3(maxR, maxR, maxR));
+	real[DTid.x].vel.w -= (random.x + random.y + random.z) / 3.0f;
 
 	//ランダムベクトルの作成
 	float range = 1;
 	float4 randomVector = float4(0, 0, 0, 0);
 	randomVector.xyz = GetRandomVector(GetRandomVector(DTid.x),float3(-range, -range, -range),float3(range, range, range));
-	randomVector = normalize(randomVector);
+	randomVector = normalize(randomVector)/10;
 
 	////ターゲットベクトルの計算
 	//float4 targetVec = addVector[0].pos - real[DTid.x].pos;
@@ -84,11 +89,11 @@ void main(uint3 DTid : SV_DispatchThreadID)
 
 	real[DTid.x].pos.xyz += real[DTid.x].vel.xyz / 10;
 
-	if (real[DTid.x].vel.w >= maxSec)
+	if (real[DTid.x].vel.w < 0)
 	{
 		real[DTid.x].pos.xyz = addVector[0].pos.xyz;
 		real[DTid.x].vel.xyz = float3(0, 0, 0);
-		real[DTid.x].vel.w = 0;
+		real[DTid.x].vel.w = maxSec;
 	}
 
 	//float dist = distance(addVector[0].pos.xyz, real[DTid.x].pos.xyz);

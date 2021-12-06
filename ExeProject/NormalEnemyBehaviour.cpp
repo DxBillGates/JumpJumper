@@ -24,7 +24,6 @@ NormalEnemyBehaviour::~NormalEnemyBehaviour()
 
 void NormalEnemyBehaviour::Start()
 {
-
 	hp = 10;
 	t = 0;
 	deadPos = {};
@@ -34,6 +33,7 @@ void NormalEnemyBehaviour::Start()
 	//hp = 10;
 	//Enemy::Initialize();
 	Enemy::pos = gameObject->GetTransform()->position;
+	shotInterval = 0;
 }
 
 void NormalEnemyBehaviour::Update()
@@ -92,18 +92,32 @@ void NormalEnemyBehaviour::Update()
 		//}
 		isMove = true;
 
-		//if (isMove)
-		//{
-		//	gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
-		//	t += 0.016f / 2.0f;
-		//}
+		if (isMove)
+		{
+			gameObject->GetTransform()->position.y = gameObject->GetTransform()->position.y + sinf(t) * 10;
+			t += 0.016f * 5;
+		}
 
 		//gameObject->GetTransform()->scale = gameObject->GetTransform()->scale + moveVector.Normalize();
 		gameObject->GetTransform()->position += moveVector;
 
-		target = nullptr;
+		//target = nullptr;
+
+		const int INTERVAL = 1;
+		if (shotInterval > INTERVAL)
+		{
+			Shot();
+			shotInterval = 0;
+		}
+
+		shotInterval += 0.016f / 2.0f;
 	}
 
+	for (auto& b : bullets)
+	{
+		if (b->IsUse())continue;
+		b->SetPos(gameObject->GetTransform()->position);
+	}
 	//Enemy::SetPosition(fixPos);
 
 	Enemy::SetPosition(gameObject->GetTransform()->position);
@@ -112,11 +126,28 @@ void NormalEnemyBehaviour::Update()
 void NormalEnemyBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
+
+	GatesEngine::Transform* transform = gameObject->GetTransform();
+	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(transform->scale);
+	GatesEngine::Math::Matrix4x4 rotateMatrix = GatesEngine::Math::Matrix4x4::Identity();
+	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(transform->position);
+
+	static float a = 0;
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::G))
+	{
+		a += 1;
+	}
+	if (target)
+	{
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
+	}
+	else
+	{
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
+	}
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 }
 
 void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
@@ -139,6 +170,7 @@ void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	{
 		Enemy::Initialize();
 		Start();
+		gameObject->Start();
 		gameObject->SetEnabled(false);
 	}
 
@@ -157,4 +189,34 @@ float NormalEnemyBehaviour::GetHP()
 void NormalEnemyBehaviour::SetBoss(GatesEngine::GameObject* gameObject)
 {
 	boss = gameObject;
+}
+
+void NormalEnemyBehaviour::SetTarget(GatesEngine::GameObject* t)
+{
+	target = t;
+}
+
+void NormalEnemyBehaviour::AddBullet(PlayerBullet* addBullet)
+{
+	bullets.push_back(addBullet);
+}
+
+void NormalEnemyBehaviour::Shot()
+{
+	bool isShot = false;
+	for (auto& b : bullets)
+	{
+		if (b->IsUse())continue;
+
+		if (!isShot)
+		{
+			if (!target)continue;
+			b->SetTarget(target, 0.1f);
+			isShot = true;
+		}
+		else
+		{
+			b->SetPos(gameObject->GetTransform()->position);
+		}
+	}
 }

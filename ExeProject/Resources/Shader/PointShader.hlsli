@@ -11,10 +11,16 @@ cbuffer CameraInfo : register(b2)
 	matrix billboard;
 }
 
+struct GSInput
+{
+	float4 svpos : SV_POSITION;
+	uint index : TEXCOORD;
+};
+
 struct PSInput
 {
 	float4 svpos : SV_POSITION;
-	float4 pos : POSITION;
+	uint index : TEXCOORD;
 };
 
 float3 GetPosition(matrix mat)

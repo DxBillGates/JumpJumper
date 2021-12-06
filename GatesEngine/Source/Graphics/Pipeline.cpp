@@ -119,6 +119,9 @@ void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag,
 		psoDesc.DepthStencilState.DepthEnable = FALSE;
 		psoDesc.DepthStencilState.StencilEnable = FALSE;
 	}
+	//psoDesc.BlendState.AlphaToCoverageEnable = true;
+	//psoDesc.BlendState.AlphaToCoverageEnable = false;
+
 	psoDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	psoDesc.BlendState.RenderTarget[0] = blendDesc;
 	psoDesc.InputLayout.pInputElementDescs = inputDesc;

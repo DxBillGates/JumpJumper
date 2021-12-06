@@ -19,7 +19,7 @@ void BossBehaviour::CallEnemy(const GatesEngine::Math::Vector3& centerPos, int c
 		e.gameObject->SetEnabled(true);
 		e.gameObject->Start();
 		e.enemyBehaviour->SetTarget(centerPos, { 0,10000,0 });
-		e.enemyBehaviour->SetTime(3);
+		e.enemyBehaviour->SetTime(GatesEngine::Random::Rand(2,3));
 
 		flag = ((int)GatesEngine::Random::Rand(-10, 10));
 		GatesEngine::Math::Vector3 offset = (flag > 0) ? left : right;
@@ -135,6 +135,7 @@ void BossBehaviour::OnLateDraw()
 	{
 		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 
+		graphicsDevice->GetCBVSRVUAVHeap()->Set();
 		GatesEngine::Math::Vector3 offset = center + GatesEngine::Math::Vector3(0, gameObject->GetTransform()->scale.y * 2, 0);
 		GatesEngine::Math::Vector3 spacePos = GatesEngine::Math::Vector3(0, 0, 0);
 		GatesEngine::Math::Vector3 addPos = GatesEngine::Math::Vector3(size.x, 0, 0) * i;
@@ -142,7 +143,7 @@ void BossBehaviour::OnLateDraw()
 		posMatrix = GatesEngine::Math::Matrix4x4::Translate(fixPos);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
 		mainCamera->Set(2);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,-1,1),GatesEngine::Math::Vector4(1,0,0,1) });
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 }

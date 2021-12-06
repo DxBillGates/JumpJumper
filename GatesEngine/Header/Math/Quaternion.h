@@ -95,6 +95,12 @@ namespace GatesEngine
 			static Matrix4x4 Rotation(const Quaternion& q);
 
 			/// <summary>
+			/// セットされてるクォータニオンから回転行列を作成する
+			/// </summary>
+			/// <returns>回転行列</returns>
+			Matrix4x4 Rotation();
+
+			/// <summary>
 			/// クォータニオンの軸を返す関数
 			/// </summary>
 			/// <param name="q">クォータニオン</param>

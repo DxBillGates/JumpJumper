@@ -65,8 +65,8 @@ void PlayerBehaviour::Move()
 
 	// ˆÚ“®ˆ—
 	bool isInputMoveKey = false;
-	if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
-	{
+	//if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	//{
 		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
 		{
 			isInputMoveKey = true;
@@ -87,7 +87,7 @@ void PlayerBehaviour::Move()
 			isInputMoveKey = true;
 			moveVector -= playerAxis.x;
 		}
-	}
+	//}
 
 	moveVel = moveVector.Normalize() * MOVE_SPEED;
 
@@ -156,7 +156,7 @@ void PlayerBehaviour::LockOnAttack()
 			{
 				if (b->IsUse())continue;
 				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
-				b->SetTarget(t->GetTransform()->position,axis);
+				b->SetTarget(t,0,axis);
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -237,7 +237,7 @@ void PlayerBehaviour::OnLateDraw()
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
 	//float persent = fuelValue / MAX_FUEL;
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 100,persent * 1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080/2,0 }));
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
@@ -262,7 +262,9 @@ void PlayerBehaviour::OnLateDraw()
 		if (!t)continue;
 		float d = GatesEngine::Math::Vector3::Distance(t->GetTransform()->position,mainCamera->GetPosition());
 		d /= 2500;
+		if (d < 1)d = 1;
 		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+		graphicsDevice->GetCBVSRVUAVHeap()->Set();
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
 		graphicsDevice->GetMainCamera()->Set(2);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });

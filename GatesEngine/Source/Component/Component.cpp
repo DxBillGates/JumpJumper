@@ -26,6 +26,10 @@ void GatesEngine::Component::OnLateDraw()
 {
 }
 
+void GatesEngine::Component::ExternalDraw()
+{
+}
+
 void GatesEngine::Component::OnCollision(GameObject* other)
 {
 }

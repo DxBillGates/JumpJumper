@@ -149,6 +149,11 @@ Matrix4x4 GatesEngine::Math::Quaternion::Rotation(const Quaternion & q)
 	return result;
 }
 
+Matrix4x4 GatesEngine::Math::Quaternion::Rotation()
+{
+	return Quaternion::Rotation(*this);
+}
+
 Vector3 GatesEngine::Math::Quaternion::GetAxis(const Quaternion & q)
 {
 	Vector3 result;

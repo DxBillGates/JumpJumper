@@ -70,7 +70,7 @@ bool Game::LoadContents()
 	meshShadowShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
 
 	auto* pointShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Point")), "PointShader");
-	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
+	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ADD, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
 
 	auto* outlineShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
 	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
@@ -159,23 +159,11 @@ bool Game::LoadContents()
 	//MeshCreater::LoadGates3DModelData("testModel", testG3M);
 	//meshManager->Add("testG3M")->Create(&graphicsDevice, testG3M);
 
-
-
-	shadowRenderTex.Create(&graphicsDevice, { 1920,1080 });
-	shadowDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
-	resultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	lateDrawResultRenderTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
-	lateDrawResultDepthTex.Create(&graphicsDevice, { 1920,1080 });
-	resultRenderShadowTex.Create(&graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
-	parlinNoiseTex.Create(&graphicsDevice, { 1920,1080 });
-	parlinNoiseHeightMapTex.Create(&graphicsDevice, { 1920,1080 });
-
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	sceneManager->ChangeSceneWithoutInitialize("Stage1Scene");
-	//sceneManager->ChangeScene("TitleScene");
+	//sceneManager->ChangeSceneWithoutInitialize("TitleScene");
 	//sceneManager->ChangeScene("SampleScene");
 
 
@@ -219,106 +207,8 @@ bool Game::Draw()
 	graphicsDevice.GetCBufferAllocater()->ResetCurrentUseNumber();
 	graphicsDevice.GetCBVSRVUAVHeap()->Set();
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
-	//graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
-	graphicsDevice.SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
-	using namespace GatesEngine::Math;
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 1920,1080,0 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, Vector4(timer.GetElapsedApplicationTime()));
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
-
-	//シャドウマップ用深度描画
-	graphicsDevice.ClearRenderTarget({ 0,0,0,1 }, true, &shadowRenderTex, &shadowDepthTex);
-	shaderManager->GetShader("DefaultMeshShader")->Set();
-
-	//プレイヤーの上空から一度描画
-	GatesEngine::GameObject* player = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
-	GatesEngine::Math::Vector3 pos = (player) ? player->GetTransform()->position : GatesEngine::Math::Vector3();
-	GatesEngine::B2 lightViewData;
-	float angle = 45;
-	GatesEngine::Math::Vector3 dir = GatesEngine::Math::Vector3(0, 0, 1).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
-	GatesEngine::Math::Vector3 up = GatesEngine::Math::Vector3(0, 1, 0).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
-	lightViewData.viewMatrix = GatesEngine::Math::Matrix4x4::GetViewMatrixLookTo({ pos - dir * 10000 }, dir, up);
-	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 20000,20000 }, 1, 20000);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, lightViewData);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,-1,0,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
-
-	//シーンの描画
 	sceneManager->Draw();
-
-
-	graphicsDevice.SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1, 1, 1, 255));
-
-	//using namespace GatesEngine::Math;
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
-	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
-	//mainCamera->Set(2);
-	////graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()/10));
-	//parlinNoiseTex.Set(5);
-	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
-
-	//深度テクスチャを利用してプレイヤー視点で描画
-	shaderManager->GetShader("testMultiRTVShader")->Set();
-
-	mainCamera->Set(2);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
-	GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
-	shadowDepthTex.Set(5);
-
-	//シーンの描画
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
-	shadowDepthTex.Set(5);
-	sceneManager->Draw();
-
-	//グリッドの描画
-	graphicsDevice.ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
-	shaderManager->GetShader("Line")->Set();
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
-	meshManager->GetMesh("Grid")->Draw();
-
-	//スプライトやコライダーのワイヤーフレーム表示
-	//gameObjectManager.LateDraw();
 	sceneManager->LateDraw();
-	graphicsDevice.GetCBVSRVUAVHeap()->Set();
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
-	{
-		shaderManager->GetShader("TestTesselationShader")->Set(true);
-	}
-	else
-	{
-		shaderManager->GetShader("TestTesselationShader")->Set(false);
-	}
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
-	mainCamera->Set(2);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, GatesEngine::B3{ Vector4(),Vector4(0,10000,10000,1) });
-	parlinNoiseTex.Set(5);
-	parlinNoiseHeightMapTex.Set(6);
-
-	meshManager->GetMesh("DividePlane")->Draw();
-
-	//描画結果から深度テクスチャを利用してアウトライン付与してを描画
-	graphicsDevice.ClearRenderTarget({ 0,0,0,1 }, true);
-
-	shaderManager->GetShader("PostEffect_OutlineShader")->Set();
-	graphicsDevice.GetCBVSRVUAVHeap()->Set();
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1  }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };
-	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))color = { 1,0,0,1 };
-	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D2))color = { 0,1,0,1 };
-	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D3))color = { 0,0,1,1 };
-	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D4))color = { 0,0,0,1 };
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, color);
-	graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	resultDepthTex.Set(3);
-	resultRenderTex.Set(4);
-	lateDrawResultDepthTex.Set(5);
-	lateDrawResultRenderTex.Set(6);
-	resultRenderShadowTex.Set(7);
-	meshManager->GetMesh("2DPlane")->Draw();
 
 	if (!graphicsDevice.ScreenFlip())return false;
 

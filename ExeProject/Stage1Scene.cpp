@@ -8,6 +8,8 @@
 #include "GPUParticleEmitterBehaviour.h"
 #include "PlayerCameraBehaviour.h"
 #include "Header/Util/Random.h"
+#include "Header/Graphics/Graphics.h"
+#include "Header/Graphics/Manager/ResourceManager.h"
 
 Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
 {
@@ -56,6 +58,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->SetGraphicsDevice(graphicsDevice);
 		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
 		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+		bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
 		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 256);
 		gParticleEmitter->SetComputeShader(testCS);
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
@@ -69,44 +72,65 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		playerBehaviour->AddBullet(bulletBehaviour);
 	}
 
-	gp = gameObjectManager.Add(new GameObject());
-	gp->SetGraphicsDevice(graphicsDevice);
-	BossBehaviour* bossBehaviour = gp->AddBehavior<BossBehaviour>();
-	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::BOSS);
-	gp->SetCollider();
-	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	gp->GetCollider()->SetSize({ 2 });
-	gp->GetTransform()->scale = 500;
-	gp->GetTransform()->position = { 0,1000,-5000 };
-	gp->SetTag("Boss");
-	boss = gp;
+	auto* b = gameObjectManager.Add(new GameObject());
+	b->SetGraphicsDevice(graphicsDevice);
+	BossBehaviour* bossBehaviour = b->AddBehavior<BossBehaviour>();
+	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(b->AddComponent<Collider>()), GColliderType::BOSS);
+	b->SetCollider();
+	b->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	b->GetCollider()->SetSize({ 2 });
+	b->GetTransform()->scale = 500;
+	b->GetTransform()->position = { 0,1000,-5000 };
+	b->SetTag("Boss");
+	boss = b;
 
 	GatesEngine::GameObject* g = nullptr;
 	//auto* g = gameObjectManager.Add(new GameObject());
-	for (int i = 0; i < 5; ++i)
-	{
-		for (int j = 0; j < 10; ++j)
-		{
-			g = gameObjectManager.Add(new GameObject());
-			//auto* g = gameObjectManager.Add(new GameObject());
-			g->SetGraphicsDevice(graphicsDevice);
-			auto* e = g->AddComponent<NormalEnemyBehaviour>();
-			e->SetBoss(boss);
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
-			g->SetCollider();
-			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetCollider()->SetSize({ 2 });
-			auto* secondCollider = g->AddComponent<Collider>();
-			secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
-			secondCollider->SetSize(10);
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
-			g->GetTransform()->scale = 100;
-			g->SetTag("enemy");
-			g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
+	//for (int i = 0; i < 1; ++i)
+	//{
+	//	for (int j = 0; j < 10; ++j)
+	//	{
+	//		g = gameObjectManager.Add(new GameObject());
+	//		//auto* g = gameObjectManager.Add(new GameObject());
+	//		g->SetGraphicsDevice(graphicsDevice);
+	//		auto* e = g->AddComponent<NormalEnemyBehaviour>();
+	//		e->SetBoss(boss);
+	//		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
+	//		g->SetCollider();
+	//		g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	//		g->GetCollider()->SetSize({ 2 });
+	//		auto* secondCollider = g->AddComponent<Collider>();
+	//		secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
+	//		secondCollider->SetSize(10);
+	//		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
+	//		g->GetTransform()->scale = 100;
+	//		g->SetTag("enemy");
+	//		g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
 
-			bossBehaviour->AddNormalEnemy(g,e);
-		}
-	}
+	//		bossBehaviour->AddNormalEnemy(g, e);
+
+	//		for (int i = 0; i < 3; ++i)
+	//		{
+	//			auto* bullet = gameObjectManager.Add(new GameObject());
+	//			bullet->SetGraphicsDevice(graphicsDevice);
+	//			auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+	//			auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+	//			gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 128);
+	//			gParticleEmitter->SetComputeShader(testCS);
+	//			//stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
+	//			bullet->AddComponent<Collider>();
+	//			bullet->SetCollider();
+	//			bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+	//			bullet->GetCollider()->SetSize({ 1 });
+	//			bullet->GetTransform()->scale = 10;
+	//			bullet->SetTag("enemyBullet");
+	//			bullet->SetName("enemyBullet");
+
+	//			e->SetTarget(gp);
+	//			e->AddBullet(bulletBehaviour);
+	//		}
+	//	}
+	//}
 
 
 	g = gameObjectManager.Add(new GameObject());
@@ -154,6 +178,16 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	//cameraBehaviour->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 	//g->GetTransform()->position = { 1000,1500,2000 };
 
+
+	shadowRenderTex.Create(graphicsDevice, { 1920,1080 });
+	shadowDepthTex.Create(graphicsDevice, { 1920,1080 });
+	resultRenderTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
+	resultDepthTex.Create(graphicsDevice, { 1920,1080 });
+	lateDrawResultRenderTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	lateDrawResultDepthTex.Create(graphicsDevice, { 1920,1080 });
+	resultRenderShadowTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
+	parlinNoiseTex.Create(graphicsDevice, { 1920,1080 });
+	parlinNoiseHeightMapTex.Create(graphicsDevice, { 1920,1080 });
 }
 
 Stage1Scene::~Stage1Scene()
@@ -256,6 +290,29 @@ void Stage1Scene::Update()
 			z = Random::Rand(-range, range);
 			g->GetTransform()->position = { x,y,z };
 			g->Start();
+
+			auto* bullet = gameObjectManager.Add(new GameObject());
+			bullet->SetGraphicsDevice(graphicsDevice);
+			auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+			auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+			bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
+			gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1280);
+			gParticleEmitter->SetComputeShader(testCS);
+			//stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::PLAYER_BULLET);
+			bullet->AddComponent<Collider>();
+			bullet->SetCollider();
+			bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+			bullet->GetCollider()->SetSize({ 1 });
+			bullet->GetTransform()->scale = 10;
+			bullet->SetTag("enemyBullet");
+			bullet->SetName("enemyBullet");
+
+			e->SetTarget(playerBehaviour->GetGameObject());
+			e->AddBullet(bulletBehaviour);
+
+			bullet->Start();
+			bullet->GetTransform()->position = g->GetTransform()->position;
+			boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
 		}
 	}
 
@@ -274,11 +331,127 @@ void Stage1Scene::Update()
 
 void Stage1Scene::Draw()
 {
+	GatesEngine::TextureManager* textureManager = GatesEngine::ResourceManager::GetTextureManager();
+	GatesEngine::ShaderManager* shaderManager = GatesEngine::ResourceManager::GetShaderManager();
+	GatesEngine::MeshManager* meshManager = GatesEngine::ResourceManager::GetMeshManager();
+	GatesEngine::SceneManager* sceneManager = app->GetSceneManager();
+	GatesEngine::Camera* mainCamera = app->GetMainCamera();
+
+	graphicsDevice->GetCBufferAllocater()->ResetCurrentUseNumber();
+	graphicsDevice->GetCBVSRVUAVHeap()->Set();
+
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
+	////graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
+	//graphicsDevice.SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
+	//using namespace GatesEngine::Math;
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 1920,1080,0 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(3, Vector4(timer.GetElapsedApplicationTime()));
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+
+	//シャドウマップ用深度描画
+	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &shadowRenderTex, &shadowDepthTex);
+	shaderManager->GetShader("DefaultMeshShader")->Set();
+
+	//プレイヤーの上空から一度描画
+	GatesEngine::GameObject* player = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
+	GatesEngine::Math::Vector3 pos = (player) ? player->GetTransform()->position : GatesEngine::Math::Vector3();
+	GatesEngine::B2 lightViewData;
+	float angle = 45;
+	GatesEngine::Math::Vector3 dir = GatesEngine::Math::Vector3(0, 0, 1).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
+	GatesEngine::Math::Vector3 up = GatesEngine::Math::Vector3(0, 1, 0).Normalize() * GatesEngine::Math::Matrix4x4::RotationX(GatesEngine::Math::ConvertToRadian(angle));
+	lightViewData.viewMatrix = GatesEngine::Math::Matrix4x4::GetViewMatrixLookTo({ pos - dir * 10000 }, dir, up);
+	lightViewData.projMatrix = GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 20000,20000 }, 1, 20000);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, lightViewData);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,-1,0,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
+
+	//シーンの描画
+	gameObjectManager.Draw();
+
+	graphicsDevice->SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1, 1, 1, 255));
+
+	//using namespace GatesEngine::Math;
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
+	//mainCamera->Set(2);
+	////graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, Vector4(timer.GetElapsedApplicationTime()/10));
+	//parlinNoiseTex.Set(5);
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+
+	//深度テクスチャを利用してプレイヤー視点で描画
+	shaderManager->GetShader("testMultiRTVShader")->Set();
+
+	mainCamera->Set(2);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,1,0).Normalize(),GatesEngine::Math::Vector4(1,1,1,1) });
+	GatesEngine::Math::Matrix4x4 lightViewMatrix = lightViewData.viewMatrix * lightViewData.projMatrix;
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
+	shadowDepthTex.Set(5);
+
+	//シーンの描画
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(4, lightViewMatrix);
+	shadowDepthTex.Set(5);
+
 	gameObjectManager.Draw();
 }
 
 void Stage1Scene::LateDraw()
 {
+	GatesEngine::TextureManager* textureManager = GatesEngine::ResourceManager::GetTextureManager();
+	GatesEngine::ShaderManager* shaderManager = GatesEngine::ResourceManager::GetShaderManager();
+	GatesEngine::MeshManager* meshManager = GatesEngine::ResourceManager::GetMeshManager();
+	GatesEngine::SceneManager* sceneManager = app->GetSceneManager();
+	GatesEngine::Camera* mainCamera = app->GetMainCamera();
+
+	//グリッドの描画
+	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	shaderManager->GetShader("Line")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
+	meshManager->GetMesh("Grid")->Draw();
+
+	//スプライトやコライダーのワイヤーフレーム表示
 	gameObjectManager.LateDraw();
+	/*sceneManager->LateDraw();*/
+	//graphicsDevice.GetCBVSRVUAVHeap()->Set();
+	//if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
+	//{
+	//	shaderManager->GetShader("TestTesselationShader")->Set(true);
+	//}
+	//else
+	//{
+	//	shaderManager->GetShader("TestTesselationShader")->Set(false);
+	//}
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
+	//mainCamera->Set(2);
+	//graphicsDevice.GetCBufferAllocater()->BindAndAttach(4, GatesEngine::B3{ Vector4(),Vector4(0,10000,10000,1) });
+	//parlinNoiseTex.Set(5);
+	//parlinNoiseHeightMapTex.Set(6);
+
+	//meshManager->GetMesh("DividePlane")->Draw();
+
+	//描画結果から深度テクスチャを利用してアウトライン付与してを描画
+	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+
+	//sceneManager->Draw();
+	//sceneManager->LateDraw();
+	shaderManager->GetShader("PostEffect_OutlineShader")->Set();
+	graphicsDevice->GetCBVSRVUAVHeap()->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	static GatesEngine::Math::Vector4 color = { 0,0,0,1 };
+	//if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))color = { 1,0,0,1 };
+	//if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D2))color = { 0,1,0,1 };
+	//if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D3))color = { 0,0,1,1 };
+	//if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D4))color = { 0,0,0,1 };
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, color);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	resultDepthTex.Set(3);
+	resultRenderTex.Set(4);
+	lateDrawResultDepthTex.Set(5);
+	lateDrawResultRenderTex.Set(6);
+	resultRenderShadowTex.Set(7);
+	meshManager->GetMesh("2DPlane")->Draw();
+
+	//gameObjectManager.LateDraw();
 	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS, 1000);
 }

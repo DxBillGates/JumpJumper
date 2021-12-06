@@ -27,6 +27,10 @@ void GPUParticleEmitterBehaviour::OnDraw()
 
 void GPUParticleEmitterBehaviour::OnLateDraw()
 {
+}
+
+void GPUParticleEmitterBehaviour::ExternalDraw()
+{
 	gParticleEmitter->Draw(nullptr, pComputeShader, gameObject->GetTransform()->position);
 }
 

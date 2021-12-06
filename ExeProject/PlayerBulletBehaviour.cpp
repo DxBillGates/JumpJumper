@@ -4,6 +4,7 @@
 #include "Header/Graphics/Manager/ResourceManager.h"
 
 PlayerBulletBehaviour::PlayerBulletBehaviour()
+	: gpuParticleEmitter(nullptr)
 {
 }
 
@@ -15,6 +16,7 @@ void PlayerBulletBehaviour::Start()
 {
 	//gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize() - 5;
 	Initialize();
+	setPos = { 0,-1000,0 };
 }
 
 void PlayerBulletBehaviour::Update()
@@ -24,17 +26,31 @@ void PlayerBulletBehaviour::Update()
 		if (!isHoming)
 		{
 			vel += shotVector;
-			gameObject->GetTransform()->position += vel * 10;
+			gameObject->GetTransform()->position += vel;
 		}
 		else
 		{
-			GatesEngine::Math::Vector3 diff = target - gameObject->GetTransform()->position;
+			if (!target)return;
+			GatesEngine::Math::Vector3 diff = target->GetTransform()->position - gameObject->GetTransform()->position;
 			GatesEngine::Math::Vector3 acc;
 			acc += (diff - vel * homingTime) * 2.0f / (homingTime * homingTime);
 
 			homingTime -= 0.016f / 2.0f;
 
+			//if (GatesEngine::Math::Vector3::Distance(target->GetTransform()->position, gameObject->GetTransform()->position) < 500)
+			//{
+			//	isHoming = false;
+			//}
+			//if (acc.Length() > 10000)acc = acc.Normalize() * 10000;
+			//float MAX_HOMING_TIME = 0.2f;
+			//if (homingTime < MAX_HOMING_TIME)homingTime = -MAX_HOMING_TIME;
+
 			vel += acc * 0.016f / 2.0f;
+
+			if (homingTime < maxHomingTime)
+			{
+				vel = vel.Normalize() * 4000;
+			}
 			gameObject->GetTransform()->position += vel * 0.016f / 2.0f;
 		}
 	}
@@ -54,19 +70,31 @@ void PlayerBulletBehaviour::OnDraw()
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Sphere")->Draw();
 }
 
-void PlayerBulletBehaviour::OnCollision(GatesEngine::GameObject* other)
+void PlayerBulletBehaviour::OnLateDraw()
 {
+	if (!isUse)return;
+	if (!gpuParticleEmitter)return;
+	gpuParticleEmitter->ExternalDraw();
 }
 
 void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 {
 	if (otherCollider->GetGameObject()->GetTag() == "enemy")
 	{
-		Initialize();
+		isHoming = false;
+		vel = {};
+		gameObject->GetTransform()->position = { 0,-1000,0 };
+		//Initialize();
+
 	}
 	//if (otherCollider->GetGameObject()->GetTag() == "block")
 	//{
 	//	isUse = false;
 	//	Initialize();
 	//}
+}
+
+void PlayerBulletBehaviour::SetGPUParticleEmitter(GatesEngine::Behaviour* behaviour)
+{
+	gpuParticleEmitter = behaviour;
 }
