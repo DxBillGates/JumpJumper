@@ -9,9 +9,9 @@
 
 void PlayerBehaviour::SetVelocity()
 {
-	const float G = 0.25f;
-	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3(10, 10, 10);
-	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10, -50, -10);
+	const float G = 0.0f;
+	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3( 10 * 100, 10,   10 * 100);
+	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10 * 100, -50, -10 * 100);
 
 	jetVel -= GatesEngine::Math::Vector3(0, G, 0);
 
@@ -21,7 +21,9 @@ void PlayerBehaviour::SetVelocity()
 	jetVel = GatesEngine::Math::Vector3::Max(jetVel, MAX_VELOCITY);
 	jetVel = GatesEngine::Math::Vector3::Min(jetVel, MIN_VELOCITY);
 
-	vel = moveVel + jetVel;
+	const float MAX_ADD_VEL_LENGTH = 1000;
+	if (addVel.Length() > MAX_ADD_VEL_LENGTH)addVel = addVel.Normalize() * MAX_ADD_VEL_LENGTH;
+	vel = moveVel + jetVel + addVel;
 }
 
 void PlayerBehaviour::SetPosition()
@@ -39,10 +41,11 @@ void PlayerBehaviour::SetRotation()
 void PlayerBehaviour::UseJet()
 {
 	// 1フレームに何ピクセル移動するか
-	const float JET_FACTOR = 1;
+	const float JET_FACTOR = 10;
 	// 1秒間にfuelValueをどれだけ使用するか 消費量 * (1.0f / frameRate)
 	const float USE_FUEL_VALUE = 1 * (1.0f / 144.0f);
 	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
+	jetVel = {};
 	if (keyboard->CheckHitKey(GatesEngine::Keys::SPACE))
 	{
 		if (fuelValue > 0)
@@ -60,36 +63,107 @@ void PlayerBehaviour::Move()
 	const float DAMPING_FACTOR = 1;
 
 	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
-	GatesEngine::Math::Axis playerAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
+	GatesEngine::Math::Axis playerAxis = mainCamera->GetRotation().GetAxis();
 	GatesEngine::Math::Vector3 moveVector;
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float MAX_DOUBLE_TAP_PERMIT_TIME = 1;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (doubleTapKeysTime[i] >= MAX_DOUBLE_TAP_PERMIT_TIME)
+		{
+			isFirstTapKeys[i] = false;
+			doubleTapKeysTime[i] = 0;
+		}
+		if (isFirstTapKeys[i])
+		{
+			doubleTapKeysTime[i] += PER_FRAME;
+		}
+	}
+
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::W) && isFirstTapKeys[0])
+	{
+		doubleTapKeys[0] = isFirstTapKeys[0];
+	}
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::A) && isFirstTapKeys[1])
+	{
+		doubleTapKeys[1] = isFirstTapKeys[1];
+	}
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::S) && isFirstTapKeys[2])
+	{
+		doubleTapKeys[2] = isFirstTapKeys[2];
+	}
+	if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D) && isFirstTapKeys[3])
+	{
+		doubleTapKeys[3] = isFirstTapKeys[3];
+	}
 
 	// 移動処理
 	bool isInputMoveKey = false;
-	//if (!input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
-	//{
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
-		{
-			isInputMoveKey = true;
-			moveVector += playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
-		{
-			isInputMoveKey = true;
-			moveVector -= playerAxis.z;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
-		{
-			isInputMoveKey = true;
-			moveVector += playerAxis.x;
-		}
-		if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
-		{
-			isInputMoveKey = true;
-			moveVector -= playerAxis.x;
-		}
-	//}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::W))
+	{
+		isInputMoveKey = true;
+		moveVector += playerAxis.z;
+		isFirstTapKeys[0] = true;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
+	{
+		isInputMoveKey = true;
+		moveVector -= playerAxis.x;
+		isFirstTapKeys[1] = true;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
+	{
+		isInputMoveKey = true;
+		moveVector -= playerAxis.z;
+		isFirstTapKeys[2] = true;
+	}
+	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
+	{
+		isInputMoveKey = true;
+		moveVector += playerAxis.x;
+		isFirstTapKeys[3] = true;
+	}
 
+	const float ADD_SPEED = 100;
+	GatesEngine::Math::Vector3 addVector;
+	if (doubleTapKeys[0])
+	{
+		addVector += playerAxis.z, doubleTapKeys[0] = false;
+		decayTime = 0;
+	}
+	if (doubleTapKeys[1])
+	{
+		addVector -= playerAxis.x, doubleTapKeys[1] = false;
+		decayTime = 0;
+	}
+	if (doubleTapKeys[2])
+	{
+		addVector -= playerAxis.z, doubleTapKeys[2] = false;
+		decayTime = 0;
+	}
+	if (doubleTapKeys[3])
+	{
+		addVector += playerAxis.x, doubleTapKeys[3] = false;
+		decayTime = 0;
+	}
+
+	float addVelLength = addVel.Length();
+	const float MAX_DECAY_TIME = 1;
+	if (addVelLength > 0)
+	{
+		decayTime += PER_FRAME;
+		GatesEngine::Math::Vector3 decayVector = addVel.Normalize() * 2;
+		addVel -= decayVector;
+		if (decayTime > MAX_DECAY_TIME || addVel.Length() < decayVector.Length())
+		{
+			decayTime = 0;
+			addVel = {};
+		}
+	}
 	moveVel = moveVector.Normalize() * MOVE_SPEED;
+	addVel += addVector.Normalize() * ADD_SPEED;
 
 	UseJet();
 	SetVelocity();
@@ -156,7 +230,7 @@ void PlayerBehaviour::LockOnAttack()
 			{
 				if (b->IsUse())continue;
 				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
-				b->SetTarget(t,0,axis);
+				b->SetTarget(t, 0, axis);
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -191,6 +265,8 @@ PlayerBehaviour::PlayerBehaviour()
 	, MAX_TARGET(100)
 	, currentFrameTargetCount(0)
 	, unuseBulletCount(0)
+	, MAX_HP(10)
+	, hp(MAX_HP)
 {
 	mainCamera = new PlayerCamera();
 	targets.resize(MAX_TARGET);
@@ -207,6 +283,14 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	gameObject->GetTransform()->position.y = 1000;
 	fuelValue = MAX_FUEL;
+	hp = 10;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		isFirstTapKeys[i] = false;
+		doubleTapKeysTime[i] = 0;
+		doubleTapKeysTime[i] = 0;
+	}
 }
 
 void PlayerBehaviour::Update()
@@ -228,6 +312,8 @@ void PlayerBehaviour::OnDraw()
 
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
+	mainCamera->Set(2);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
 }
@@ -260,7 +346,7 @@ void PlayerBehaviour::OnLateDraw()
 	for (auto& t : targets)
 	{
 		if (!t)continue;
-		float d = GatesEngine::Math::Vector3::Distance(t->GetTransform()->position,mainCamera->GetPosition());
+		float d = GatesEngine::Math::Vector3::Distance(t->GetTransform()->position, mainCamera->GetPosition());
 		d /= 2500;
 		if (d < 1)d = 1;
 		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
@@ -268,6 +354,29 @@ void PlayerBehaviour::OnLateDraw()
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
 		graphicsDevice->GetMainCamera()->Set(2);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+	}
+
+	GatesEngine::Math::Vector3 center = gameObject->GetTransform()->position;
+	GatesEngine::Math::Vector3 size = 20;
+	rotate = GatesEngine::Math::Quaternion({ {0,1,0},0 });
+	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(size);
+	GatesEngine::Math::Matrix4x4 rotateMatrix = mainCamera->GetRotation();
+	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(center);
+
+	for (int i = 0; i < hp; ++i)
+	{
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+
+		graphicsDevice->GetCBVSRVUAVHeap()->Set();
+		GatesEngine::Math::Vector3 offset = center + GatesEngine::Math::Vector3(0, gameObject->GetTransform()->scale.y * 2, 0);
+		GatesEngine::Math::Vector3 spacePos = GatesEngine::Math::Vector3(0, 0, 0);
+		GatesEngine::Math::Vector3 addPos = GatesEngine::Math::Vector3(size.x, 0, 0) * i;
+		GatesEngine::Math::Vector3 fixPos = offset + addPos + spacePos - GatesEngine::Math::Vector3(size.x, 0, 0) * MAX_HP / 2;
+		posMatrix = GatesEngine::Math::Matrix4x4::Translate(fixPos);
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
+		mainCamera->Set(2);
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,-1,1),GatesEngine::Math::Vector4(1,0,0,1) });
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 }
@@ -296,6 +405,11 @@ void PlayerBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
 		if (fuelValue >= MAX_FUEL)fuelValue = MAX_FUEL;
 		fuelValue += CHARGE_FUEL;
 	}
+
+	//if (hitCollider->GetGameObject()->GetTag() == "enemyBullet")
+	//{
+	//	--hp;
+	//}
 }
 
 void PlayerBehaviour::SetCamera(PlayerCamera* pCamera)
@@ -333,4 +447,9 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 	}
 
 
+}
+
+int PlayerBehaviour::GetHp()
+{
+	return hp;
 }

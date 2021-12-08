@@ -6,6 +6,7 @@ namespace GatesEngine
 	/// </summary>
 	enum class Keys
 	{
+		NONE = -1,
 		ESC = 0x01,
 		D1 = 0x02,
 		D2 = 0x03,

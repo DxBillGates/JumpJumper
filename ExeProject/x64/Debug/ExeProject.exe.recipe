@@ -82,7 +82,16 @@
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\RGBShiftVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\SceneTransitionFadePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\SceneTransitionFadeVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\testCS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\testInitializeCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\TestMultiRTVPS.cso</FullPath>
@@ -104,6 +113,12 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\TexturePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\TextureSpritePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\TextureSpriteVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\suzut\Desktop\就職作品\x64\Debug\TextureVS.cso</FullPath>

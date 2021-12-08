@@ -27,6 +27,15 @@ private:
 	int currentFrameTargetCount;
 
 	int unuseBulletCount;
+	const int MAX_HP;
+	int hp;
+
+	bool doubleTapKeys[4];
+	bool isFirstTapKeys[4];
+	float doubleTapKeysTime[4];
+	GatesEngine::Math::Vector3 addVel;
+	float decayTime;
+
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”
@@ -80,4 +89,5 @@ public:
 	PlayerCamera* GetSetCamera();
 	void AddBullet(PlayerBullet* newBullet);
 	void AddTarget(GatesEngine::GameObject* other);
+	int GetHp();
 };

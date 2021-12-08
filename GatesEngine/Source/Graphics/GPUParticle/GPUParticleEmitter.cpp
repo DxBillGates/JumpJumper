@@ -57,7 +57,7 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 	handle.ptr += (UINT64)manager->GetDevice()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 200 + (UINT64)manager->GetDevice()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * addDataSrvValue;
 	manager->GetDevice()->GetCmdList()->SetComputeRootDescriptorTable(1, handle);
 
-	manager->GetDevice()->GetCmdList()->Dispatch(useParticleValue / 128, 1, 1);
+	manager->GetDevice()->GetCmdList()->Dispatch(useParticleValue / 256, 1, 1);
 }
 
 void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT useParticleValue)

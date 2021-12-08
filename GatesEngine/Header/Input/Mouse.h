@@ -10,6 +10,7 @@ namespace GatesEngine
 	{
 		using Vector2 = GatesEngine::Math::Vector2;
 	private:
+		HWND hwnd;
 		IDirectInputDevice8* device;
 		DIMOUSESTATE2 currentMouseState;
 		DIMOUSESTATE2 beforeMouseState;

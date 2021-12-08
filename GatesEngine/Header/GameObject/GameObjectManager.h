@@ -44,6 +44,11 @@ namespace GatesEngine
 		void Draw();
 
 		/// <summary>
+		/// 特殊な描画をシたいとき用
+		/// </summary>
+		void SecondDraw();
+
+		/// <summary>
 		/// 登録されているゲームオブジェクトの遅延描画をする関数
 		/// </summary>
 		void LateDraw();

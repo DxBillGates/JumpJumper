@@ -7,6 +7,7 @@ enum class GColliderType
 {
 	BLOCK,
 	ENEMY,
+	ENEMY_BULLET,
 	PLAYER,
 	PLAYER_BULLET,
 	PLAYER_CAMERA,
@@ -20,6 +21,7 @@ private:
 	std::vector<GatesEngine::Collider*> enemyColliders;
 	std::vector<GatesEngine::Collider*> playerColliders;
 	std::vector<GatesEngine::Collider*> playerBulletColliders;
+	std::vector<GatesEngine::Collider*> enemyBulletCollider;
 	GatesEngine::Collider* bossCollider;
 
 	GatesEngine::Camera3D* mainCamera;
@@ -30,6 +32,7 @@ private:
 	void CheckCollisionHitEnemyTo();
 	void CheckCollisionHitEnemyToCameraRay();
 	void CheckCollisionHitBossTo();
+	void CheckCollisionHitEnemyBulletTo();
 public:
 	void Update();
 	GatesEngine::Collider* AddCollider(GatesEngine::Collider* collider, GColliderType type);

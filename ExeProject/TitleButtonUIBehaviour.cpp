@@ -30,11 +30,8 @@ void TitleButtonUIBehaviour::OnLateDraw()
 
 	shaderManager->GetShader("DefaultSpriteShader")->Set();
 
-	static float a = 1;
-	if (a < 0)return;
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ scale.x,scale.y,0 }) * GatesEngine::Math::Matrix4x4::Translate({ pos.x,pos.y,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, a));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, alpha));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	meshManager->GetMesh("2DPlane")->Draw();
-	a -= 0.016f / 10;
 }

@@ -1,6 +1,12 @@
 #pragma once
 #include "Header/Math/Vector2.h"
 
+enum class ButtonUIType
+{
+	START,
+	EXIT,
+};
+
 /// <summary>
 /// 2DUIに使うクラス
 /// </summary>
@@ -14,6 +20,10 @@ protected:
 
 	bool isCenter;
 	bool isSelect;
+
+	float alpha;
+
+	ButtonUIType type;
 public:
 
 	/// <summary>
@@ -41,6 +51,18 @@ public:
 	bool GetIsSelect();
 
 	/// <summary>
+	/// UIの透明度を取得する関数
+	/// </summary>
+	/// <returns>UIの透明度</returns>
+	float GetAlpha();
+
+	/// <summary>
+	/// ボタンの種類を取得する関数
+	/// </summary>
+	/// <returns>ボタンの種類</returns>
+	ButtonUIType GetType();
+
+	/// <summary>
 	/// ボタンの大きさを設定する関数
 	/// </summary>
 	/// <param name="setscale">設定する大きさ</param>
@@ -63,5 +85,17 @@ public:
 	/// </summary>
 	/// <param name="flag">成否</param>
 	void SetIsSelect(bool flag);
+
+	/// <summary>
+	/// UIの透明度を設定する関数
+	/// </summary>
+	/// <param name="value">設定値</param>
+	void SetAlpha(float value);
+
+	/// <summary>
+	/// ボタンの種類を設定する関数
+	/// </summary>
+	/// <param name="buttonType">設定するタイプ</param>
+	void SetType(ButtonUIType buttonType);
 };
 

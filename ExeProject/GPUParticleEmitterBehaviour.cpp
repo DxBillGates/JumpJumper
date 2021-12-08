@@ -4,6 +4,7 @@
 GPUParticleEmitterBehaviour::GPUParticleEmitterBehaviour()
 	: gParticleEmitter(new GatesEngine::GPUParticleEmitter())
 	, pComputeShader(nullptr)
+	, pInitializeComputeShader(nullptr)
 {
 }
 
@@ -31,6 +32,7 @@ void GPUParticleEmitterBehaviour::OnLateDraw()
 
 void GPUParticleEmitterBehaviour::ExternalDraw()
 {
+	if (!pComputeShader)return;
 	gParticleEmitter->Draw(nullptr, pComputeShader, gameObject->GetTransform()->position);
 }
 
@@ -42,4 +44,15 @@ void GPUParticleEmitterBehaviour::CreateParticleEmitter(GatesEngine::GPUParticle
 void GPUParticleEmitterBehaviour::SetComputeShader(GatesEngine::ComputePipeline* setShader)
 {
 	pComputeShader = setShader;
+}
+
+void GPUParticleEmitterBehaviour::SetInitializeShader(GatesEngine::ComputePipeline* setShader)
+{
+	pInitializeComputeShader = setShader;
+}
+
+void GPUParticleEmitterBehaviour::DispatchInitializeShader()
+{
+	if (!pInitializeComputeShader)return;
+	gParticleEmitter->Draw(nullptr, pInitializeComputeShader, gameObject->GetTransform()->position);
 }

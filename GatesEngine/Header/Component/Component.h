@@ -39,6 +39,11 @@ namespace GatesEngine
 		virtual void OnDraw();
 
 		/// <summary>
+		/// “Áê‚È•`‰æ—p
+		/// </summary>
+		virtual void OnSecondDraw();
+
+		/// <summary>
 		/// ‚·‚×‚Ä‚ÌOnDrawŠÖ”‚ªŒÄ‚Î‚ê‚½Œã‚ÉŒÄ‚Î‚ê‚é’x‰„•`‰æŠÖ”
 		/// </summary>
 		virtual void OnLateDraw();

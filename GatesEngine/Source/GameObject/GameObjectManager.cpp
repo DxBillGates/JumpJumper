@@ -71,6 +71,14 @@ void GatesEngine::GameObjectManager::Draw()
 	}
 }
 
+void GatesEngine::GameObjectManager::SecondDraw()
+{
+	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
+	{
+		(*itr)->SecondDraw();
+	}
+}
+
 void GatesEngine::GameObjectManager::LateDraw()
 {
 	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)

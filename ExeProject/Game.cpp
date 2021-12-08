@@ -58,7 +58,7 @@ bool Game::LoadContents()
 	testDOFShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::CBV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
 
 	auto* testBrightnessSamplingShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"BrightnessSampling")), "BrightnessSamplingShader");
-	testBrightnessSamplingShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
+	testBrightnessSamplingShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
 
 	auto* bloomShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Bloom")), "BloomShader");
 	bloomShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, false);
@@ -88,6 +88,12 @@ bool Game::LoadContents()
 	testTesselationShader->SetPrimitiveTopology(PrimiriveTopologyType::PATCH);
 	testTesselationShader->SetRootParamerters({ RangeType::CBV,RangeType::CBV ,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV });
 	testTesselationShader->CreatePipeline();
+
+	auto* sceneTransFadeShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"SceneTransitionFade")), "SceneTransitionFadeShader");
+	sceneTransFadeShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
+
+	auto* textureSpriteShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"TextureSprite")), "TextureSpriteShader");
+	textureSpriteShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV });
 
 
 	//”Âƒ|ƒŠ¶¬
@@ -166,35 +172,35 @@ bool Game::LoadContents()
 	//sceneManager->ChangeSceneWithoutInitialize("TitleScene");
 	//sceneManager->ChangeScene("SampleScene");
 
-
-	mainCamera = &camera;
-
-	GameObject* playerObject = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
-	if (playerObject)mainCamera = playerObject->GetComponent<PlayerBehaviour>()->GetSetCamera();
-	else mainCamera = &camera;
-
-	mainCamera->SetGraphicsDevice(&graphicsDevice);
-	mainCamera->SetMainWindow(&mainWindow);
-	graphicsDevice.SetMainCamera(mainCamera);
-
 	return true;
 }
 
 bool Game::Initialize()
 {
 	gameObjectManager.Start();
-	sceneManager->GetCurrentScene()->Initialize();
-	timer.SetFrameRate(144);
+	timer.SetFrameRate(60);
 	timer.SetIsShow(false);
+
+	mainCamera = &camera;
+
+	GatesEngine::GameObject* playerObject = sceneManager->GetCurrentScene()->GetGameObjectManager()->Find("player");
+	if (playerObject)mainCamera = playerObject->GetComponent<PlayerBehaviour>()->GetSetCamera();
+	else mainCamera = &camera;
+
+	mainCamera->SetGraphicsDevice(&graphicsDevice);
+	mainCamera->SetMainWindow(&mainWindow);
+	graphicsDevice.SetMainCamera(mainCamera);
+	sceneManager->GetCurrentScene()->Initialize();
 
 	return true;
 }
 
 bool Game::Update()
 {
-	//camera.Update();
+	camera.Update();
 	gameObjectManager.Update();
 	sceneManager->Update();
+	if(sceneManager->GetCurrentScene()->GetIsTerminateApplication())return false;
 	return true;
 }
 

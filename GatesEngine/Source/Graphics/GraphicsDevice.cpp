@@ -394,6 +394,7 @@ GatesEngine::CBVSRVUAVHeap* GatesEngine::GraphicsDevice::GetCBVSRVUAVHeap()
 
 GatesEngine::CBufferAllocater* GatesEngine::GraphicsDevice::GetCBufferAllocater()
 {
+	cbvSrvUavHeap->Set();
 	return cBufferAllocater;
 }
 

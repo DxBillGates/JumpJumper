@@ -88,7 +88,7 @@ void GatesEngine::MeshCreater::Create2DQuad(Math::Vector2 size, Math::Vector2 uv
 	using namespace Math;
 	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0),Vector2(0,0),Vector3(0,0,-1) });
 	vertices->push_back({ Vector3(size.x / 2.0f,-size.y / 2.0f,0),Vector2(uvMax.x,0),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(size.x / 2.0f,size.y / 2.0f,0),Vector2(uvMax.x,uvMax.y),Vector3(0,0,0 - 1) });
+	vertices->push_back({ Vector3(size.x / 2.0f,size.y / 2.0f,0),Vector2(uvMax.x,uvMax.y),Vector3(0,0,-1) });
 	vertices->push_back({ Vector3(-size.x / 2.0f,size.y / 2.0f,0),Vector2(0,uvMax.y),Vector3(0,0,-1) });
 
 	indices->push_back(0);

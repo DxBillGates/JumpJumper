@@ -4,6 +4,10 @@
 using Vector2 = GatesEngine::Math::Vector2;
 
 GatesEngine::Mouse::Mouse()
+	: beforeMouseState({})
+	, currentMouseState({})
+	, device(nullptr)
+	, hwnd()
 {
 }
 
@@ -17,6 +21,7 @@ void GatesEngine::Mouse::Create(IDirectInput8 * input, HWND hwnd)
 	result = input->CreateDevice(GUID_SysMouse, &device, NULL);
 	result = device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	result = device->SetDataFormat(&c_dfDIMouse2);
+	this->hwnd = hwnd;
 }
 
 void GatesEngine::Mouse::Initialize()
@@ -27,7 +32,6 @@ void GatesEngine::Mouse::Initialize()
 
 void GatesEngine::Mouse::Update()
 {
-
 	beforeMouseState = currentMouseState;
 
 	HRESULT result;
@@ -40,9 +44,10 @@ void GatesEngine::Mouse::Update()
 	}
 	POINT mousePoint{};
 	GetCursorPos(&mousePoint);
+	//ScreenToClient(hwnd, &mousePoint);
+	float a = (mousePoint.y / 1080.0f) * 23 * 3;
 	mouseMove.x = mousePos.x - mousePoint.x;
 	mouseMove.y = mousePos.y - mousePoint.y;
-
 	mousePos.x = (float)mousePoint.x;
 	mousePos.y = (float)mousePoint.y;
 }
@@ -83,11 +88,16 @@ Vector2 GatesEngine::Mouse::GetMouseMove()
 
 Vector2 GatesEngine::Mouse::GetMousePos()
 {
-	return mousePos;
+	POINT point = { (LONG)mousePos.x,(LONG)mousePos.y };
+	ScreenToClient(hwnd, &point);
+	float a = (point.y / 1080.0f) * 23 * 3;
+	return {(float)point.x,(float)point.y + a};
 }
 
 void GatesEngine::Mouse::SetMouseCursor(const Vector2& setPos)
 {
-	SetCursorPos((int)setPos.x, (int)setPos.y);
+	POINT point = { (LONG)setPos.x,(LONG)setPos.y };
+	//ClientToScreen(hwnd, &point);
+	SetCursorPos(point.x,point.y);
 	mousePos = setPos;
 }

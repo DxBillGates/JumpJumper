@@ -48,6 +48,11 @@ namespace GatesEngine
 		void Draw();
 
 		/// <summary>
+		/// 特殊な描画用
+		/// </summary>
+		void SecondDraw();
+
+		/// <summary>
 		/// 設定されているコンポーネントすべての遅延描画関数を呼び出す関数
 		/// </summary>
 		void LateDraw();

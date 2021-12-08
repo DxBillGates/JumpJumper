@@ -21,6 +21,7 @@ GatesEngine::Scene::Scene(const char* sceneName, Application* app)
 	, changeNextSceneFlag(false)
 	, app(app)
 	, graphicsDevice(nullptr)
+	, isTerminateApplication(false)
 {
 #ifdef _DEBUG
 	printf("%sê∂ê¨\n", sceneName);
@@ -45,4 +46,9 @@ bool GatesEngine::Scene::IsChangeScene()
 GatesEngine::GameObjectManager* GatesEngine::Scene::GetGameObjectManager()
 {
 	return &gameObjectManager;
+}
+
+bool GatesEngine::Scene::GetIsTerminateApplication()
+{
+	return isTerminateApplication;
 }

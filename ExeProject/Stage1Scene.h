@@ -15,6 +15,7 @@ private:
 	GatesEngine::GameObject* boss;
 
 	GatesEngine::ComputePipeline* testCS;
+	GatesEngine::ComputePipeline* testInitializeCS;
 	GatesEngine::GPUParticleManager* gpuParticleManager;
 	GatesEngine::GPUParticleEmitter gpuParticleEmitter;
 
@@ -31,6 +32,11 @@ private:
 
 	GatesEngine::RenderTexture parlinNoiseTex;
 	GatesEngine::RenderTexture parlinNoiseHeightMapTex;
+
+	GatesEngine::RenderTexture redrawRenderTexture;
+	GatesEngine::DepthStencilTexture redrawDepthTex;
+	GatesEngine::RenderTexture subPostprocessTexture;
+	GatesEngine::RenderTexture brightnessTexture;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

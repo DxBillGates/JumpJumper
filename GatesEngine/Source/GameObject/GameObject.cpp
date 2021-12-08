@@ -73,6 +73,21 @@ void GatesEngine::GameObject::Draw()
 	}
 }
 
+void GatesEngine::GameObject::SecondDraw()
+{
+	if (enabled)
+	{
+		for (auto itr = components.begin(); itr != components.end(); ++itr)
+		{
+			(*itr)->OnSecondDraw();
+		}
+		for (auto itr = behaviors.begin(); itr != behaviors.end(); ++itr)
+		{
+			(*itr)->OnSecondDraw();
+		}
+	}
+}
+
 void GatesEngine::GameObject::LateDraw()
 {
 	if (enabled)

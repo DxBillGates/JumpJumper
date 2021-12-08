@@ -17,7 +17,8 @@ void main(
 )
 {
 	float3 addPos = posData[input[0].index].pos;
-	float3 addScale = 10 * posData[input[0].index].vel.w;
+	//addPos.x = input[0].index;
+	float3 addScale = 30 * posData[input[0].index].vel.w;
 	float4x4 addModelMatrix =
 	{
 		addScale.x,0,0,addPos.x,

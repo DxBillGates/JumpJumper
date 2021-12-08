@@ -15,6 +15,7 @@ namespace GatesEngine
 		CollisionManager collisionManager;
 		const char* sceneName;
 		bool changeNextSceneFlag;
+		bool isTerminateApplication;
 	public:
 		/// <summary>
 		/// コンストラクタ
@@ -76,5 +77,11 @@ namespace GatesEngine
 		/// </summary>
 		/// <returns>ゲームオブジェクトマネージャーのポインタ</returns>
 		GameObjectManager* GetGameObjectManager();
+
+		/// <summary>
+		/// アプリを狩猟させる確認する関数
+		/// </summary>
+		/// <returns>成否</returns>
+		bool GetIsTerminateApplication();
 	};
 }

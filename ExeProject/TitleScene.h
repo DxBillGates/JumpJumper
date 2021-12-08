@@ -2,6 +2,9 @@
 #include "Header/Scene/Scene.h"
 #include "Header/Graphics/Camera3D.h"
 #include "Header/Input/Input.h"
+#include "TitleManager.h"
+#include "Header/Graphics/RenderTexture.h"
+#include "Header/Graphics/DepthStencilTexture.h"
 
 class TitleScene : public GatesEngine::Scene
 {
@@ -12,6 +15,15 @@ private:
 private:
 	GatesEngine::Camera3D* mainCamera;
 	GatesEngine::Input* input;
+	TitleManager titleManager;
+	float black;
+	bool isIncreaseBlack;
+	bool isDecreaseBlack;
+	bool isSceneTransition;
+	ButtonUIType sceneTransType;
+
+	GatesEngine::RenderTexture sceneRenderTexture;
+	GatesEngine::DepthStencilTexture sceneDepthTexture;
 public:
 	TitleScene();
 	TitleScene(const char* sceneName);

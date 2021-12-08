@@ -102,4 +102,44 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	//	real[DTid.x].pos.xyz = addVector[0].pos.xyz;
 	//	real[DTid.x].vel.xyz = float3(0, 0, 0);
 	//}
+
+	//for (int i = 0; i < PARTICLE_PER_THREAD; i++)
+	//{
+	//	int globalId = PARTICLE_PER_THREAD * DTid.x + i;
+
+	//	//real[globalId].pos.x = globalId;
+	//	//real[globalId].pos.y = 0;
+	//	//real[globalId].pos.z = 0;
+
+	//	//real[globalId].pos.xyz += addVector[0].pos.xyz;
+	//	////寿命の設定
+	//	float maxSec = 1;
+
+	//	//寿命の加算
+	//	float frame = 1.0f / 60.0f;
+	//	float minR = frame / 10;
+	//	float maxR = frame;
+
+	//	float3 random = GetRandomVector(GetRandomVector(globalId), float3(minR, minR, minR), float3(maxR, maxR, maxR));
+	//	real[globalId].vel.w -= (random.x + random.y + random.z) / 3.0f;
+
+	//	//ランダムベクトルの作成
+	//	float range = 1;
+	//	float4 randomVector = float4(0, 0, 0, 0);
+	//	randomVector.xyz = GetRandomVector(GetRandomVector(globalId), float3(-range, -range, -range), float3(range, range, range));
+	//	randomVector = normalize(randomVector) / 10;
+
+	//	//ベクトルの加算
+	//	real[globalId].vel.xyz += randomVector.xyz;
+
+	//	real[globalId].pos.xyz += real[globalId].vel.xyz / 10;
+
+	//	if (real[globalId].vel.w < 0)
+	//	{
+	//		real[globalId].pos.xyz = float3(0, 0, 0);
+	//		real[globalId].vel.xyz = float3(0, 0, 0);
+	//		real[globalId].vel.w = maxSec;
+	//	}
+	//}
 }
+

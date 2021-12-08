@@ -6,7 +6,7 @@
 class PlayerBulletBehaviour : public GatesEngine::Behaviour,public PlayerBullet
 {
 private:
-	GatesEngine::Behaviour* gpuParticleEmitter;
+	GPUParticleEmitterBehaviour* gpuParticleEmitter;
 	GatesEngine::Math::Vector3 targetPos;
 public:
 	PlayerBulletBehaviour();
@@ -14,7 +14,8 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;
+	void OnSecondDraw() override;
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::Collider* otherCollider) override;
-	void SetGPUParticleEmitter(GatesEngine::Behaviour* behaviour);
+	void SetGPUParticleEmitter(GPUParticleEmitterBehaviour* behaviour);
 };

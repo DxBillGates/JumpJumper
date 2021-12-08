@@ -22,6 +22,10 @@ void GatesEngine::Component::OnDraw()
 {
 }
 
+void GatesEngine::Component::OnSecondDraw()
+{
+}
+
 void GatesEngine::Component::OnLateDraw()
 {
 }

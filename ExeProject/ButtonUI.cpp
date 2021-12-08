@@ -20,6 +20,16 @@ bool ButtonUI::GetIsSelect()
     return isSelect;
 }
 
+float ButtonUI::GetAlpha()
+{
+    return alpha;
+}
+
+ButtonUIType ButtonUI::GetType()
+{
+    return type;
+}
+
 void ButtonUI::SetScale(const Vector2& setscale)
 {
     scale = setscale;
@@ -38,4 +48,14 @@ void ButtonUI::SetIsCenterFlag(bool flag)
 void ButtonUI::SetIsSelect(bool flag)
 {
     isSelect = flag;
+}
+
+void ButtonUI::SetAlpha(float value)
+{
+    alpha = value;
+}
+
+void ButtonUI::SetType(ButtonUIType buttonType)
+{
+    type = buttonType;
 }

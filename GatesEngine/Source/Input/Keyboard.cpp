@@ -37,6 +37,7 @@ void GatesEngine::Keyboard::Update()
 
 bool GatesEngine::Keyboard::CheckPressTrigger(Keys key)
 {
+	if (key == Keys::NONE)return false;
 	bool flag = false;
 	int index = (int)key;
 	if (!(beforeKeys[index] & 0x80) && (currentKeys[index] & 0x80))
@@ -48,6 +49,7 @@ bool GatesEngine::Keyboard::CheckPressTrigger(Keys key)
 
 bool GatesEngine::Keyboard::CheckReleaseTrigger(Keys key)
 {
+	if (key == Keys::NONE)return false;
 	bool flag = false;
 	int index = (int)key;
 	if ((beforeKeys[index] & 0x80) && !(currentKeys[index] & 0x80))
@@ -59,6 +61,7 @@ bool GatesEngine::Keyboard::CheckReleaseTrigger(Keys key)
 
 bool GatesEngine::Keyboard::CheckHitKey(Keys key)
 {
+	if (key == Keys::NONE)return false;
 	bool flag = false;
 	int index = (int)key;
 	if ((currentKeys[index] & 0x80))

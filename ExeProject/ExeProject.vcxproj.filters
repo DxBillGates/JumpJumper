@@ -282,6 +282,21 @@
     <FxCompile Include="Resources\Shader\PointGS.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\SceneTransitionFadePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SceneTransitionFadeVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\testInitializeCS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TextureSpriteVS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TextureSpritePS.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\DefaultShader.hlsli">
@@ -322,6 +337,9 @@
     </None>
     <None Include="Resources\Shader\TestTesselationShader.hlsli">
       <Filter>シェーダー\TestTesselation</Filter>
+    </None>
+    <None Include="Resources\Shader\TextureSpriteShader.hlsli">
+      <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
 </Project>

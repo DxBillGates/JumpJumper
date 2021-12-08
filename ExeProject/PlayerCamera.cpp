@@ -36,10 +36,23 @@ void PlayerCamera::Update()
 		{
 			input->GetMouse()->SetMouseCursor({ 1920 / 2,1080 / 2 });
 			//ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ðŽæ“¾
-			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() / 500.0f;
+			const float PER_FRAME = 1.0f / 60.0f;
+			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() * PER_FRAME / 10;
+			
+			const float range = 0.05f;
+			if (inputValue.x >= range)inputValue.x = range;
+			if (inputValue.x <= -range)inputValue.x = -range;
+			if (inputValue.y >= range)inputValue.y = range;
+			if (inputValue.y <= -range)inputValue.y = -range;
+
+			//inputValue = inputValue.Normalize() * PER_FRAME;
+			//float preyaw = yaw, preitch = pitch;
+			//printf("%f,%f\n", yaw, pitch);
 
 			pitch -= inputValue.y;
 			yaw -= inputValue.x;
+
+			//printf("%f,%f\n", yaw-preyaw, pitch - preitch);
 
 			float minMaxPitch = Math::ConvertToRadian(89);
 			if (pitch > minMaxPitch)pitch = minMaxPitch;
