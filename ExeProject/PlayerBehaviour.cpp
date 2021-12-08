@@ -10,14 +10,16 @@
 void PlayerBehaviour::SetVelocity()
 {
 	const float G = 0.0f;
-	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3( 10 * 100, 10,   10 * 100);
-	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10 * 100, -50, -10 * 100);
+	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3( 10 * 10,  10 * 10,   10 * 10);
+	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10 * 10, -10 * 10, -10 * 10);
 
 	jetVel -= GatesEngine::Math::Vector3(0, G, 0);
 
 	// 各ベクトルの値を補正
 	moveVel = GatesEngine::Math::Vector3::Max(moveVel, MAX_VELOCITY);
 	moveVel = GatesEngine::Math::Vector3::Min(moveVel, MIN_VELOCITY);
+	addVel = GatesEngine::Math::Vector3::Max(addVel, MAX_VELOCITY);
+	addVel = GatesEngine::Math::Vector3::Min(addVel, MIN_VELOCITY);
 	jetVel = GatesEngine::Math::Vector3::Max(jetVel, MAX_VELOCITY);
 	jetVel = GatesEngine::Math::Vector3::Min(jetVel, MIN_VELOCITY);
 
