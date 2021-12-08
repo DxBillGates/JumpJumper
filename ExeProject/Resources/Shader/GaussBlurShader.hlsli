@@ -8,11 +8,6 @@ cbuffer Orthograph : register(b1)
 	matrix projMatrix;
 }
 
-cbuffer GaussBlurData : register(b2)
-{
-	float4 blurData[2];
-}
-
 struct VSInput
 {
 	float4 pos : POSITION;
@@ -24,3 +19,9 @@ struct VSOutput
 	float4 svpos : SV_POSITION;
 	float2 uv : TEXCOORD;
 };
+
+float Gaussian(float2 inputUV, float2 uv, float sigma)
+{
+	float d = distance(inputUV, uv);
+	return exp(-(d * d) / (2 * sigma * sigma));
+}

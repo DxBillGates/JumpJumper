@@ -10,7 +10,7 @@ SamplerState clampLinearSampler : register(s3);
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	float4 texColor = tex.Sample(clampPointSampler,input.uv);
-	float4 bloomColor = brightnessGaussTex.Sample(clampPointSampler, input.uv);
+	float4 texColor = tex.Sample(clampLinearSampler,input.uv);
+	float4 bloomColor = brightnessGaussTex.Sample(clampLinearSampler, input.uv);
 	return float4((texColor.rgb + bloomColor.rgb), 1.0f);
 }

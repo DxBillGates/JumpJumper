@@ -37,6 +37,7 @@ private:
 	GatesEngine::DepthStencilTexture redrawDepthTex;
 	GatesEngine::RenderTexture subPostprocessTexture;
 	GatesEngine::RenderTexture brightnessTexture;
+	GatesEngine::RenderTexture blurRenderTexture;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

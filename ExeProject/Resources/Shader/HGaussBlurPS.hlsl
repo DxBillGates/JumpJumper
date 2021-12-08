@@ -17,17 +17,21 @@ float4 main(VSOutput input) : SV_TARGET
 	float perPixel = 1;
 	float2 pixel = float2(perPixel / w, perPixel / h);
 
-	float4 texColor = tex.Sample(clampPointSampler, input.uv);
-	float4 resultColor = float4(0, 0, 0, 0);
+	float totalWeight = 0, sigma = 0.01f, stepWidth = 0.004f;
+	float4 samplingColor = float4(0, 0, 0, 0);
 
-	resultColor += blurData[0] * texColor;
-
-	//‰¡•ûŒü‚Éƒuƒ‰[‚ğ‚©‚¯‚é
-	for (uint i = 0; i < 8; ++i)
+	for (float py = -sigma * 2; py <= sigma * 2; py += stepWidth)
 	{
-		resultColor += blurData[i >> 2][i % 4] * tex.Sample(clampPointSampler, saturate(input.uv + float2( pixel.x * i,0)));
-		resultColor += blurData[i >> 2][i % 4] * tex.Sample(clampPointSampler, saturate(input.uv + float2(-pixel.y * i,0)));
+		for (float px = -sigma * 2; px <= sigma * 2; px += stepWidth)
+		{
+			float2 uv = input.uv + float2(px, py);
+			float weight = Gaussian(input.uv, uv, sigma);
+			samplingColor += tex.Sample(clampPointSampler, uv) * weight;
+			totalWeight += weight;
+		}
 	}
 
-	return float4(resultColor.rgb,texColor.a);
+	samplingColor.rgb = samplingColor.rgb / totalWeight;
+
+	return float4(samplingColor.rgb,1);
 }

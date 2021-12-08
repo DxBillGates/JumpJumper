@@ -185,19 +185,23 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	//g->GetTransform()->position = { 1000,1500,2000 };
 
 
-	shadowRenderTex.Create(graphicsDevice, { 1920,1080 });
-	shadowDepthTex.Create(graphicsDevice, { 1920,1080 });
-	resultRenderTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
-	resultDepthTex.Create(graphicsDevice, { 1920,1080 });
-	lateDrawResultRenderTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(141, 219, 228, 255));
-	lateDrawResultDepthTex.Create(graphicsDevice, { 1920,1080 });
-	resultRenderShadowTex.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
-	parlinNoiseTex.Create(graphicsDevice, { 1920,1080 });
-	parlinNoiseHeightMapTex.Create(graphicsDevice, { 1920,1080 });
-	subPostprocessTexture.Create(graphicsDevice, { 1920,1080 }, GatesEngine::Math::Vector4(1, 1, 1, 255));
-	brightnessTexture.Create(graphicsDevice, { 1920,1080 });
-	redrawRenderTexture.Create(graphicsDevice, { 1920,1080 });
-	redrawDepthTex.Create(graphicsDevice, { 1920,1080 });
+	GatesEngine::Math::Vector2 renderTextureSize = app->GetWindow()->GetWindowSize();
+	//renderTextureSize = {1280,720};
+
+	shadowRenderTex.Create(graphicsDevice, renderTextureSize);
+	shadowDepthTex.Create(graphicsDevice, renderTextureSize);
+	resultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
+	resultDepthTex.Create(graphicsDevice, renderTextureSize);
+	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	lateDrawResultDepthTex.Create(graphicsDevice, renderTextureSize);
+	resultRenderShadowTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
+	parlinNoiseTex.Create(graphicsDevice, renderTextureSize);
+	parlinNoiseHeightMapTex.Create(graphicsDevice, renderTextureSize);
+	subPostprocessTexture.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
+	brightnessTexture.Create(graphicsDevice, renderTextureSize);
+	blurRenderTexture.Create(graphicsDevice, renderTextureSize/8);
+	redrawRenderTexture.Create(graphicsDevice, renderTextureSize);
+	redrawDepthTex.Create(graphicsDevice, renderTextureSize);
 }
 
 Stage1Scene::~Stage1Scene()
@@ -358,15 +362,15 @@ void Stage1Scene::Draw()
 	graphicsDevice->GetCBufferAllocater()->ResetCurrentUseNumber();
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
-	//graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
-	graphicsDevice->SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
-	using namespace GatesEngine::Math;
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 1920,1080,0 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, Vector4(app->GetTimer()->GetElapsedApplicationTime()));
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("CreateParlinNoiseTextureShader")->Set();
+	////graphicsDevice.ClearRenderTargetOutDsv({ 0,0,0,1 }, true, &parlinNoiseTex);
+	//graphicsDevice->SetMultiRenderTarget({ &parlinNoiseTex,&parlinNoiseHeightMapTex }, nullptr, { 0,0,0,1 });
+	//using namespace GatesEngine::Math;
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 1920,1080,0 }) * Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, Vector4(1));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, Vector4(app->GetTimer()->GetElapsedApplicationTime()));
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 
 	//シャドウマップ用深度描画
 	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &shadowRenderTex, &shadowDepthTex);
@@ -387,7 +391,7 @@ void Stage1Scene::Draw()
 	//シーンの描画
 	gameObjectManager.Draw();
 
-	graphicsDevice->SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1,1,1, 255));
+	graphicsDevice->SetMultiRenderTarget({ &resultRenderTex,&resultRenderShadowTex }, &resultDepthTex, GatesEngine::Math::Vector4(1, 1, 1, 255));
 
 	//using namespace GatesEngine::Math;
 	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
@@ -432,23 +436,23 @@ void Stage1Scene::LateDraw()
 	gameObjectManager.LateDraw();
 	/*sceneManager->LateDraw();*/
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
-	using namespace GatesEngine::Math;
-	auto* input = GatesEngine::Input::GetInstance();
-	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
-	{
-		shaderManager->GetShader("TestTesselationShader")->Set(true);
-	}
-	else
-	{
-		shaderManager->GetShader("TestTesselationShader")->Set(false);
-	}
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
-	mainCamera->Set(2);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(4, GatesEngine::B3{ Vector4(),Vector4(0,10000,10000,1) });
-	parlinNoiseTex.Set(5);
-	parlinNoiseHeightMapTex.Set(6);
+	//using namespace GatesEngine::Math;
+	//auto* input = GatesEngine::Input::GetInstance();
+	//if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::P))
+	//{
+	//	shaderManager->GetShader("TestTesselationShader")->Set(true);
+	//}
+	//else
+	//{
+	//	shaderManager->GetShader("TestTesselationShader")->Set(false);
+	//}
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, Matrix4x4::Scale({ 100 }) * Matrix4x4::RotationX(ConvertToRadian(-90)) * Matrix4x4::Translate({ 0,5000,1000 }));
+	//mainCamera->Set(2);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(4, GatesEngine::B3{ Vector4(),Vector4(0,10000,10000,1) });
+	//parlinNoiseTex.Set(5);
+	//parlinNoiseHeightMapTex.Set(6);
 
-	meshManager->GetMesh("DividePlane")->Draw();
+	//meshManager->GetMesh("DividePlane")->Draw();
 
 	////描画結果から深度テクスチャを利用してアウトライン付与してを描画
 	//graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
@@ -477,7 +481,7 @@ void Stage1Scene::LateDraw()
 	gameObjectManager.SecondDraw();
 
 
-	graphicsDevice->ClearRenderTarget({ 1,1,1, 255 }, true,&subPostprocessTexture);
+	graphicsDevice->ClearRenderTarget({ 1,1,1, 255 }, true, &subPostprocessTexture);
 	shaderManager->GetShader("PostEffect_OutlineShader")->Set();
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
@@ -495,7 +499,7 @@ void Stage1Scene::LateDraw()
 	shaderManager->GetShader("BrightnessSamplingShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	color = { 0.1f,1,1,1 };
+	color = { 1,1,1,1 };
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, color);
 	//subPostprocessTexture.Set(3);
 	//resultRenderTex.Set(3);
@@ -505,17 +509,34 @@ void Stage1Scene::LateDraw()
 	redrawRenderTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+	//graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
 
-	shaderManager->GetShader("TextureSpriteShader")->Set();
+	//shaderManager->GetShader("TextureSpriteShader")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//color = { 0,0,0,1 };
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, color);
+	//subPostprocessTexture.Set(3);
+	////resultRenderTex.Set(3);
+	////redrawRenderTexture.Set(3);
+	//brightnessTexture[0].Set(3);
+	//meshManager->GetMesh("2DPlane")->Draw();
+
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true,&blurRenderTexture);
+
+	shaderManager->GetShader("HGaussBlurShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	color = { 0,0,0,1 };
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, color);
-	subPostprocessTexture.Set(3);
-	//resultRenderTex.Set(3);
-	//redrawRenderTexture.Set(3);
-	//brightnessTexture.Set(3);
+	brightnessTexture.Set(3);
+	meshManager->GetMesh("2DPlane")->Draw();
+
+	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+
+	shaderManager->GetShader("BloomShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	subPostprocessTexture.Set(2);
+	blurRenderTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
 

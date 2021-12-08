@@ -14,7 +14,7 @@ PSOutput main(VSOutput input)
 	float3 lightDir = normalize(worldLightDir.xyz);
 	float3 normal = normalize(input.normal);
 	float intensity = saturate(dot(-lightDir, normal));
-	float4 color = float4(intensity, intensity, intensity, 1);
+	float4 color = float4(intensity, intensity, intensity, 1) * lightColor;
 	//////ŠÈˆÕƒgƒD[ƒ“
 	//if (intensity > 0.95)
 	//	color = float4(1, 1, 1, 1.0);
