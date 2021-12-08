@@ -26,5 +26,6 @@ public:
 	void RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector);
 	bool IsUse();
 	void SetPos(const GatesEngine::Math::Vector3& p);
-	void SetTarget(GatesEngine::GameObject* t, float maxTime = 0 , const GatesEngine::Math::Axis& axis = {});
+	void SetTarget(GatesEngine::GameObject* t, float maxTime = 0 , const GatesEngine::Math::Axis& axis = {},const GatesEngine::Math::Vector3& addValue = 2500);
+	void SetTarget(GatesEngine::GameObject* t, float maxTime = 0, const GatesEngine::Math::Vector3& vec = {},float addValue = 2500);
 };

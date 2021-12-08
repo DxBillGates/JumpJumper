@@ -71,7 +71,7 @@ void PlayerBullet::SetPos(const GatesEngine::Math::Vector3& p)
 	setPos = p;
 }
 
-void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Axis& axis)
+void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Axis& axis, const GatesEngine::Math::Vector3& addValue)
 {
 	float range = 32767;
 	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(10000,range) ,GatesEngine::Random::Rand(-range,-10000) };
@@ -82,7 +82,29 @@ void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const Ga
 	GatesEngine::Math::Vector3 yVector = axis.y * randomVector.y;
 	GatesEngine::Math::Vector3 zVector = axis.z * randomVector.z;
 	GatesEngine::Math::Vector3 vector = xVector + yVector + zVector;
-	vel = vector.Normalize() * 2500;
+	vel = vector.Normalize();
+	vel.x *= addValue.x;
+	vel.y *= addValue.y;
+	vel.z *= addValue.z;
+
+	isUse = true;
+	isHoming = true;
+	target = t;
+	maxHomingTime = maxTime;
+	float delayTime = GatesEngine::Random::Rand(0, 10);
+	float delaySec = GatesEngine::Random::Rand(0, 10) / 100;
+	homingTime = 1 + delayTime * delaySec / 100.0f;
+}
+
+void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Vector3& vec, float addValue)
+{
+	float range = 32767;
+	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(10000,range) ,GatesEngine::Random::Rand(-range,-10000) };
+
+	randomVector = randomVector.Normalize();
+
+	GatesEngine::Math::Vector3 vector = vec * randomVector.y;
+	vel = vector.Normalize() * addValue;
 
 	isUse = true;
 	isHoming = true;

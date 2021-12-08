@@ -230,7 +230,7 @@ void PlayerBehaviour::LockOnAttack()
 			{
 				if (b->IsUse())continue;
 				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
-				b->SetTarget(t, 0, axis);
+				b->SetTarget(t, 0, axis, {2500,5000,2500});
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -357,28 +357,28 @@ void PlayerBehaviour::OnLateDraw()
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 
-	GatesEngine::Math::Vector3 center = gameObject->GetTransform()->position;
-	GatesEngine::Math::Vector3 size = 20;
-	rotate = GatesEngine::Math::Quaternion({ {0,1,0},0 });
-	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(size);
-	GatesEngine::Math::Matrix4x4 rotateMatrix = mainCamera->GetRotation();
-	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(center);
+	//GatesEngine::Math::Vector3 center = gameObject->GetTransform()->position;
+	//GatesEngine::Math::Vector3 size = 20;
+	//rotate = GatesEngine::Math::Quaternion({ {0,1,0},0 });
+	//GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(size);
+	//GatesEngine::Math::Matrix4x4 rotateMatrix = mainCamera->GetRotation();
+	//GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(center);
 
-	for (int i = 0; i < hp; ++i)
-	{
-		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+	//for (int i = 0; i < hp; ++i)
+	//{
+	//	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 
-		graphicsDevice->GetCBVSRVUAVHeap()->Set();
-		GatesEngine::Math::Vector3 offset = center + GatesEngine::Math::Vector3(0, gameObject->GetTransform()->scale.y * 2, 0);
-		GatesEngine::Math::Vector3 spacePos = GatesEngine::Math::Vector3(0, 0, 0);
-		GatesEngine::Math::Vector3 addPos = GatesEngine::Math::Vector3(size.x, 0, 0) * i;
-		GatesEngine::Math::Vector3 fixPos = offset + addPos + spacePos - GatesEngine::Math::Vector3(size.x, 0, 0) * MAX_HP / 2;
-		posMatrix = GatesEngine::Math::Matrix4x4::Translate(fixPos);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
-		mainCamera->Set(2);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,-1,1),GatesEngine::Math::Vector4(1,0,0,1) });
-		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
-	}
+	//	graphicsDevice->GetCBVSRVUAVHeap()->Set();
+	//	GatesEngine::Math::Vector3 offset = center + GatesEngine::Math::Vector3(0, gameObject->GetTransform()->scale.y * 2, 0);
+	//	GatesEngine::Math::Vector3 spacePos = GatesEngine::Math::Vector3(0, 0, 0);
+	//	GatesEngine::Math::Vector3 addPos = GatesEngine::Math::Vector3(size.x, 0, 0) * i;
+	//	GatesEngine::Math::Vector3 fixPos = offset + addPos + spacePos - GatesEngine::Math::Vector3(size.x, 0, 0) * MAX_HP / 2;
+	//	posMatrix = GatesEngine::Math::Matrix4x4::Translate(fixPos);
+	//	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
+	//	mainCamera->Set(2);
+	//	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,-1,1),GatesEngine::Math::Vector4(1,0,0,1) });
+	//	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+	//}
 }
 
 void PlayerBehaviour::OnCollision(GatesEngine::GameObject* other)

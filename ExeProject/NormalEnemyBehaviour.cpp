@@ -211,7 +211,7 @@ void NormalEnemyBehaviour::Shot()
 		if (!isShot)
 		{
 			if (!target)continue;
-			b->SetTarget(target, 0.1f);
+			b->SetTarget(target, 0.1f, GatesEngine::Math::Vector3(0,1,0),5000);
 			isShot = true;
 		}
 		else
