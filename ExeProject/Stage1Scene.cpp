@@ -477,7 +477,7 @@ void Stage1Scene::LateDraw()
 	//meshManager->GetMesh("2DPlane")->Draw();
 
 	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &redrawRenderTexture, &redrawDepthTex);
-	gameObjectManager.Draw();
+	//gameObjectManager.Draw();
 	gameObjectManager.SecondDraw();
 
 
@@ -489,7 +489,7 @@ void Stage1Scene::LateDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, color);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	resultDepthTex.Set(3);
-	redrawRenderTexture.Set(4);
+	resultRenderTex.Set(4);
 	lateDrawResultDepthTex.Set(5);
 	lateDrawResultRenderTex.Set(6);
 	resultRenderShadowTex.Set(7);

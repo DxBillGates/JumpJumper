@@ -136,6 +136,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjectCollisionManager.cpp" />
     <ClCompile Include="GPUParticleEmitterBehaviour.cpp" />
+    <ClCompile Include="LockonTarget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalEnemyBehaviour.cpp" />
     <ClCompile Include="PlayerBehaviour.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjectCollisionManager.h" />
     <ClInclude Include="GPUParticleEmitterBehaviour.h" />
+    <ClInclude Include="LockonTarget.h" />
     <ClInclude Include="NormalEnemyBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerBullet.h" />

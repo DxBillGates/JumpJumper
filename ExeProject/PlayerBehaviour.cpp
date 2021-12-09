@@ -208,7 +208,7 @@ void PlayerBehaviour::Attack()
 void PlayerBehaviour::LockOnAttack()
 {
 	if (currentFrameTargetCount <= 0)return;
-	if (input->GetMouse()->GetCheckReleaseTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))
+	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))
 	{
 		int unusedBulletCount = 0;
 		// 使っていない弾の総量を取得
@@ -225,14 +225,14 @@ void PlayerBehaviour::LockOnAttack()
 		int useBulletCount = 0;
 		for (auto& t : targets)
 		{
-			if (!t)break;
-			GatesEngine::Math::Vector3 targetDir = t->GetTransform()->position - gameObject->GetTransform()->position;
+			if (!t.GetIsLockon())break;
+			GatesEngine::Math::Vector3 targetDir = t.GetTarget()->GetTransform()->position - gameObject->GetTransform()->position;
 			targetDir = GatesEngine::Math::Vector3::Normalize(targetDir);
 			for (auto& b : bullets)
 			{
 				if (b->IsUse())continue;
 				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
-				b->SetTarget(t, 0, axis, {2500,5000,2500});
+				b->SetTarget(t.GetTarget(), 0, axis, {2500,5000,2500});
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -252,7 +252,7 @@ void PlayerBehaviour::ClearTargets()
 {
 	for (auto& g : targets)
 	{
-		g = nullptr;
+		g.Initialize();
 	}
 }
 
@@ -297,6 +297,10 @@ void PlayerBehaviour::Start()
 
 void PlayerBehaviour::Update()
 {
+	for (auto& t : targets)
+	{
+		t.Update();
+	}
 	Move();
 	Attack();
 	LockOnAttack();
@@ -347,13 +351,14 @@ void PlayerBehaviour::OnLateDraw()
 	GatesEngine::Math::Quaternion rotate = GatesEngine::Math::Quaternion({ {0,0,1},time });
 	for (auto& t : targets)
 	{
-		if (!t)continue;
-		float d = GatesEngine::Math::Vector3::Distance(t->GetTransform()->position, mainCamera->GetPosition());
-		d /= 2500;
+		if (!t.GetIsLockon())continue;
+		float d = 1;
 		if (d < 1)d = 1;
+		float addScale = (t.GetMaxLockonTime() - t.GetLockTime()) / t.GetMaxLockonTime();
+		d *= GatesEngine::Math::Easing::EaseOutQuad(addScale);
 		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
 		graphicsDevice->GetCBVSRVUAVHeap()->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 200 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t->GetTransform()->position }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t.GetTarget()->GetTransform()->position }));
 		graphicsDevice->GetMainCamera()->Set(2);
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
 		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
@@ -434,15 +439,18 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 	for (auto& g : targets)
 	{
 		// ロックオン中の敵がいた場合スキップ
-		if (g == other)
+		if (g.GetTarget() == other)
 		{
+			g.Initialize();
+			g.SetLockonTarget(other);
 			return;
 		}
 
 		// 登録されてなければターゲットに設定
-		if (!g)
+		if (!g.GetTarget())
 		{
-			g = other;
+			g.Initialize();
+			g.SetLockonTarget(other);
 			++currentFrameTargetCount;
 			break;
 		}

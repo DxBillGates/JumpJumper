@@ -1,5 +1,6 @@
 #pragma once
 #include "Header/Component/Behaviour.h"
+#include "LockonTarget.h"
 #include "Header/Math/Math.h"
 #include "Header/Input/Input.h"
 #include "Header/Graphics/Camera.h"
@@ -22,7 +23,8 @@ private:
 
 	std::vector<PlayerBullet*> bullets;
 
-	std::vector<GatesEngine::GameObject*> targets;
+	std::vector<LockonTarget> targets;
+	//std::vector<GatesEngine::GameObject*> targets;
 	const int MAX_TARGET;
 	int currentFrameTargetCount;
 

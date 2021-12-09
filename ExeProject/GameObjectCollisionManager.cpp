@@ -133,8 +133,8 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
 {
 	if (!mainCamera)return;
 	if (!playerBehaviour)return;
-	if (GatesEngine::Input::GetInstance()->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
-	{
+	//if (GatesEngine::Input::GetInstance()->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::RIGHT_CLICK))
+	//{
 		for (auto& e : enemyColliders)
 		{
 			if (!e->GetEnabled())continue;
@@ -148,7 +148,7 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
 				}
 			}
 		}
-	}
+	//}
 }
 
 void GameObjectCollisionManager::CheckCollisionHitBossTo()
