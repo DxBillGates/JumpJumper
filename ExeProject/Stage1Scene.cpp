@@ -199,7 +199,9 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	parlinNoiseHeightMapTex.Create(graphicsDevice, renderTextureSize);
 	subPostprocessTexture.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	brightnessTexture.Create(graphicsDevice, renderTextureSize);
-	blurRenderTexture.Create(graphicsDevice, renderTextureSize/8);
+	blurRenderTexture.Create(graphicsDevice, renderTextureSize / 8);
+	blurRenderTexture2.Create(graphicsDevice, renderTextureSize / 4);
+	blurRenderTexture3.Create(graphicsDevice, renderTextureSize / 8);
 	redrawRenderTexture.Create(graphicsDevice, renderTextureSize);
 	redrawDepthTex.Create(graphicsDevice, renderTextureSize);
 }
@@ -426,7 +428,7 @@ void Stage1Scene::LateDraw()
 	GatesEngine::Camera* mainCamera = app->GetMainCamera();
 
 	//ƒOƒŠƒbƒh‚Ì•`‰æ
-	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(0, 0, 0, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
 	shaderManager->GetShader("Line")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
@@ -477,7 +479,7 @@ void Stage1Scene::LateDraw()
 	//meshManager->GetMesh("2DPlane")->Draw();
 
 	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &redrawRenderTexture, &redrawDepthTex);
-	//gameObjectManager.Draw();
+	gameObjectManager.Draw();
 	gameObjectManager.SecondDraw();
 
 
@@ -499,7 +501,7 @@ void Stage1Scene::LateDraw()
 	shaderManager->GetShader("BrightnessSamplingShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	color = { 1,1,1,1 };
+	color = { 0.2f,1,1,1 };
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, color);
 	//subPostprocessTexture.Set(3);
 	//resultRenderTex.Set(3);
@@ -522,7 +524,7 @@ void Stage1Scene::LateDraw()
 	//brightnessTexture[0].Set(3);
 	//meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true,&blurRenderTexture);
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture);
 
 	shaderManager->GetShader("HGaussBlurShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
@@ -530,14 +532,47 @@ void Stage1Scene::LateDraw()
 	brightnessTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, & blurRenderTexture2);
 
-	shaderManager->GetShader("BloomShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	shaderManager->GetShader("HGaussBlurShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	subPostprocessTexture.Set(2);
 	blurRenderTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
+
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, & blurRenderTexture3);
+
+	shaderManager->GetShader("HGaussBlurShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	blurRenderTexture2.Set(3);
+	meshManager->GetMesh("2DPlane")->Draw();
+
+	static bool flag = false;
+	if(app->GetInput()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))
+	flag = !flag;
+	if (flag)
+	{
+		graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+
+		shaderManager->GetShader("BloomShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		subPostprocessTexture.Set(2);
+		blurRenderTexture3.Set(3);
+		meshManager->GetMesh("2DPlane")->Draw();
+	}
+	else
+	{
+		graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+
+		shaderManager->GetShader("BloomShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		subPostprocessTexture.Set(2);
+		blurRenderTexture.Set(3);
+		meshManager->GetMesh("2DPlane")->Draw();
+	}
 
 
 

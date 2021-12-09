@@ -146,8 +146,8 @@ void NormalEnemyBehaviour::OnDraw()
 	{
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	}
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
 }
 
 void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)

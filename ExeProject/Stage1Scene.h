@@ -38,6 +38,9 @@ private:
 	GatesEngine::RenderTexture subPostprocessTexture;
 	GatesEngine::RenderTexture brightnessTexture;
 	GatesEngine::RenderTexture blurRenderTexture;
+
+	GatesEngine::RenderTexture blurRenderTexture2;
+	GatesEngine::RenderTexture blurRenderTexture3;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);
