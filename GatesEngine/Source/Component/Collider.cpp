@@ -25,6 +25,7 @@ GatesEngine::Collider::~Collider()
 
 void GatesEngine::Collider::Start()
 {
+	isEnabled = true;
 	GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	mesh = (type == ColliderType::CUBE) ? ResourceManager::GetMeshManager()->GetMesh("LineCube") : ResourceManager::GetMeshManager()->GetMesh("LineCircle");
 	shader = ResourceManager::GetShaderManager()->GetShader("Line");

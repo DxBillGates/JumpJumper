@@ -40,24 +40,12 @@ void PlayerBulletBehaviour::Update()
 
 			homingTime -= 0.016f / 2.0f;
 
-			//{
-			//	isHoming = false;
-			//}
-			//if (GatesEngine::Math::Vector3::Distance(target->GetTransform()->position, gameObject->GetTransform()->position) < 100)
-			//{
 			const float MAX_ACC = 100000;
 			if (acc.Length() > MAX_ACC)
 			{
 				acc = acc.Normalize() * MAX_ACC;
 			}
-			//}
-			//float MAX_HOMING_TIME = 0.2f;
-			//if (homingTime < MAX_HOMING_TIME)homingTime = -MAX_HOMING_TIME;
-
-
-			//printf("%f\n", acc.Length());
 			vel += acc * 0.016f / 2.0f;
-			//vel = vel.Normalize() * 10000;
 
 			gameObject->GetTransform()->position += vel * 0.016f / 2.0f;
 		}
@@ -76,14 +64,6 @@ void PlayerBulletBehaviour::OnDraw()
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Sphere")->Draw();
-
-	//if (!isUse)
-	//{
-	//	gpuParticleEmitter->DispatchInitializeShader();
-	//	return;
-	//}
-	//if (!gpuParticleEmitter)return;
-	//gpuParticleEmitter->ExternalDraw();
 }
 
 void PlayerBulletBehaviour::OnSecondDraw()
@@ -99,13 +79,6 @@ void PlayerBulletBehaviour::OnSecondDraw()
 
 void PlayerBulletBehaviour::OnLateDraw()
 {
-	if (!isUse)
-	{
-		gpuParticleEmitter->DispatchInitializeShader();
-		return;
-	}
-	if (!gpuParticleEmitter)return;
-	gpuParticleEmitter->ExternalDraw();
 }
 
 void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
@@ -115,14 +88,7 @@ void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 		isHoming = false;
 		vel = {};
 		gameObject->GetTransform()->position = { 0,-1000,0 };
-		//Initialize();
-
 	}
-	//if (otherCollider->GetGameObject()->GetTag() == "block")
-	//{
-	//	isUse = false;
-	//	Initialize();
-	//}
 }
 
 void PlayerBulletBehaviour::SetGPUParticleEmitter(GPUParticleEmitterBehaviour* behaviour)

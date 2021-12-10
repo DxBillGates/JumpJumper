@@ -2,6 +2,7 @@
 #include "Header/Scene/Scene.h"
 #include "Stage1.h"
 #include "PlayerBehaviour.h"
+#include "EnemyManager.h"
 #include "Header/Graphics/GPUParticle/GPUParticleManager.h"
 #include "Header/Graphics/GPUParticle/GPUParticleEmitter.h"
 #include "Header/Graphics/RenderTexture.h"
@@ -41,6 +42,9 @@ private:
 
 	GatesEngine::RenderTexture blurRenderTexture2;
 	GatesEngine::RenderTexture blurRenderTexture3;
+
+	int battleCount;
+	EnemyManager enemyManager;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

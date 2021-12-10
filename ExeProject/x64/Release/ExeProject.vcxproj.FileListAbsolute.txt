@@ -55,3 +55,9 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationDS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationHS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationPS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TestTesselationVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\PointGS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\SceneTransitionFadePS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\SceneTransitionFadeVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\testInitializeCS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TextureSpritePS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\TextureSpriteVS.cso

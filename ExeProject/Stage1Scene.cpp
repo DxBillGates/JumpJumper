@@ -90,53 +90,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	boss = b;
 
 	GatesEngine::GameObject* g = nullptr;
-	//auto* g = gameObjectManager.Add(new GameObject());
-	//for (int i = 0; i < 1; ++i)
-	//{
-	//	for (int j = 0; j < 10; ++j)
-	//	{
-	//		g = gameObjectManager.Add(new GameObject());
-	//		//auto* g = gameObjectManager.Add(new GameObject());
-	//		g->SetGraphicsDevice(graphicsDevice);
-	//		auto* e = g->AddComponent<NormalEnemyBehaviour>();
-	//		e->SetBoss(boss);
-	//		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
-	//		g->SetCollider();
-	//		g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	//		g->GetCollider()->SetSize({ 2 });
-	//		auto* secondCollider = g->AddComponent<Collider>();
-	//		secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
-	//		secondCollider->SetSize(10);
-	//		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
-	//		g->GetTransform()->scale = 100;
-	//		g->SetTag("enemy");
-	//		g->GetTransform()->position = { (float)i * 250,(float)(j + 1) * 250,1000 };
-
-	//		bossBehaviour->AddNormalEnemy(g, e);
-
-	//		for (int i = 0; i < 3; ++i)
-	//		{
-	//			auto* bullet = gameObjectManager.Add(new GameObject());
-	//			bullet->SetGraphicsDevice(graphicsDevice);
-	//			auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
-	//			auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
-	//			gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 128);
-	//			gParticleEmitter->SetComputeShader(testCS);
-	//			gParticleEmitter->SetInitializeShader(testInitializeCS);
-	//			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::ENEMY_BULLET);
-	//			bullet->AddComponent<Collider>();
-	//			bullet->SetCollider();
-	//			bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-	//			bullet->GetCollider()->SetSize({ 1 });
-	//			bullet->GetTransform()->scale = 10;
-	//			bullet->SetTag("enemyBullet");
-	//			bullet->SetName("enemyBullet");
-
-	//			e->SetTarget(gp);
-	//			e->AddBullet(bulletBehaviour);
-	//		}
-	//	}
-	//}
 
 
 	g = gameObjectManager.Add(new GameObject());
@@ -192,7 +145,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	shadowDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	resultDepthTex.Create(graphicsDevice, renderTextureSize);
-	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(0,0,0, 255));
 	lateDrawResultDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderShadowTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	parlinNoiseTex.Create(graphicsDevice, renderTextureSize);
@@ -204,6 +157,60 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	blurRenderTexture3.Create(graphicsDevice, renderTextureSize / 8);
 	redrawRenderTexture.Create(graphicsDevice, renderTextureSize);
 	redrawDepthTex.Create(graphicsDevice, renderTextureSize);
+
+
+
+	for (int i = 0; i < 20; ++i)
+	{
+		auto* g = gameObjectManager.Add(new GameObject());
+		g->SetGraphicsDevice(graphicsDevice);
+		auto* e = g->AddComponent<NormalEnemyBehaviour>();
+		e->SetBoss(boss);
+		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
+		g->SetCollider();
+		g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+		g->GetTransform()->scale = { 100 };
+		g->GetCollider()->SetSize(2);
+
+		auto* secondCollider = g->AddComponent<Collider>();
+		secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
+		secondCollider->SetSize(10);
+		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
+
+		g->SetTag("enemy");
+		float x, y, z;
+		float range = 3000;
+		x = Random::Rand(-range, range);
+		y = Random::Rand(-100, range);
+		z = Random::Rand(-range, range);
+		g->GetTransform()->position = { x,y,z };
+		g->Start();
+
+		auto* bullet = gameObjectManager.Add(new GameObject());
+		bullet->SetGraphicsDevice(graphicsDevice);
+		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+		bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
+		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1280);
+		gParticleEmitter->SetComputeShader(testCS);
+		gParticleEmitter->SetInitializeShader(testInitializeCS);
+		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::ENEMY_BULLET);
+		bullet->AddComponent<Collider>();
+		bullet->SetCollider();
+		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+		bullet->GetCollider()->SetSize({ 1 });
+		bullet->GetTransform()->scale = 10;
+		bullet->SetTag("enemyBullet");
+		bullet->SetName("enemyBullet");
+
+		e->SetTarget(playerBehaviour->GetGameObject());
+		e->AddBullet(bulletBehaviour);
+
+		bullet->Start();
+		bullet->GetTransform()->position = g->GetTransform()->position;
+
+		enemyManager.RegisterEnemy(e,g);
+	}
 }
 
 Stage1Scene::~Stage1Scene()
@@ -218,44 +225,18 @@ void Stage1Scene::Initialize()
 	gameObjectManager.Start();
 	stage.GetCollisionManager()->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 	//app->GetTimer()->SetFrameRate(60);
+	battleCount = 1;
 }
 
 void Stage1Scene::Update()
 {
 	gpuParticleEmitter.Update();
+	enemyManager.Update(battleCount);
 	gameObjectManager.Update();
 	////八分木空間分割すり抜けバグ多発したため一旦なし
 	//collisionManager.Update();
 	stage.Update();
 
-	//テスト用オブジェクト配置
-	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::UP))
-	{
-		using namespace GatesEngine;
-		for (int i = 0; i < 3; ++i)
-		{
-			auto* g = gameObjectManager.Add(new GameObject());
-			g->SetGraphicsDevice(graphicsDevice);
-			g->AddComponent<BlockBehaviour>();
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			//複数のコライダーに対応済み
-			auto* c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			c->SetPosition({ 0,100,100 });
-			c = stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-			c->SetPosition({ 0,200,200 });
-			g->SetCollider();
-			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetTransform()->scale = { 500,100,500 };
-			g->SetTag("block");
-			float x, y, z;
-			float range = 3000;
-			x = Random::Rand(-range, range);
-			y = Random::Rand(-100, range);
-			z = Random::Rand(-range, range);
-			g->GetTransform()->position = { x,y,z };
-			g->Start();
-		}
-	}
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
 	{
@@ -265,22 +246,6 @@ void Stage1Scene::Update()
 		x = Random::Rand(-range, range);
 		y = Random::Rand(-100, range);
 		z = Random::Rand(-range, range);
-		//for (int i = 0; i < 5; ++i)
-		//{
-		//	for (int j = 0; j < 5; ++j)
-		//	{
-		//		auto* g = gameObjectManager.Add(new GameObject());
-		//		g->SetGraphicsDevice(graphicsDevice);
-		//		g->AddComponent<BlockBehaviour>();
-		//		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::BLOCK);
-		//		g->SetCollider();
-		//		g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-		//		g->GetTransform()->scale = { 50,10,50 };
-		//		g->SetTag("block");
-		//		g->GetTransform()->position = { x + 50 * i,y,z + 50 * j };
-		//		g->Start();
-		//	}
-		//}
 
 		for (int i = 0; i < 1; ++i)
 		{
@@ -331,6 +296,8 @@ void Stage1Scene::Update()
 			bullet->Start();
 			bullet->GetTransform()->position = g->GetTransform()->position;
 			boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
+
+			enemyManager.RegisterEnemy(e,g);
 		}
 	}
 

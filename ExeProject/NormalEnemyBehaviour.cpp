@@ -5,6 +5,7 @@
 #include "Header/Component/Collider.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Util/Random.h"
+#include "PlayerBulletBehaviour.h"
 
 NormalEnemyBehaviour::NormalEnemyBehaviour()
 	: target(nullptr)
@@ -24,6 +25,7 @@ NormalEnemyBehaviour::~NormalEnemyBehaviour()
 
 void NormalEnemyBehaviour::Start()
 {
+	isEnabled = true;
 	hp = 10;
 	t = 0;
 	deadPos = {};
@@ -32,6 +34,7 @@ void NormalEnemyBehaviour::Start()
 	animationTime = 0;
 	//hp = 10;
 	//Enemy::Initialize();
+
 	Enemy::pos = gameObject->GetTransform()->position;
 	shotInterval = 0;
 }
@@ -164,6 +167,10 @@ void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	if (other->GetTag() == "playerBullet")
 	{
 		hp = 0;
+		Enemy::Initialize();
+		Start();
+		gameObject->Start();
+		gameObject->SetEnabled(false);
 	}
 
 	if (other->GetTag() == "Boss")
