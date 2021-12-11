@@ -17,7 +17,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float perPixel = 1;
 	float2 pixel = float2(perPixel / w, perPixel / h);
 
-	float totalWeight = 0, sigma = 0.01f, stepWidth = 0.001f;
+	float totalWeight = 0, sigma = 0.005f, stepWidth = 0.001f;
 	float4 samplingColor = float4(0, 0, 0, 0);
 
 	for (float py = -sigma * 2; py <= sigma * 2; py += stepWidth)

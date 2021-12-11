@@ -79,6 +79,13 @@ void PlayerBulletBehaviour::OnSecondDraw()
 
 void PlayerBulletBehaviour::OnLateDraw()
 {
+	if (!isUse)
+	{
+		gpuParticleEmitter->DispatchInitializeShader();
+		return;
+	}
+	if (!gpuParticleEmitter)return;
+	gpuParticleEmitter->ExternalDraw();
 }
 
 void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)

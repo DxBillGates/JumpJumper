@@ -83,7 +83,8 @@ float GatesEngine::Mouse::GetWheelValue()
 
 Vector2 GatesEngine::Mouse::GetMouseMove()
 {
-	return mouseMove;
+	//return mouseMove;
+	return { (float)-currentMouseState.lX,(float)-currentMouseState.lY };
 }
 
 Vector2 GatesEngine::Mouse::GetMousePos()

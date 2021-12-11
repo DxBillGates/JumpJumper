@@ -39,11 +39,11 @@ void PlayerCamera::Update()
 			const float PER_FRAME = 1.0f / 60.0f;
 			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() * PER_FRAME / 10;
 			
-			const float range = 0.05f;
-			if (inputValue.x >= range)inputValue.x = range;
-			if (inputValue.x <= -range)inputValue.x = -range;
-			if (inputValue.y >= range)inputValue.y = range;
-			if (inputValue.y <= -range)inputValue.y = -range;
+			//const float range = 0.05f;
+			//if (inputValue.x >= range)inputValue.x = range;
+			//if (inputValue.x <= -range)inputValue.x = -range;
+			//if (inputValue.y >= range)inputValue.y = range;
+			//if (inputValue.y <= -range)inputValue.y = -range;
 
 			//inputValue = inputValue.Normalize() * PER_FRAME;
 			//float preyaw = yaw, preitch = pitch;
