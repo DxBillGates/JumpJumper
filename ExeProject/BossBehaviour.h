@@ -1,29 +1,36 @@
 #pragma once
 #include "Header/Component/Behaviour.h"
-#include "Header/Graphics/Camera3D.h"
-#include "Enemy.h"
+#include "GameState.h"
+#include "Header/Math/Vector3.h"
+
+enum class BossState
+{
+	NONE,
+	JOIN,
+	HEALING,
+	LEFT,
+};
 
 class BossBehaviour : public GatesEngine::Behaviour
 {
 private:
-	struct EnemyInfo
-	{
-		Enemy* enemyBehaviour;
-		GatesEngine::GameObject* gameObject;
-	};
 private:
-	const int MAX_HP;
-	int hp;
-	GatesEngine::Camera3D* mainCamera;
-	bool callEnemyFlag;
-	const int MAX_NORMAL_ENEMY;
-	int normalEnemyAddedCount;
-	//std::vector<GatesEngine::GameObject*> normalEnemies;
-	std::vector<EnemyInfo> normalEnemies;
-	float callEnemyInterval;
-	int n;
+	BossState state;
+	bool isJoining;
+	float joiningTime;
+	bool isLefting;
+	float leftingTime;
+	GatesEngine::Math::Vector3 preLerpPos;
+
+	bool stopFlag;
+	float stopingTime;
+
+	const float MAX_HP;
+	float hp;
 private:
-	void CallEnemy(const GatesEngine::Math::Vector3& centerPos, int count = 5);
+	void InitState();
+	void JoinOrLeft(BossState state);
+	void Stoping();
 public:
 	BossBehaviour();
 	~BossBehaviour();
@@ -32,6 +39,6 @@ public:
 	void OnDraw() override;
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::Collider* otherCollider);
-	void AddNormalEnemy(GatesEngine::GameObject* enemy,Enemy* enemyBehhaviour);
+	void SetBossState(BossState state);
 };
 

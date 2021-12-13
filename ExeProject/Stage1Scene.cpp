@@ -79,7 +79,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 	auto* b = gameObjectManager.Add(new GameObject());
 	b->SetGraphicsDevice(graphicsDevice);
-	BossBehaviour* bossBehaviour = b->AddBehavior<BossBehaviour>();
+	/*BossBehaviour* */bossBehaviour = b->AddBehavior<BossBehaviour>();
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(b->AddComponent<Collider>()), GColliderType::BOSS);
 	b->SetCollider();
 	b->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
@@ -223,6 +223,7 @@ Stage1Scene::~Stage1Scene()
 
 void Stage1Scene::Initialize()
 {
+	gameState.Initialize();
 	gameObjectManager.Start();
 	stage.GetCollisionManager()->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 	//app->GetTimer()->SetFrameRate(60);
@@ -231,6 +232,7 @@ void Stage1Scene::Initialize()
 
 void Stage1Scene::Update()
 {
+	gameState.Update(app->GetTimer()->GetElapsedTime());
 	gpuParticleEmitter.Update();
 	enemyManager.Update(battleCount);
 	gameObjectManager.Update();
@@ -238,6 +240,19 @@ void Stage1Scene::Update()
 	//collisionManager.Update();
 	stage.Update();
 
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::Y))
+	{
+		gameState.ChangeState();
+	}
+
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::B))
+	{
+		bossBehaviour->SetBossState(BossState::JOIN);
+	}
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::V))
+	{
+		bossBehaviour->SetBossState(BossState::LEFT);
+	}
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
 	{
@@ -296,7 +311,7 @@ void Stage1Scene::Update()
 
 			bullet->Start();
 			bullet->GetTransform()->position = g->GetTransform()->position;
-			boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
+			//boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
 
 			enemyManager.RegisterEnemy(e,g);
 		}

@@ -3,43 +3,85 @@
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Util/Random.h"
+#include "Header/Graphics/Camera3D.h"
 
-void BossBehaviour::CallEnemy(const GatesEngine::Math::Vector3& centerPos, int count)
+void BossBehaviour::InitState()
 {
-	GatesEngine::Math::Vector3 left, right;
-	left = { -1000,0,0 };
-	right = { 1000,0,0 };
-	int loopCount = 0;
-	int flag;
-	for (auto& e : normalEnemies)
-	{
-		if (loopCount >= count)break;
-		if (!e.gameObject)break;
-		if (e.gameObject->GetEnabled())continue;
-		e.gameObject->SetEnabled(true);
-		e.gameObject->Start();
-		e.enemyBehaviour->SetTarget(centerPos, { 0,10000,0 });
-		e.enemyBehaviour->SetTime(GatesEngine::Random::Rand(2,3));
+	state = BossState::NONE;
+	isJoining = false;
+	joiningTime = 1;
+	isLefting = false;
+	leftingTime = 1;
+}
 
-		flag = ((int)GatesEngine::Random::Rand(-10, 10));
-		GatesEngine::Math::Vector3 offset = (flag > 0) ? left : right;
-		e.enemyBehaviour->SetPosition(gameObject->GetTransform()->position + offset);
-		e.gameObject->GetTransform()->position = gameObject->GetTransform()->position + offset;
-		++loopCount;
+void BossBehaviour::JoinOrLeft(BossState state)
+{
+	GatesEngine::Math::Vector3 endPos;
+	float easingValue = 0;
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float MAX_TIME = 3;
+
+
+	switch (state)
+	{
+	case BossState::JOIN:
+		endPos = {};
+		easingValue = GatesEngine::Math::Easing::EaseInExpo(joiningTime);
+		gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(preLerpPos, endPos, easingValue);
+		joiningTime += PER_FRAME / MAX_TIME;
+		break;
+	case BossState::LEFT:
+		endPos = preLerpPos;
+		endPos.y = preLerpPos.y + 10000;
+		easingValue = GatesEngine::Math::Easing::EaseOutExpo(leftingTime);
+		gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(preLerpPos, endPos, easingValue);
+		leftingTime += PER_FRAME / MAX_TIME;
+		break;
+	default:
+		break;
 	}
+
+	if (joiningTime > 1 || leftingTime > 1)
+	{
+		InitState();
+		stopFlag = true;
+	}
+
+
+}
+
+void BossBehaviour::Stoping()
+{
+	state = BossState::HEALING;
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float MAX_STOPING_TIME = 5;
+
+	const int HEALING_VALUE_PER_FRAME = 1;
+
+	hp = GatesEngine::Math::Lerp(0, MAX_HP, GatesEngine::Math::Easing::EaseInOutQuint(stopingTime));
+
+	if (stopingTime >= 1)
+	{
+		stopFlag = false;
+		stopingTime = 0;
+		hp = MAX_HP;
+	}
+
+	stopingTime += PER_FRAME / MAX_STOPING_TIME;
 }
 
 BossBehaviour::BossBehaviour()
-	: MAX_HP(10)
+	: state(BossState::NONE)
+	, isJoining(false)
+	, joiningTime(0)
+	, isLefting(false)
+	, leftingTime(0)
+	, stopFlag(false)
+	, stopingTime(0)
+	, MAX_HP(100)
 	, hp(MAX_HP)
-	, mainCamera(nullptr)
-	, callEnemyFlag(false)
-	, MAX_NORMAL_ENEMY(100)
-	, normalEnemyAddedCount(0)
-	, callEnemyInterval(0)
-	, n(0)
 {
-	normalEnemies.resize(MAX_NORMAL_ENEMY);
 }
 
 BossBehaviour::~BossBehaviour()
@@ -48,48 +90,28 @@ BossBehaviour::~BossBehaviour()
 
 void BossBehaviour::Start()
 {
-	for (auto& e : normalEnemies)
-	{
-		if (!e.gameObject)break;
-		e.gameObject->SetEnabled(false);
-	}
-//
-//	int r = 5000;
-//	GatesEngine::Math::Vector3 pos;
-//	GatesEngine::Math::Vector3 offset;
-//	const int CALL_ENEMY = 10;
-//	for (int i = 0; i < CALL_ENEMY; ++i)
-//	{
-//		pos.x = r * sinf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.x;
-//		pos.y = 100;
-//		pos.z = r * cosf((2.0f * 3.1415f / CALL_ENEMY) * i) / 2 + offset.z;
-//		CallEnemy(pos, 1);
-//	}
+	InitState();
+	stopFlag = false;
+	stopingTime = 0;
+	hp = 0;
 }
 
 void BossBehaviour::Update()
 {
-	if (!mainCamera)
+	if (isJoining)JoinOrLeft(BossState::JOIN);
+	else if (isLefting)JoinOrLeft(BossState::LEFT);
+
+	if (state == BossState::NONE && stopFlag)
 	{
-		mainCamera = dynamic_cast<GatesEngine::Camera3D*>(gameObject->GetGraphicsDevice()->GetMainCamera());
-	}
-	const int MAX_TIME = 3;
-	if (callEnemyInterval >= MAX_TIME)
-	{
-		int r = 5000;
-		GatesEngine::Math::Vector3 pos;
-		GatesEngine::Math::Vector3 offset;
-		const int CALL_ENEMY = 10;
-		if (n > CALL_ENEMY)n = 0;
-		pos.x = r * sinf((2.0f * 3.1415f / CALL_ENEMY) * n) / 2 + offset.x;
-		pos.y = 100;
-		pos.z = r * cosf((2.0f * 3.1415f / CALL_ENEMY) * n) / 2 + offset.z;
-		CallEnemy(pos, 1);
-		++n;
-		callEnemyInterval = 0;
+		GatesEngine::Camera3D* mainCamera = dynamic_cast<GatesEngine::Camera3D*>(gameObject->GetGraphicsDevice()->GetMainCamera());
+
+		if (mainCamera)
+		{
+			mainCamera->SetClip();
+		}
 	}
 
-	callEnemyInterval += 0.016f / 2.0f;
+	if (stopFlag)Stoping();
 }
 
 void BossBehaviour::OnDraw()
@@ -121,46 +143,40 @@ void BossBehaviour::OnDraw()
 
 void BossBehaviour::OnLateDraw()
 {
-	if (!mainCamera)return;
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	GatesEngine::Math::Vector3 center = gameObject->GetTransform()->position;
-
-	GatesEngine::Math::Vector3 size = 200;
-	GatesEngine::Math::Quaternion rotate = GatesEngine::Math::Quaternion({ {0,0,1},0 });
-	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(size);
-	GatesEngine::Math::Matrix4x4 rotateMatrix = GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation();
-	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(center);
-
-	for (int i = 0; i < hp; ++i)
-	{
-		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-
-		graphicsDevice->GetCBVSRVUAVHeap()->Set();
-		GatesEngine::Math::Vector3 offset = center + GatesEngine::Math::Vector3(0, gameObject->GetTransform()->scale.y * 2, 0);
-		GatesEngine::Math::Vector3 spacePos = GatesEngine::Math::Vector3(0, 0, 0);
-		GatesEngine::Math::Vector3 addPos = GatesEngine::Math::Vector3(size.x, 0, 0) * i;
-		GatesEngine::Math::Vector3 fixPos = offset + addPos + spacePos - GatesEngine::Math::Vector3(size.x, 0, 0) * MAX_HP / 2;
-		posMatrix = GatesEngine::Math::Matrix4x4::Translate(fixPos);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
-		mainCamera->Set(2);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,-1,1),GatesEngine::Math::Vector4(1,0,0,1) });
-		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
-	}
+	float persent = hp / MAX_HP;
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * persent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,25,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 }
 
 void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 {
-	GatesEngine::GameObject* other = otherCollider->GetGameObject();
-	if (other->GetTag() == "enemy")
-	{
-		--hp;
-	}
 }
 
-void BossBehaviour::AddNormalEnemy(GatesEngine::GameObject* enemy, Enemy* enemyBehaviour)
+void BossBehaviour::SetBossState(BossState state)
 {
-	if (normalEnemyAddedCount > (int)normalEnemies.size())return;
-	normalEnemies[normalEnemyAddedCount].enemyBehaviour = enemyBehaviour;
-	normalEnemies[normalEnemyAddedCount].gameObject = enemy;
-	++normalEnemyAddedCount;
+	InitState();
+	this->state = state;
+	preLerpPos = gameObject->GetTransform()->position;
+
+	switch (state)
+	{
+	case BossState::NONE:
+		isJoining = false;
+		joiningTime = 0;
+		isLefting = false;
+		leftingTime = 0;
+		break;
+	case BossState::JOIN:
+		isJoining = true;
+		joiningTime = 0;
+		break;
+	case BossState::LEFT:
+		isLefting = true;
+		leftingTime = 0;
+		break;
+	}
 }

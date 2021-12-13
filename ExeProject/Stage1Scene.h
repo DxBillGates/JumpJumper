@@ -7,6 +7,8 @@
 #include "Header/Graphics/GPUParticle/GPUParticleEmitter.h"
 #include "Header/Graphics/RenderTexture.h"
 #include "Header/Graphics/DepthStencilTexture.h"
+#include "GameState.h"
+#include "BossBehaviour.h"
 
 class Stage1Scene : public GatesEngine::Scene
 {
@@ -47,6 +49,8 @@ private:
 
 	int battleCount;
 	EnemyManager enemyManager;
+	GameStateManager gameState;
+	BossBehaviour* bossBehaviour;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

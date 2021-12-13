@@ -45,6 +45,11 @@ void NormalEnemyBehaviour::Start()
 	Enemy::SetTarget(gameObject->GetTransform()->position, {});
 
 	shotInterval = 0;
+
+	for (auto& b : bullets)
+	{
+		b->SetPos({ 0,-1000,0 });
+	}
 }
 
 void NormalEnemyBehaviour::Update()
