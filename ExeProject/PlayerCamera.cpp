@@ -94,6 +94,7 @@ void PlayerCamera::Update()
 void PlayerCamera::SetShake(float time, float length)
 {
 	isCameraShaking = true;
+	cameraShakingTime = 0;
 	maxCameraShakingTime = time;
 	shakeValue = length;
 }
