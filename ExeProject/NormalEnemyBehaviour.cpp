@@ -33,9 +33,17 @@ void NormalEnemyBehaviour::Start()
 	isAnimetion = false;
 	animationTime = 0;
 	//hp = 10;
-	//Enemy::Initialize();
+	Enemy::Initialize();
 
-	Enemy::pos = gameObject->GetTransform()->position;
+	//Enemy::pos = gameObject->GetTransform()->position;
+	GatesEngine::Math::Vector3 p;
+	p.x = GatesEngine::Random::Rand(-10000, 10000);
+	p.y = GatesEngine::Random::Rand(100, 10000);
+	p.z = GatesEngine::Random::Rand(-10000, 10000);
+	Enemy::iPos = p;
+	Enemy::SetTime(1);
+	Enemy::SetTarget(gameObject->GetTransform()->position, {});
+
 	shotInterval = 0;
 }
 
@@ -149,7 +157,7 @@ void NormalEnemyBehaviour::OnDraw()
 	{
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	}
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,spawnTime} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
 }
 

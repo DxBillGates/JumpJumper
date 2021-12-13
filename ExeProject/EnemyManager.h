@@ -60,5 +60,6 @@ public:
 	void Initialize();
 	void Update(int currentBattleNumber);
 	Enemy* RegisterEnemy(Enemy* addEnemy,GatesEngine::GameObject* gameObject);
+	bool IsDestroyAllGroup();
 };
 

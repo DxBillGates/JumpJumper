@@ -1,4 +1,5 @@
 #include "EnemyManager.h"
+#include "Header/Input/Input.h"
 
 void EnemyManager::ResetAllGroup()
 {
@@ -200,4 +201,10 @@ Enemy* EnemyManager::RegisterEnemy(Enemy* addEnemy, GatesEngine::GameObject* gam
 	// ’Ç‰Á“o˜^‚µ‚½“G‚Ì”‚ğ‘‚â‚·
 	++registerEnemyCount;
 	return addEnemy;
+}
+
+bool EnemyManager::IsDestroyAllGroup()
+{
+	bool result = usingGroupCount > 0 ? false : true;
+	return result;
 }

@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Header/Math/Easing.h"
 
 Enemy::Enemy()
 	: pos(GatesEngine::Math::Vector3())
@@ -18,6 +19,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
+	iPos = GatesEngine::Math::Vector3();
 	pos = GatesEngine::Math::Vector3();
 	vel = GatesEngine::Math::Vector3();
 	acc = GatesEngine::Math::Vector3();
@@ -26,27 +28,42 @@ void Enemy::Initialize()
 	isUse = false;
 	isSetting = false;
 	isTarget = false;
+	isSpawning = true;
+	spawnTime = 0;
 }
 
 void Enemy::Update()
 {
+	const float PER_FRAME = 1.0f / 60.0f;
+	if (spawnTime > 1)
+	{
+		isSpawning = false;
+		spawnTime = 1;
+	}
+	if (isSpawning)spawnTime += PER_FRAME;
+
 	//pos += vel;
 	if (isTarget)
 	{
+		float a = GatesEngine::Math::Easing::EaseOutExpo(1 - setTime);
+		pos = GatesEngine::Math::Vector3::Lerp(iPos, target, a);
 		if (setTime < 0)
 		{
 			isTarget = false;
+			setTime = 0;
 			isSetting = false;
 			return;
 		}
-		GatesEngine::Math::Vector3 diff = target - pos;
-		GatesEngine::Math::Vector3 acc;
-		acc += (diff - vel * setTime) * 2.0f / (setTime * setTime);
+		//GatesEngine::Math::Vector3 diff = target - pos;
+		//GatesEngine::Math::Vector3 acc;
+
+		//float a = GatesEngine::Math::Easing::EaseInQuad(setTime / 3.0f);
+		//acc += (diff - vel * a) * 2.0f / (a * a);
 
 		setTime -= 0.016f / 2.0f;
 
-		vel += acc * 0.016f / 2.0f;
-		pos += vel * 0.016f / 2.0f;
+		//vel += acc * 0.016f / 2.0f;
+		//pos += vel * 0.016f / 2.0f;
 	}
 }
 

@@ -233,6 +233,8 @@ void Stage1Scene::Update()
 {
 	gpuParticleEmitter.Update();
 	enemyManager.Update(battleCount);
+
+	if (enemyManager.IsDestroyAllGroup())battleCount++;
 	gameObjectManager.Update();
 	////”ª•ª–Ø‹óŠÔ•ªŠ„‚·‚è”²‚¯ƒoƒO‘½”­‚µ‚½‚½‚ßˆê’U‚È‚µ
 	//collisionManager.Update();

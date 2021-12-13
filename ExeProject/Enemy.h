@@ -3,6 +3,7 @@
 class Enemy
 {
 protected:
+	GatesEngine::Math::Vector3 iPos;
 	GatesEngine::Math::Vector3 pos;
 	GatesEngine::Math::Vector3 vel;
 	GatesEngine::Math::Vector3 acc;
@@ -11,6 +12,9 @@ protected:
 	bool isUse;
 	bool isSetting;
 	bool isTarget;
+
+	bool isSpawning;
+	float spawnTime;
 public:
 	Enemy();
 	~Enemy();
