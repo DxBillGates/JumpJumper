@@ -4,7 +4,7 @@
 void EnemyManager::ResetAllGroup()
 {
 	// 全グループを未使用状態＆敵を未登録状態に変更
-	for (auto& group: enemyGroup)
+	for (auto& group : enemyGroup)
 	{
 		group.isUse = false;
 		for (auto& e : group.enemies)
@@ -108,7 +108,7 @@ void EnemyManager::CreateStartBattleScene(int currentBattleNumber)
 
 	EnemyGroup* createdGroup = nullptr;
 	// バトル番号+1*定数 /個のグループを作成
-	for (int i = 0; i < createGroupCount * MULTIPLE_GROUP_COUNT;++i)
+	for (int i = 0; i < createGroupCount * MULTIPLE_GROUP_COUNT; ++i)
 	{
 		createdGroup = CreatGroup(USE_ENEMY_COUNT);
 		if (!createdGroup)continue;
@@ -146,7 +146,7 @@ EnemyManager::EnemyManager()
 EnemyManager::~EnemyManager()
 {
 	ResetAllGroup();
-	for (int i = 0; i < registerEnemyCount;++i)
+	for (int i = 0; i < registerEnemyCount; ++i)
 	{
 		enemies[i].enemyClass->Initialize();
 		enemies[i].gameObject->SetEnabled(false);
@@ -169,7 +169,8 @@ void EnemyManager::Update(int currentBattleNumber)
 	// 使っているグループ数を更新
 	CheckUsingGroupCount();
 
-	if (preUsingCount > 0 && usingGroupCount == 0)
+	//if (preUsingCount > 0 && usingGroupCount == 0)
+	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::L))
 	{
 		createGroupState = CreateGroupState::START_BATTLE_SCENE;
 	}
@@ -188,7 +189,7 @@ void EnemyManager::Update(int currentBattleNumber)
 		break;
 	}
 
-	 //現在のバトルシーンの番号を更新
+	//現在のバトルシーンの番号を更新
 	battleSceneNumber = currentBattleNumber;
 }
 

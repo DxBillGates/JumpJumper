@@ -79,7 +79,7 @@ float4 main(DefaultSpriteVSOutput input) : SV_TARGET
 	float4 resultColor = (depthColor.r < lateDrawDepthColor.r) ? texColor * sub * blurShadowTex : lateDrawColor;
 	resultColor = (sub <= 0) ? color : resultColor;
 	//outline
-	return resultColor;
+	return float4(resultColor.rgb,1);
 
 	//no outline
 	return texColor;
