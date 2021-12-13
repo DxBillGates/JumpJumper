@@ -22,6 +22,8 @@ private:
 	const float CHARGE_FUEL;
 
 	std::vector<PlayerBullet*> bullets;
+	bool isShotInterval;
+	float shotInterval;
 
 	std::vector<LockonTarget> targets;
 	//std::vector<GatesEngine::GameObject*> targets;

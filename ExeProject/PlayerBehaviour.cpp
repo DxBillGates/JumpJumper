@@ -177,20 +177,36 @@ void PlayerBehaviour::Attack()
 {
 	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
 
-	bool isInputLeftClick = (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::LEFT_CLICK)) ? true : false;
+	bool isInputLeftClick = (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::LEFT_CLICK)) ? true : false;
 	bool isShot = false;
 	unuseBulletCount = 0;
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float MAX_SHOT_INTERVAL = 0.5f;
+
+	if (isShotInterval)
+	{
+		shotInterval -= PER_FRAME;
+	}
+
+	if (shotInterval < 0)
+	{
+		isShotInterval = false;
+		shotInterval = MAX_SHOT_INTERVAL;
+	}
+
 
 	// 使っていない弾を走査したのち移動ベクトルを設定する
 	// その後の走査はプレイヤーの位置にセットする
 	for (int i = 0; i < (int)bullets.size(); ++i)
 	{
-		if (!isShot && isInputLeftClick)
+		if (!isShot && isInputLeftClick && !isShotInterval)
 		{
 			if (!(*bullets[i]).IsUse())
 			{
 				(*bullets[i]).Shot(cameraAxis.z.Normalize());
 				isShot = true;
+				isShotInterval = true;
 			}
 		}
 		else
@@ -293,6 +309,9 @@ void PlayerBehaviour::Start()
 		doubleTapKeysTime[i] = 0;
 		doubleTapKeysTime[i] = 0;
 	}
+
+	isShotInterval = false;
+	shotInterval = 0;
 }
 
 void PlayerBehaviour::Update()

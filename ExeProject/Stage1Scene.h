@@ -43,6 +43,8 @@ private:
 	GatesEngine::RenderTexture blurRenderTexture2;
 	GatesEngine::RenderTexture blurRenderTexture3;
 
+	GatesEngine::RenderTexture blurPlusParticleTex;
+
 	int battleCount;
 	EnemyManager enemyManager;
 public:

@@ -22,6 +22,7 @@ void LockonTarget::Initialize()
 void LockonTarget::Update()
 {
 	if (!target)return;
+	if (!target->GetEnabled())Initialize();
 	if (lockonTime >= MAX_LOCKON_TIME)Initialize();
 
 	const float PER_FRAME = 1.0f / 60.0f;
