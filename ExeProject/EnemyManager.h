@@ -42,6 +42,8 @@ private:
 
 	// 現在のバトルシーンで敵グループをどれだけ使用しているか確認するための変数
 	int usingGroupCount;
+	// 前フレームでの使用敵グループ数
+	int preUsingGroupCount;
 
 	// 現在のバトルシーンでどれだけグループを使用したか確認するための関数
 	int usingCurrentBattleSceneGroupCoutn;

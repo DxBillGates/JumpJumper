@@ -44,8 +44,11 @@ void BossBehaviour::JoinOrLeft(BossState state)
 
 	if (joiningTime > 1 || leftingTime > 1)
 	{
+		if (state == BossState::JOIN)
+		{
+			stopFlag = true;
+		}
 		InitState();
-		stopFlag = true;
 	}
 
 

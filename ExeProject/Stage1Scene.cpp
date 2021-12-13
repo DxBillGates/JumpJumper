@@ -252,6 +252,12 @@ void Stage1Scene::Update()
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::V))
 	{
 		bossBehaviour->SetBossState(BossState::LEFT);
+		battleCount++;
+	}
+
+	if (enemyManager.IsDestroyAllGroup())
+	{
+		bossBehaviour->SetBossState(BossState::JOIN);
 	}
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))

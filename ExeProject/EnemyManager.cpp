@@ -128,6 +128,7 @@ EnemyManager::EnemyManager()
 	, MAX_ENEMY_GROUP(20)
 	, enemyGroup()
 	, usingGroupCount(0)
+	, preUsingGroupCount(0)
 	, battleSceneNumber(-1)
 {
 	// 敵リストを初期化
@@ -163,7 +164,7 @@ void EnemyManager::Update(int currentBattleNumber)
 	CreateGroupState createGroupState = CreateGroupState::NONE;
 	if (currentBattleNumber != battleSceneNumber)createGroupState = CreateGroupState::START_BATTLE_SCENE;
 
-	int preUsingCount = usingGroupCount;
+	preUsingGroupCount = usingGroupCount;
 	// すべてのグループをチェックして使われているか、グループが生存しているかを確認し更新
 	CheckAllGroup();
 	// 使っているグループ数を更新
@@ -206,6 +207,6 @@ Enemy* EnemyManager::RegisterEnemy(Enemy* addEnemy, GatesEngine::GameObject* gam
 
 bool EnemyManager::IsDestroyAllGroup()
 {
-	bool result = usingGroupCount > 0 ? false : true;
+	bool result = preUsingGroupCount > 0 && usingGroupCount == 0 ? true : false;
 	return result;
 }
