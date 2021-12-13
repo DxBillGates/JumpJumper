@@ -17,6 +17,8 @@ namespace GatesEngine
 		float pitch;
 
 		Math::Matrix4x4 rotation;
+
+		Math::Vector3 addVector;
 	public:
 		/// <summary>
 		/// コンストラクタ
@@ -27,6 +29,11 @@ namespace GatesEngine
 		/// 仮想デストラクタ
 		/// </summary>
 		virtual ~Camera3D();
+
+		/// <summary>
+		/// 更新関数
+		/// </summary>
+		void Update() override;
 
 		/// <summary>
 		/// GPUにカメラデータをセットする関数

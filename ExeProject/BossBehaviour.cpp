@@ -3,7 +3,7 @@
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Util/Random.h"
-#include "Header/Graphics/Camera3D.h"
+#include "PlayerCamera.h"
 
 void BossBehaviour::InitState()
 {
@@ -103,11 +103,11 @@ void BossBehaviour::Update()
 
 	if (state == BossState::NONE && stopFlag)
 	{
-		GatesEngine::Camera3D* mainCamera = dynamic_cast<GatesEngine::Camera3D*>(gameObject->GetGraphicsDevice()->GetMainCamera());
+		PlayerCamera* mainCamera = dynamic_cast<PlayerCamera*>(gameObject->GetGraphicsDevice()->GetMainCamera());
 
 		if (mainCamera)
 		{
-			mainCamera->SetClip();
+			mainCamera->SetShake(0.5f/2, 10);
 		}
 	}
 

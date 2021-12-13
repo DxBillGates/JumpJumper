@@ -38,16 +38,18 @@ void PlayerBulletBehaviour::Update()
 			GatesEngine::Math::Vector3 acc;
 			acc += (diff - vel * homingTime) * 2.0f / (homingTime * homingTime);
 
-			homingTime -= 0.016f / 2.0f;
+			const float PER_FRAME = 1.0f / 60.0f;
+			const float SPEED = 0.5f;
+			homingTime -= PER_FRAME * SPEED;
 
 			const float MAX_ACC = 100000;
 			if (acc.Length() > MAX_ACC)
 			{
 				acc = acc.Normalize() * MAX_ACC;
 			}
-			vel += acc * 0.016f / 2.0f;
+			vel += acc * PER_FRAME * SPEED;
 
-			gameObject->GetTransform()->position += vel * 0.016f / 2.0f;
+			gameObject->GetTransform()->position += vel * PER_FRAME * SPEED;
 		}
 	}
 	else

@@ -1,9 +1,42 @@
 #include "PlayerCamera.h"
+#include "Header/Util/Random.h"
+
+void PlayerCamera::Shake()
+{
+	if (!isCameraShaking)return;
+	if (cameraShakingTime > 1)
+	{
+		isCameraShaking = false;
+		cameraShakingTime = 0;
+		maxCameraShakingTime = 0;
+		addVector = {};
+		return;
+	}
+
+	GatesEngine::Math::Axis axis = rotation.GetAxis();
+	float range = 32767;
+	GatesEngine::Math::Vector3 randomVector;
+	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) ,0 };
+
+	randomVector = randomVector.Normalize();
+
+	GatesEngine::Math::Vector3 xVector = axis.x * randomVector.x;
+	GatesEngine::Math::Vector3 yVector = axis.y * randomVector.y;
+	GatesEngine::Math::Vector3 vector = xVector + yVector;
+	addVector = vector.Normalize() * shakeValue;
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	cameraShakingTime += PER_FRAME / maxCameraShakingTime;
+}
 
 PlayerCamera::PlayerCamera()
 	: input(nullptr)
 	, moveSpeed(1)
 	, isFocus(true)
+	, isCameraShaking(false)
+	, cameraShakingTime(0)
+	, maxCameraShakingTime(0)
+	, shakeValue(0)
 {
 	Initialize();
 }
@@ -38,21 +71,9 @@ void PlayerCamera::Update()
 			//ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ðŽæ“¾
 			const float PER_FRAME = 1.0f / 60.0f;
 			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() * PER_FRAME / 10;
-			
-			//const float range = 0.05f;
-			//if (inputValue.x >= range)inputValue.x = range;
-			//if (inputValue.x <= -range)inputValue.x = -range;
-			//if (inputValue.y >= range)inputValue.y = range;
-			//if (inputValue.y <= -range)inputValue.y = -range;
-
-			//inputValue = inputValue.Normalize() * PER_FRAME;
-			//float preyaw = yaw, preitch = pitch;
-			//printf("%f,%f\n", yaw, pitch);
 
 			pitch -= inputValue.y;
 			yaw -= inputValue.x;
-
-			//printf("%f,%f\n", yaw-preyaw, pitch - preitch);
 
 			float minMaxPitch = Math::ConvertToRadian(89);
 			if (pitch > minMaxPitch)pitch = minMaxPitch;
@@ -66,4 +87,13 @@ void PlayerCamera::Update()
 			position += moveVector * moveSpeed;
 		}
 	}
+
+	if (isCameraShaking)Shake();
+}
+
+void PlayerCamera::SetShake(float time, float length)
+{
+	isCameraShaking = true;
+	maxCameraShakingTime = time;
+	shakeValue = length;
 }

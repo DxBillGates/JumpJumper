@@ -1,5 +1,6 @@
 #include "..\..\Header\Graphics\Camera3D.h"
 #include "..\..\Header\Graphics\CBufferAllocater.h"
+#include "..\..\Header\Util\Random.h"
 
 GatesEngine::Camera3D::Camera3D()
 	: viewMatrix(Math::Matrix4x4::Identity())
@@ -8,10 +9,15 @@ GatesEngine::Camera3D::Camera3D()
 	, up({0,1,0})
 	, yaw(0)
 	, pitch(0)
+	, addVector({})
 {
 }
 
 GatesEngine::Camera3D::~Camera3D()
+{
+}
+
+void GatesEngine::Camera3D::Update()
 {
 }
 
@@ -23,7 +29,7 @@ void GatesEngine::Camera3D::Set(int setDescriptorIndex)
 	rotation = Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw);
 	direction = Math::Matrix4x4::Transform(direction, rotation);
 	Math::Axis axis = rotation.GetAxis();
-	viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position, direction, axis.y);
+	viewMatrix = Math::Matrix4x4::GetViewMatrixLookTo(position + addVector, direction, axis.y);
 	pGraphicsDevice->GetCBufferAllocater()->BindAndAttach(setDescriptorIndex, B2{ viewMatrix,projectionMatrix,position,Math::Matrix4x4::RotationX(pitch) * Math::Matrix4x4::RotationY(yaw) });
 }
 
