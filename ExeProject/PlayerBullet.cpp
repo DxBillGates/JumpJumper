@@ -16,6 +16,7 @@ void PlayerBullet::Initialize()
 
 void PlayerBullet::Update()
 {
+	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_LIFE_TIME = 5;
 	if (isUse)
 	{
@@ -24,6 +25,26 @@ void PlayerBullet::Update()
 		{
 			Initialize();
 		}
+
+		if (!isEmittion)return;
+		if (emittionTime >= setEmittionTime)
+		{
+			isEmittion = false;
+			emittionTime = 0;
+			setEmittionTime = 0;
+
+			float range = 32767;
+			randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) ,GatesEngine::Random::Rand(-range,-1) };
+
+			GatesEngine::Math::Vector3 xVector = moveAxis.x * randomVector.x;
+			GatesEngine::Math::Vector3 yVector = moveAxis.y * randomVector.y;
+			GatesEngine::Math::Vector3 zVector = moveAxis.z * randomVector.z;
+			GatesEngine::Math::Vector3 vector = xVector * 1000 + yVector * 1000 + zVector;
+			vel = vector.Normalize()  *10;
+		}
+
+
+		emittionTime += PER_FRAME;
 	}
 }
 
@@ -48,6 +69,17 @@ void PlayerBullet::Shot(const GatesEngine::Math::Vector3& v)
 	vel = v;
 	shotVector = v;
 	isUse = true;
+}
+
+void PlayerBullet::Shot(const GatesEngine::Math::Vector3& v, float emittionTime, const GatesEngine::Math::Axis& axis)
+{
+	vel = v;
+	shotVector = v;
+	isUse = true;
+	isEmittion = true;
+	this->emittionTime = 0;
+	setEmittionTime = emittionTime;
+	moveAxis = axis;
 }
 
 void PlayerBullet::RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector)

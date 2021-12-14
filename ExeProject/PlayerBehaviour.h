@@ -77,6 +77,11 @@ private:
 	void LockOnAttack();
 
 	/// <summary>
+	/// ひとかたまりで弾を撃ち、数秒後に爆散する攻撃関数
+	/// </summary>
+	void EmittionAttack();
+
+	/// <summary>
 	/// ロックオンした敵情報をクリアする関数
 	/// </summary>
 	void ClearTargets();

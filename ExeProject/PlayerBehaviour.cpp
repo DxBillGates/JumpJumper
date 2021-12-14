@@ -223,9 +223,18 @@ void PlayerBehaviour::Attack()
 
 void PlayerBehaviour::LockOnAttack()
 {
-	if (currentFrameTargetCount <= 0)return;
+	//if (currentFrameTargetCount <= 0)
+	//{
+	//	return;
+	//}
 	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))
 	{
+		if (currentFrameTargetCount <= 0)
+		{
+			// ロックオンしている敵がいない場合は爆散攻撃に変更
+			EmittionAttack();
+			return;
+		}
 		int unusedBulletCount = 0;
 		// 使っていない弾の総量を取得
 		for (auto& b : bullets)
@@ -261,6 +270,29 @@ void PlayerBehaviour::LockOnAttack()
 
 		currentFrameTargetCount = 0;
 		ClearTargets();
+	}
+}
+
+void PlayerBehaviour::EmittionAttack()
+{
+	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
+	const int USE_BULLET_COUNT = 10;
+
+	//// 左クリックを離していないなら関数を終了
+	//if (!input->GetMouse()->GetCheckReleaseTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))return;
+
+	int useCount = 0;
+	for (auto& b : bullets)
+	{
+		// 一度に使う弾の上限に達しているか確認
+		if (useCount > USE_BULLET_COUNT)break;
+		// すでに使ってる弾なら次のループへ
+		if (b->IsUse())continue;
+
+		
+		b->Shot(cameraAxis.z, 1,cameraAxis);
+
+		++useCount;
 	}
 }
 

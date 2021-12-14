@@ -16,6 +16,11 @@ protected:
 	GatesEngine::GameObject* target;
 	float homingTime;
 	float maxHomingTime;
+
+	bool isEmittion;
+	float emittionTime;
+	float setEmittionTime;
+	GatesEngine::Math::Axis moveAxis;
 public:
 	void Initialize();
 	void Update();
@@ -23,6 +28,7 @@ public:
 	PlayerBullet();
 	virtual ~PlayerBullet();
 	void Shot(const GatesEngine::Math::Vector3& v);
+	void Shot(const GatesEngine::Math::Vector3& v, float emittionTime,const GatesEngine::Math::Axis& axis);
 	void RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector);
 	bool IsUse();
 	void SetPos(const GatesEngine::Math::Vector3& p);
