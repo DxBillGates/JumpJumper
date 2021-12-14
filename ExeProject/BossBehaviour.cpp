@@ -19,10 +19,12 @@ void BossBehaviour::JoinOrLeft(BossState state)
 	GatesEngine::Math::Vector3 endPos;
 	float easingValue = 0;
 
+	// PER_FRAME / MAX_TIMEを加算することでMAX_TIMEに指定した時間までの1フレームの経過時間を取得
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_TIME = 3;
 
 
+	// ボス戦に移行したとき、ザコ敵戦に移行したときの処理、線形補間で移動
 	switch (state)
 	{
 	case BossState::JOIN:
@@ -42,6 +44,7 @@ void BossBehaviour::JoinOrLeft(BossState state)
 		break;
 	}
 
+	// 設定した時間を経過したらステートをもとに戻す
 	if (joiningTime > 1 || leftingTime > 1)
 	{
 		if (state == BossState::JOIN)
@@ -56,6 +59,7 @@ void BossBehaviour::JoinOrLeft(BossState state)
 
 void BossBehaviour::Stoping()
 {
+	// HPを回復させる処理
 	state = BossState::HEALING;
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_STOPING_TIME = 5;
@@ -105,6 +109,7 @@ void BossBehaviour::Update()
 	if (isJoining)JoinOrLeft(BossState::JOIN);
 	else if (isLefting)JoinOrLeft(BossState::LEFT);
 
+	// ボスのステートがJOINからNONEに変わりstopFlag(回復モード)になったフレームに画面揺れを発生させる(着地時)
 	if (state == BossState::NONE && stopFlag)
 	{
 		PlayerCamera* mainCamera = dynamic_cast<PlayerCamera*>(gameObject->GetGraphicsDevice()->GetMainCamera());

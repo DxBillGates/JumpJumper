@@ -2,7 +2,7 @@
 #include "Header/GameObject/GameObject.h"
 #include "Header/Math/Math.h"
 
-class PlayerBullet
+class Bullet
 {
 protected:
 	bool isUse;
@@ -25,8 +25,8 @@ public:
 	void Initialize();
 	void Update();
 public:
-	PlayerBullet();
-	virtual ~PlayerBullet();
+	Bullet();
+	virtual ~Bullet();
 	void Shot(const GatesEngine::Math::Vector3& v);
 	void Shot(const GatesEngine::Math::Vector3& v, float emittionTime,const GatesEngine::Math::Axis& axis);
 	void RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector);

@@ -21,7 +21,7 @@ private:
 	const float MAX_FUEL;
 	const float CHARGE_FUEL;
 
-	std::vector<PlayerBullet*> bullets;
+	std::vector<Bullet*> bullets;
 	bool isShotInterval;
 	float shotInterval;
 
@@ -96,7 +96,7 @@ public:
 	void OnCollision(GatesEngine::Collider* hitCollider) override;
 	void SetCamera(PlayerCamera* pCamera);
 	PlayerCamera* GetSetCamera();
-	void AddBullet(PlayerBullet* newBullet);
+	void AddBullet(Bullet* newBullet);
 	void AddTarget(GatesEngine::GameObject* other);
 	int GetHp();
 };

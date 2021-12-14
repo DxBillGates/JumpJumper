@@ -12,12 +12,12 @@ private:
 	GatesEngine::GameObject* boss;
 	float hp;
 	float t;
-	GatesEngine::Math::Vector3 deadPos;
-	bool isBossAttack;
-	bool isAnimetion;
-	float animationTime;
+	//GatesEngine::Math::Vector3 deadPos;
+	//bool isBossAttack;
+	//bool isAnimetion;
+	//float animationTime;
 
-	std::vector<PlayerBullet*> bullets;
+	std::vector<Bullet*> bullets;
 	float shotInterval;
 public:
 	NormalEnemyBehaviour();
@@ -30,6 +30,6 @@ public:
 	float GetHP();
 	void SetBoss(GatesEngine::GameObject* gameObject);
 	void SetTarget(GatesEngine::GameObject* t);
-	void AddBullet(PlayerBullet* addBullet);
+	void AddBullet(Bullet* addBullet);
 	void Shot();
 };

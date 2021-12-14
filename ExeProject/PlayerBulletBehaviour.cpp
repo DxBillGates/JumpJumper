@@ -3,16 +3,16 @@
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 
-PlayerBulletBehaviour::PlayerBulletBehaviour()
+BulletBehaviour::BulletBehaviour()
 	: gpuParticleEmitter(nullptr)
 {
 }
 
-PlayerBulletBehaviour::~PlayerBulletBehaviour()
+BulletBehaviour::~BulletBehaviour()
 {
 }
 
-void PlayerBulletBehaviour::Start()
+void BulletBehaviour::Start()
 {
 	//gameObject->GetTransform()->scale = gameObject->GetCollider()->GetSize() - 5;
 	Initialize();
@@ -20,7 +20,7 @@ void PlayerBulletBehaviour::Start()
 	targetPos = {};
 }
 
-void PlayerBulletBehaviour::Update()
+void BulletBehaviour::Update()
 {
 	if (isUse)
 	{
@@ -56,10 +56,10 @@ void PlayerBulletBehaviour::Update()
 	{
 		gameObject->GetTransform()->position = setPos;
 	}
-	PlayerBullet::Update();
+	Bullet::Update();
 }
 
-void PlayerBulletBehaviour::OnDraw()
+void BulletBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
@@ -68,7 +68,7 @@ void PlayerBulletBehaviour::OnDraw()
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Sphere")->Draw();
 }
 
-void PlayerBulletBehaviour::OnSecondDraw()
+void BulletBehaviour::OnSecondDraw()
 {
 	if (!isUse)
 	{
@@ -79,7 +79,7 @@ void PlayerBulletBehaviour::OnSecondDraw()
 	gpuParticleEmitter->ExternalDraw();
 }
 
-void PlayerBulletBehaviour::OnLateDraw()
+void BulletBehaviour::OnLateDraw()
 {
 	//if (!isUse)
 	//{
@@ -90,7 +90,7 @@ void PlayerBulletBehaviour::OnLateDraw()
 	//gpuParticleEmitter->ExternalDraw();
 }
 
-void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
+void BulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 {
 	if (otherCollider->GetGameObject()->GetTag() == "enemy" || otherCollider->GetGameObject()->GetTag() == "player")
 	{
@@ -107,7 +107,7 @@ void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	}
 }
 
-void PlayerBulletBehaviour::SetGPUParticleEmitter(GPUParticleEmitterBehaviour* behaviour)
+void BulletBehaviour::SetGPUParticleEmitter(GPUParticleEmitterBehaviour* behaviour)
 {
 	gpuParticleEmitter = behaviour;
 }

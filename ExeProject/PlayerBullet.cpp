@@ -1,9 +1,9 @@
 #include "PlayerBullet.h"
 #include "Header/Util/Random.h"
 
-void PlayerBullet::Initialize()
+void Bullet::Initialize()
 {
-	setPos = {0,-1000,0};
+	setPos = { 0,-1000,0 };
 	isUse = false;
 	isHoming = false;
 	randomVector = {};
@@ -14,7 +14,7 @@ void PlayerBullet::Initialize()
 	maxHomingTime = 0;
 }
 
-void PlayerBullet::Update()
+void Bullet::Update()
 {
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_LIFE_TIME = 5;
@@ -36,11 +36,12 @@ void PlayerBullet::Update()
 			float range = 32767;
 			randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) ,GatesEngine::Random::Rand(-range,-1) };
 
+
 			GatesEngine::Math::Vector3 xVector = moveAxis.x * randomVector.x;
 			GatesEngine::Math::Vector3 yVector = moveAxis.y * randomVector.y;
 			GatesEngine::Math::Vector3 zVector = moveAxis.z * randomVector.z;
 			GatesEngine::Math::Vector3 vector = xVector * 1000 + yVector * 1000 + zVector;
-			vel = vector.Normalize()  *10;
+			vel = vector.Normalize() * 10;
 		}
 
 
@@ -48,7 +49,7 @@ void PlayerBullet::Update()
 	}
 }
 
-PlayerBullet::PlayerBullet()
+Bullet::Bullet()
 	: isUse(false)
 	, vel({})
 	, lifeTime(0)
@@ -56,22 +57,22 @@ PlayerBullet::PlayerBullet()
 	, randomVector({})
 	, shotVector({})
 	, homingTime(0)
-	, setPos({0,-1000,0})
+	, setPos({ 0,-1000,0 })
 {
 }
 
-PlayerBullet::~PlayerBullet()
+Bullet::~Bullet()
 {
 }
 
-void PlayerBullet::Shot(const GatesEngine::Math::Vector3& v)
+void Bullet::Shot(const GatesEngine::Math::Vector3& v)
 {
 	vel = v;
 	shotVector = v;
 	isUse = true;
 }
 
-void PlayerBullet::Shot(const GatesEngine::Math::Vector3& v, float emittionTime, const GatesEngine::Math::Axis& axis)
+void Bullet::Shot(const GatesEngine::Math::Vector3& v, float emittionTime, const GatesEngine::Math::Axis& axis)
 {
 	vel = v;
 	shotVector = v;
@@ -82,7 +83,7 @@ void PlayerBullet::Shot(const GatesEngine::Math::Vector3& v, float emittionTime,
 	moveAxis = axis;
 }
 
-void PlayerBullet::RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector)
+void Bullet::RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirVector)
 {
 	float range = 32767;
 	shotVector = GatesEngine::Math::Vector3::Normalize(dirVector);
@@ -93,17 +94,17 @@ void PlayerBullet::RandomVectorHomingShot(const GatesEngine::Math::Vector3& dirV
 	isHoming = true;
 }
 
-bool PlayerBullet::IsUse()
+bool Bullet::IsUse()
 {
 	return isUse;
 }
 
-void PlayerBullet::SetPos(const GatesEngine::Math::Vector3& p)
+void Bullet::SetPos(const GatesEngine::Math::Vector3& p)
 {
 	setPos = p;
 }
 
-void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Axis& axis, const GatesEngine::Math::Vector3& addValue)
+void Bullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Axis& axis, const GatesEngine::Math::Vector3& addValue)
 {
 	float range = 32767;
 	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(10000,range) ,GatesEngine::Random::Rand(-range,-10000) };
@@ -128,7 +129,7 @@ void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const Ga
 	homingTime = 1 + delayTime * delaySec / 100.0f;
 }
 
-void PlayerBullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Vector3& vec, float addValue)
+void Bullet::SetTarget(GatesEngine::GameObject* t, float maxTime, const GatesEngine::Math::Vector3& vec, float addValue)
 {
 	float range = 32767;
 	randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(10000,range) ,GatesEngine::Random::Rand(-range,-10000) };

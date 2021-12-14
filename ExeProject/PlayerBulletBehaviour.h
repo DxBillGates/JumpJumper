@@ -3,14 +3,14 @@
 #include "Header/Component/Behaviour.h"
 #include "PlayerBullet.h"
 
-class PlayerBulletBehaviour : public GatesEngine::Behaviour,public PlayerBullet
+class BulletBehaviour : public GatesEngine::Behaviour,public Bullet
 {
 private:
 	GPUParticleEmitterBehaviour* gpuParticleEmitter;
 	GatesEngine::Math::Vector3 targetPos;
 public:
-	PlayerBulletBehaviour();
-	~PlayerBulletBehaviour();
+	BulletBehaviour();
+	~BulletBehaviour();
 	void Start() override;
 	void Update() override;
 	void OnDraw() override;

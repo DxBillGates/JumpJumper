@@ -56,11 +56,11 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	gp->SetName("player");
 	gp->SetTag("player");
 
-	for (int i = 0; i < 40; ++i)
+	for (int i = 0; i < 20; ++i)
 	{
 		auto* bullet = gameObjectManager.Add(new GameObject());
 		bullet->SetGraphicsDevice(graphicsDevice);
-		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+		auto* bulletBehaviour = bullet->AddBehavior<BulletBehaviour>();
 		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
 		bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
 		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 256);
@@ -189,7 +189,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 		auto* bullet = gameObjectManager.Add(new GameObject());
 		bullet->SetGraphicsDevice(graphicsDevice);
-		auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+		auto* bulletBehaviour = bullet->AddBehavior<BulletBehaviour>();
 		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
 		bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
 		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1280);
@@ -298,7 +298,7 @@ void Stage1Scene::Update()
 
 			auto* bullet = gameObjectManager.Add(new GameObject());
 			bullet->SetGraphicsDevice(graphicsDevice);
-			auto* bulletBehaviour = bullet->AddBehavior<PlayerBulletBehaviour>();
+			auto* bulletBehaviour = bullet->AddBehavior<BulletBehaviour>();
 			auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
 			bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
 			gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1280);

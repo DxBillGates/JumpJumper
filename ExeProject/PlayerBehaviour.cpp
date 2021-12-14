@@ -10,7 +10,7 @@
 void PlayerBehaviour::SetVelocity()
 {
 	const float G = 0.0f;
-	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3( 10 * 10,  10 * 10,   10 * 10);
+	const GatesEngine::Math::Vector3 MAX_VELOCITY = GatesEngine::Math::Vector3(10 * 10, 10 * 10, 10 * 10);
 	const GatesEngine::Math::Vector3 MIN_VELOCITY = GatesEngine::Math::Vector3(-10 * 10, -10 * 10, -10 * 10);
 
 	jetVel -= GatesEngine::Math::Vector3(0, G, 0);
@@ -71,6 +71,7 @@ void PlayerBehaviour::Move()
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_DOUBLE_TAP_PERMIT_TIME = 1;
 
+	// 同じキーのダブルタップを検知
 	for (int i = 0; i < 4; ++i)
 	{
 		if (doubleTapKeysTime[i] >= MAX_DOUBLE_TAP_PERMIT_TIME)
@@ -257,7 +258,7 @@ void PlayerBehaviour::LockOnAttack()
 			{
 				if (b->IsUse())continue;
 				GatesEngine::Math::Axis axis = mainCamera->GetRotation().GetAxis();
-				b->SetTarget(t.GetTarget(), 0, axis, {2500,5000,2500});
+				b->SetTarget(t.GetTarget(), 0, axis, { 2500,5000,2500 });
 
 				++useBulletCount;
 				if (useBulletCount >= MAX_USE_BULLET_FOR_ONE_ENEMY || useBulletCount >= useBulletForOneEnemy)
@@ -289,8 +290,8 @@ void PlayerBehaviour::EmittionAttack()
 		// すでに使ってる弾なら次のループへ
 		if (b->IsUse())continue;
 
-		
-		b->Shot(cameraAxis.z, 1,cameraAxis);
+
+		b->Shot(cameraAxis.z, 1, cameraAxis);
 
 		++useCount;
 	}
@@ -480,7 +481,7 @@ PlayerCamera* PlayerBehaviour::GetSetCamera()
 	return mainCamera;
 }
 
-void PlayerBehaviour::AddBullet(PlayerBullet* newBullet)
+void PlayerBehaviour::AddBullet(Bullet* newBullet)
 {
 	bullets.push_back(newBullet);
 }

@@ -35,6 +35,8 @@ void Enemy::Initialize()
 void Enemy::Update()
 {
 	const float PER_FRAME = 1.0f / 60.0f;
+
+	// スポーン処理
 	if (spawnTime > 1)
 	{
 		isSpawning = false;
@@ -42,7 +44,8 @@ void Enemy::Update()
 	}
 	if (isSpawning)spawnTime += PER_FRAME;
 
-	//pos += vel;
+
+	// 指定されたポジションへ線形補間で移動
 	if (isTarget)
 	{
 		float a = GatesEngine::Math::Easing::EaseOutExpo(1 - setTime);
@@ -54,16 +57,8 @@ void Enemy::Update()
 			isSetting = false;
 			return;
 		}
-		//GatesEngine::Math::Vector3 diff = target - pos;
-		//GatesEngine::Math::Vector3 acc;
-
-		//float a = GatesEngine::Math::Easing::EaseInQuad(setTime / 3.0f);
-		//acc += (diff - vel * a) * 2.0f / (a * a);
 
 		setTime -= 0.016f / 2.0f;
-
-		//vel += acc * 0.016f / 2.0f;
-		//pos += vel * 0.016f / 2.0f;
 	}
 }
 
