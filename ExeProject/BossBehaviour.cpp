@@ -66,6 +66,7 @@ void BossBehaviour::Stoping()
 
 	if (stopingTime >= 1)
 	{
+		state = BossState::NONE;
 		stopFlag = false;
 		stopingTime = 0;
 		hp = MAX_HP;
@@ -157,6 +158,12 @@ void BossBehaviour::OnLateDraw()
 
 void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 {
+	GatesEngine::GameObject* object = otherCollider->GetGameObject();
+
+	if (object->GetTag() == "playerBullet")
+	{
+		hp -= MAX_HP / 10;
+	}
 }
 
 void BossBehaviour::SetBossState(BossState state)
@@ -182,4 +189,14 @@ void BossBehaviour::SetBossState(BossState state)
 		leftingTime = 0;
 		break;
 	}
+}
+
+BossState BossBehaviour::GetState()
+{
+	return state;
+}
+
+float BossBehaviour::GetHp()
+{
+	return hp;
 }

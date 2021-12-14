@@ -153,20 +153,20 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
 
 void GameObjectCollisionManager::CheckCollisionHitBossTo()
 {
-	for (auto& e : enemyColliders)
+	for (auto& pBullet : playerBulletColliders)
 	{
-		if (!e->GetEnabled())continue;
-		GatesEngine::GameObject* enemy, * boss;
-		enemy = e->GetGameObject();
+		if (!pBullet->GetEnabled())continue;
+		GatesEngine::GameObject* playerBullet, * boss;
+		playerBullet = pBullet->GetGameObject();
 		boss = bossCollider->GetGameObject();
 
-		if (e->GetType() == GatesEngine::ColliderType::CUBE)
+		if (pBullet->GetType() == GatesEngine::ColliderType::CUBE)
 		{
-			if (GatesEngine::CollisionManager::CheckAABB(e, bossCollider))
+			if (GatesEngine::CollisionManager::CheckAABB(pBullet, bossCollider))
 			{
-				enemy->Collision(bossCollider);
-				e->SetColor({ 1,0,0,0 });
-				boss->Collision(e);
+				playerBullet->Collision(bossCollider);
+				pBullet->SetColor({ 1,0,0,0 });
+				boss->Collision(pBullet);
 				bossCollider->SetColor({ 1,0,0,0 });
 			}
 		}

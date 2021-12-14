@@ -40,5 +40,7 @@ public:
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::Collider* otherCollider);
 	void SetBossState(BossState state);
+	BossState GetState();
+	float GetHp();
 };
 

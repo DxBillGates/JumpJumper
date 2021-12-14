@@ -56,7 +56,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	gp->SetName("player");
 	gp->SetTag("player");
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 40; ++i)
 	{
 		auto* bullet = gameObjectManager.Add(new GameObject());
 		bullet->SetGraphicsDevice(graphicsDevice);
@@ -210,7 +210,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->Start();
 		bullet->GetTransform()->position = g->GetTransform()->position;
 
-		enemyManager.RegisterEnemy(e,g);
+		enemyManager.RegisterEnemy(e, g);
 	}
 }
 
@@ -245,19 +245,20 @@ void Stage1Scene::Update()
 		gameState.ChangeState();
 	}
 
-	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::B))
+	if (bossBehaviour->GetHp() <= 0 && bossBehaviour->GetState() == BossState::NONE)
 	{
-		bossBehaviour->SetBossState(BossState::JOIN);
-	}
-	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::V))
-	{
-		bossBehaviour->SetBossState(BossState::LEFT);
-		battleCount++;
+		if (gameState.GetCurrentState() == GameState::BOSS_BATTLE || gameState.GetCurrentState() == GameState::FISRT_BOSS_BATTLE)
+		{
+			gameState.ChangeState();
+			bossBehaviour->SetBossState(BossState::LEFT);
+			battleCount++;
+		}
 	}
 
 	if (enemyManager.IsDestroyAllGroup())
 	{
 		bossBehaviour->SetBossState(BossState::JOIN);
+		gameState.ChangeState();
 	}
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
@@ -319,7 +320,7 @@ void Stage1Scene::Update()
 			bullet->GetTransform()->position = g->GetTransform()->position;
 			//boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
 
-			enemyManager.RegisterEnemy(e,g);
+			enemyManager.RegisterEnemy(e, g);
 		}
 	}
 
@@ -521,33 +522,33 @@ void Stage1Scene::LateDraw()
 	brightnessTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, & blurRenderTexture2);
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture2);
 
 	shaderManager->GetShader("HGaussBlurShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	blurRenderTexture.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, & blurRenderTexture3);
+	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture3);
 
 	shaderManager->GetShader("HGaussBlurShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	blurRenderTexture2.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
 	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurPlusParticleTex);
 	shaderManager->GetShader("BloomShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	redrawRenderTexture.Set(2);
 	blurRenderTexture3.Set(3);
 	meshManager->GetMesh("2DPlane")->Draw();
 
 	static bool flag = false;
-	if(app->GetInput()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))
-	flag = !flag;
+	if (app->GetInput()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))
+		flag = !flag;
 	if (flag)
 	{
 		graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);

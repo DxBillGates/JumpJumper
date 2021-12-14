@@ -98,6 +98,13 @@ void PlayerBulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 		vel = {};
 		gameObject->GetTransform()->position = { 0,-1000,0 };
 	}
+
+	if (gameObject->GetTag() == "playerBullet" && otherCollider->GetGameObject()->GetTag() == "Boss")
+	{
+		isHoming = false;
+		vel = {};
+		gameObject->GetTransform()->position = { 0,-1000,0 };
+	}
 }
 
 void PlayerBulletBehaviour::SetGPUParticleEmitter(GPUParticleEmitterBehaviour* behaviour)
