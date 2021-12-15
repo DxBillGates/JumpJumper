@@ -264,6 +264,9 @@
     <ClInclude Include="Header\Graphics\DebugCamera.h">
       <Filter>Header\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Util\Utility.h">
+      <Filter>Header\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -418,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugCamera.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Util\Utility.cpp">
+      <Filter>Source\Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -77,6 +77,7 @@
     <ClInclude Include="Header\Scene\SceneManager.h" />
     <ClInclude Include="Header\Util\Random.h" />
     <ClInclude Include="Header\Util\Timer.h" />
+    <ClInclude Include="Header\Util\Utility.h" />
     <ClInclude Include="Header\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,7 @@
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Util\Random.cpp" />
     <ClCompile Include="Source\Util\Timer.cpp" />
+    <ClCompile Include="Source\Util\Utility.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
