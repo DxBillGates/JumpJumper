@@ -357,11 +357,11 @@ void PlayerBehaviour::Update()
 	Attack();
 	LockOnAttack();
 
-	// カメラのポジション更新
-	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	GatesEngine::Math::Axis pAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
-	GatesEngine::Math::Axis cAxis = mainCamera->GetRotation().GetAxis();
-	mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y + 100,pos.z) - cAxis.z * 300 });
+	//// カメラのポジション更新
+	//GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
+	//GatesEngine::Math::Axis pAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
+	//GatesEngine::Math::Axis cAxis = mainCamera->GetRotation().GetAxis();
+	//mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y + 100,pos.z) - cAxis.z * 300 });
 }
 
 void PlayerBehaviour::OnDraw()

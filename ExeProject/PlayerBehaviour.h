@@ -39,7 +39,6 @@ private:
 	float doubleTapKeysTime[4];
 	GatesEngine::Math::Vector3 addVel;
 	float decayTime;
-
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”

@@ -134,6 +134,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	g->GetCollider()->SetSize({ 2 });
 	//g->GetTransform()->scale = { 500,100,500 };
 	g->SetTag("mainCamera");
+	cameraBehaviour->SetPlayerObject(playerBehaviour->GetGameObject());
 	//cameraBehaviour->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 	//g->GetTransform()->position = { 1000,1500,2000 };
 

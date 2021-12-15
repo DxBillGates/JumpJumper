@@ -7,6 +7,10 @@ class PlayerCameraBehaviour : public GatesEngine::Behaviour
 private:
 	GatesEngine::Camera3D* camera;
 	GatesEngine::Math::Vector3 beforeFramePos;
+
+	GatesEngine::GameObject* playerObject;
+	const float DEFAULT_CAMERA_DISTANCE;
+	float cameraDistance;
 public:
 	PlayerCameraBehaviour();
 	void Start() override;
@@ -14,6 +18,7 @@ public:
 	void OnDraw() override;
 	void OnLateDraw() override;
 	void OnCollision(GatesEngine::Collider* hitCollider) override;
+	void SetPlayerObject(GatesEngine::GameObject* object);
 	//void SetCamera(GatesEngine::Camera3D* camera);
 };
 
