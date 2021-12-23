@@ -1,11 +1,20 @@
 #pragma once
 #include "GraphicsDevice.h"
+#include <string>
 
 namespace GatesEngine
 {
 	class Texture
 	{
+	private:
+		GraphicsDevice* gDevice;
+	protected:
+		ID3D12Resource* texBuffer;
+		int srvNumber;
 	public:
-		virtual void Set(int descIndex) {}
+		Texture();
+		virtual ~Texture();
+		void Load(const std::string& filename,GraphicsDevice* gDevice);
+		virtual void Set(int descIndex);
 	};
 }

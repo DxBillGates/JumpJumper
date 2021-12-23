@@ -24,7 +24,7 @@ void PlayerCameraBehaviour::Update()
 
 	//if (cameraDistance >= DEFAULT_CAMERA_DISTANCE)cameraDistance = DEFAULT_CAMERA_DISTANCE;
 	//beforeFramePos = gameObject->GetTransform()->position;
-	GatesEngine::Utility::Printf("cDistance : %f\n", cameraDistance);
+	//GatesEngine::Utility::Printf("cDistance : %f\n", cameraDistance);
 	// カメラのポジション更新
 	GatesEngine::Math::Vector3 pos = playerObject->GetTransform()->position;
 	GatesEngine::Math::Axis cAxis = camera->GetRotation().GetAxis();

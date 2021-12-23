@@ -62,40 +62,7 @@ void NormalEnemyBehaviour::Update()
 	if (!Enemy::GetIsTarget())
 	{
 		GatesEngine::Math::Vector3 moveVector;
-		//if (hp <= 0 && !isBossAttack && !isAnimetion)
-		//{
-		//	isAnimetion = true;
-		//	deadPos = gameObject->GetTransform()->position;
-		//}
 
-		//const float ANIMATION_TIME = 2;
-		//if (isAnimetion)
-		//{
-		//	bool isBreak = (animationTime >= ANIMATION_TIME) ? true : false;
-
-		//	if (!isBreak)
-		//	{
-		//		gameObject->GetTransform()->position = deadPos;
-		//		float range = 32767;
-		//		GatesEngine::Math::Vector3 randomVector = { GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range),GatesEngine::Random::Rand(-range,range) };
-		//		moveVector = randomVector;
-		//		moveVector = moveVector.Normalize() * 20;
-		//	}
-		//	else
-		//	{
-		//		isAnimetion = false;
-		//		isBossAttack = true;
-		//		animationTime = 0;
-		//	}
-		//	animationTime += 0.016f;
-		//}
-
-		//if (isBossAttack)
-		//{
-		//	moveVector = boss->GetTransform()->position - gameObject->GetTransform()->position;
-		//	moveVector = moveVector.Normalize() * 10 * animationTime;
-		//	animationTime += 0.016f;
-		//}
 
 		bool isMove = false;
 		isMove = true;
@@ -108,23 +75,15 @@ void NormalEnemyBehaviour::Update()
 
 		gameObject->GetTransform()->position += moveVector;
 
-		const int INTERVAL = 1;
-		if (shotInterval > INTERVAL)
+		Shot();
+
+		if (isTargetInCollder)
 		{
-			Shot();
-			shotInterval = 0;
+			isTargetInCollder = false;
 		}
-
-		shotInterval += 0.016f / 2.0f;
 	}
 
-
-	// Žg‚Á‚Ä‚¢‚È‚¢’e‚ÌˆÊ’u‚ð•â³
-	for (auto& b : bullets)
-	{
-		if (b->IsUse())continue;
-		b->SetPos(gameObject->GetTransform()->position);
-	}
+	FixBulletPos();
 
 	Enemy::SetPosition(gameObject->GetTransform()->position);
 }
@@ -139,11 +98,6 @@ void NormalEnemyBehaviour::OnDraw()
 	GatesEngine::Math::Matrix4x4 rotateMatrix = GatesEngine::Math::Matrix4x4::Identity();
 	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(transform->position);
 
-	static float a = 0;
-	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::G))
-	{
-		a += 1;
-	}
 	if (target)
 	{
 		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * rotateMatrix * posMatrix);
@@ -163,6 +117,7 @@ void NormalEnemyBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	{
 		if (other->GetName() == "player")
 		{
+			isTargetInCollder = true;
 			target = other;
 		}
 	}
@@ -213,6 +168,18 @@ void NormalEnemyBehaviour::AddBullet(Bullet* addBullet)
 
 void NormalEnemyBehaviour::Shot()
 {
+	const int INTERVAL = 1;
+	if (shotInterval > INTERVAL)
+	{
+		shotInterval = 0;
+	}
+	else
+	{
+		shotInterval += 0.016f / 2.0f;
+		return;
+	}
+
+
 	bool isShot = false;
 	for (auto& b : bullets)
 	{
@@ -221,12 +188,22 @@ void NormalEnemyBehaviour::Shot()
 		if (!isShot)
 		{
 			if (!target)continue;
-			b->SetTarget(target, 0.1f, GatesEngine::Math::Vector3(0,1,0),5000);
+			b->SetTarget(target, 0.1f, GatesEngine::Math::Vector3(0, 1, 0), 5000);
 			isShot = true;
 		}
 		else
 		{
 			b->SetPos(gameObject->GetTransform()->position);
 		}
+	}
+}
+
+void NormalEnemyBehaviour::FixBulletPos()
+{
+	// Žg‚Á‚Ä‚¢‚È‚¢’e‚ÌˆÊ’u‚ð•â³
+	for (auto& b : bullets)
+	{
+		if (b->IsUse())continue;
+		b->SetPos(gameObject->GetTransform()->position);
 	}
 }

@@ -178,7 +178,7 @@ bool Game::LoadContents()
 bool Game::Initialize()
 {
 	gameObjectManager.Start();
-	timer.SetFrameRate(60);
+	timer.SetFrameRate(144);
 	timer.SetIsShow(false);
 
 	mainCamera = &camera;

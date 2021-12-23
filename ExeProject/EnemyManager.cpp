@@ -190,7 +190,7 @@ void EnemyManager::Update(int currentBattleNumber)
 		break;
 	}
 
-	//現在のバトルシーンの番号を更新
+	// 現在のバトルシーンの番号を更新
 	battleSceneNumber = currentBattleNumber;
 }
 

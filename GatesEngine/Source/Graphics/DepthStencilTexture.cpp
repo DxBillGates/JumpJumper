@@ -3,7 +3,7 @@
 
 GatesEngine::DepthStencilTexture::DepthStencilTexture()
 	: DepthStencil()
-	, srvNumber(0)
+	, Texture()
 {
 }
 

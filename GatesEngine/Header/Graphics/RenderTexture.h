@@ -8,10 +8,6 @@ namespace GatesEngine
 {
 	class RenderTexture : public Texture,public RenderTarget
 	{
-	private:
-		//TextureƒNƒ‰ƒX‚ğì‚ê‚Ä‚¢‚È‚¢‚½‚ßŒ±“I«
-		ID3D12Resource* texBuff;
-		int srvNumber;
 	public:
 		RenderTexture();
 		~RenderTexture();

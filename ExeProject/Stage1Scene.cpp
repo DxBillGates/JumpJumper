@@ -146,7 +146,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	shadowDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	resultDepthTex.Create(graphicsDevice, renderTextureSize);
-	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141, 219, 228, 255));
+	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141/2, 219/2, 228/2, 255));
 	lateDrawResultDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderShadowTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	parlinNoiseTex.Create(graphicsDevice, renderTextureSize);
@@ -176,7 +176,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 		auto* secondCollider = g->AddComponent<Collider>();
 		secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
-		secondCollider->SetSize(10);
+		secondCollider->SetSize(100);
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
 
 		g->SetTag("enemy");
@@ -419,7 +419,7 @@ void Stage1Scene::LateDraw()
 	GatesEngine::Camera* mainCamera = app->GetMainCamera();
 
 	//ƒOƒŠƒbƒh‚Ì•`‰æ
-	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141, 219, 228, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141/2, 219/2, 228/2, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
 	shaderManager->GetShader("Line")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });

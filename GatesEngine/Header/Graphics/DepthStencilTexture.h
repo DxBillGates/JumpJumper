@@ -7,8 +7,6 @@ namespace GatesEngine
 {
 	class DepthStencilTexture : public Texture,public DepthStencil
 	{
-	private:
-		int srvNumber;
 	public:
 		/// <summary>
 		/// コンストラクタ
