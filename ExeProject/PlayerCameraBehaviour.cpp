@@ -22,13 +22,18 @@ void PlayerCameraBehaviour::Update()
 	if (!camera)return;
 	if (!playerObject)return;
 
-	//if (cameraDistance >= DEFAULT_CAMERA_DISTANCE)cameraDistance = DEFAULT_CAMERA_DISTANCE;
-	//beforeFramePos = gameObject->GetTransform()->position;
-	//GatesEngine::Utility::Printf("cDistance : %f\n", cameraDistance);
+	beforeFramePos = gameObject->GetTransform()->position;
+
 	// カメラのポジション更新
 	GatesEngine::Math::Vector3 pos = playerObject->GetTransform()->position;
 	GatesEngine::Math::Axis cAxis = camera->GetRotation().GetAxis();
-	camera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y + 100,pos.z) - cAxis.z * cameraDistance });
+
+	GatesEngine::Math::Vector3 newCameraPos = GatesEngine::Math::Vector3(pos.x, pos.y + 100, pos.z) - cAxis.z * cameraDistance;
+
+	const float LERP_VALUE = 0.2f;
+	GatesEngine::Math::Vector3 lerpCameraPos = GatesEngine::Math::Vector3::Lerp(beforeFramePos, newCameraPos, LERP_VALUE);
+
+	camera->SetPosition(lerpCameraPos);
 	gameObject->GetTransform()->position = camera->GetPosition();
 }
 
@@ -47,7 +52,7 @@ void PlayerCameraBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
 		//GatesEngine::Math::Vector3 fixPos = beforeFramePos;
 		//gameObject->GetTransform()->position = beforeFramePos;
 		//camera->SetPosition(beforeFramePos);
-		//cameraDistance = 0;
+		//cameraDistance-=1;
 	}
 }
 

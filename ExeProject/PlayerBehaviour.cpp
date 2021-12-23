@@ -61,7 +61,7 @@ void PlayerBehaviour::UseJet()
 void PlayerBehaviour::Move()
 {
 	const float G = 0.25f;
-	const float MOVE_SPEED = 5;
+	const float MOVE_SPEED = 20;
 	const float DAMPING_FACTOR = 1;
 
 	GatesEngine::Keyboard* keyboard = input->GetKeyboard();
@@ -356,12 +356,6 @@ void PlayerBehaviour::Update()
 	Move();
 	Attack();
 	LockOnAttack();
-
-	//// カメラのポジション更新
-	//GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position;
-	//GatesEngine::Math::Axis pAxis = gameObject->GetTransform()->GetMatrix().GetAxis();
-	//GatesEngine::Math::Axis cAxis = mainCamera->GetRotation().GetAxis();
-	//mainCamera->SetPosition({ GatesEngine::Math::Vector3(pos.x,pos.y + 100,pos.z) - cAxis.z * 300 });
 }
 
 void PlayerBehaviour::OnDraw()
@@ -371,7 +365,7 @@ void PlayerBehaviour::OnDraw()
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	mainCamera->Set(2);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,1,0},{1,1,1,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
 }
