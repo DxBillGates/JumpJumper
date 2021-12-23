@@ -1,13 +1,45 @@
 struct UAVData
 {
+	// どのエミッターに属しているか
+	int emitter;
+	// 深度値（ソート用）
+	float depth;
+
+	// 状態
+	int state;
+	// 生存フラグ
+	int isDead;
+	// ライフ
+	float life;
+
+	// 基礎データ
+	float3 scale;
+	float3 rotate;
 	float4 pos;
 	float4 vel;
+	float alpha;
 };
 
 struct TestData
 {
+	// どのエミッターに属しているか
+	int emitter;
+	// 深度値（ソート用）
+	float depth;
+
+	// 状態
+	int state;
+	// 生存フラグ
+	int isDead;
+	// ライフ
+	float life;
+
+	// 基礎データ
+	float3 scale;
+	float3 rotate;
 	float4 pos;
 	float4 vel;
+	float alpha;
 };
 
 float3 GetRandomVector(float x)
@@ -141,5 +173,8 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	//		real[globalId].vel.w = maxSec;
 	//	}
 	//}
+
+	UAVData data = real[DTid.x];
+	data.pos = float4(0, 0, 0, 0);
 }
 

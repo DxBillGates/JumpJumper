@@ -51,6 +51,12 @@ private:
 	EnemyManager enemyManager;
 	GameStateManager gameState;
 	BossBehaviour* bossBehaviour;
+
+	//GatesEngine::ComputePipeline* gpuParticleCS;
+	//ID3D12Resource* particlesData;
+	//ID3D12Resource* particlesDrawData;
+	//ID3D12Resource* worldData;
+	//ID3D12Resource* emittersData;
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

@@ -30,7 +30,23 @@ float3 GetPosition(matrix mat)
 
 struct ParticleData
 {
+	// どのエミッターに属しているか
+	int emitter;
+	// 深度値（ソート用）
+	float depth;
+
+	// 状態
+	int state;
+	// 生存フラグ
+	int isDead;
+	// ライフ
+	float life;
+
+	// 基礎データ
+	float3 scale;
+	float3 rotate;
 	float4 pos;
 	float4 vel;
+	float alpha;
 };
 StructuredBuffer<ParticleData> posData : register(t0);

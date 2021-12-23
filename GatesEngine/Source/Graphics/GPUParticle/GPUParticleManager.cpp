@@ -32,7 +32,7 @@ GatesEngine::GPUParticleManager::GPUParticleManager(GraphicsDevice* pGraphicsDev
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	resDesc.MipLevels = 1;
 	resDesc.SampleDesc = { 1,0 };
-	resDesc.Width = (sizeof(ParticleData) * maxParticleValue + 0xff) & ~0xff;
+	resDesc.Width = sizeof(ParticleData) * maxParticleValue;
 
 	hr = graphicsDevice->GetDevice()->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr, IID_PPV_ARGS(&particleBuffer));
 
@@ -122,4 +122,19 @@ void GatesEngine::GPUParticleManager::CreateSRV(ID3D12Resource* buffer, const D3
 GatesEngine::GraphicsDevice* GatesEngine::GPUParticleManager::GetDevice()
 {
 	return graphicsDevice;
+}
+
+void GatesEngine::GPUParticleManager::Update()
+{
+	ParticleData* particleData = nullptr;
+	ParticleData* updateParticleData = nullptr;
+
+	particleBuffer->Map(0, nullptr, (void**)&particleData);
+	updateParticleBuffer->Map(0, nullptr, (void**)&updateParticleData);
+
+	memcpy(updateParticleData, particleData, sizeof(ParticleData)*nextParticleOffset);
+}
+
+void GatesEngine::GPUParticleManager::Dispatch(ComputePipeline* shader)
+{
 }

@@ -213,6 +213,9 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 		enemyManager.RegisterEnemy(e, g);
 	}
+
+	//gpuParticleCS = new GatesEngine::ComputePipeline(graphicsDevice, L"GPUParticle");
+	//gpuParticleCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV,GatesEngine::RangeType::SRV });
 }
 
 Stage1Scene::~Stage1Scene()
@@ -342,6 +345,7 @@ void Stage1Scene::Update()
 		app->GetTimer()->SetIsShow(false);
 	}
 	++i;
+	gpuParticleManager->Update();
 }
 
 void Stage1Scene::Draw()
