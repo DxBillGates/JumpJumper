@@ -39,6 +39,8 @@ private:
 	float doubleTapKeysTime[4];
 	GatesEngine::Math::Vector3 addVel;
 	float decayTime;
+
+	float moveVelDecayTime;
 private:
 	/// <summary>
 	/// moveVelとjetVelの補正とvelに対してセットする関数
@@ -84,6 +86,8 @@ private:
 	/// ロックオンした敵情報をクリアする関数
 	/// </summary>
 	void ClearTargets();
+
+	void DecayVelocity(GatesEngine::Math::Vector3& vec,float& time,const float MAX_TIME);
 public:
 	PlayerBehaviour();
 	~PlayerBehaviour();

@@ -109,24 +109,28 @@ void PlayerBehaviour::Move()
 		isInputMoveKey = true;
 		moveVector += playerAxis.z;
 		isFirstTapKeys[0] = true;
+		moveVelDecayTime = 0;
 	}
 	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::A))
 	{
 		isInputMoveKey = true;
 		moveVector -= playerAxis.x;
 		isFirstTapKeys[1] = true;
+		moveVelDecayTime = 0;
 	}
 	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::S))
 	{
 		isInputMoveKey = true;
 		moveVector -= playerAxis.z;
 		isFirstTapKeys[2] = true;
+		moveVelDecayTime = 0;
 	}
 	if (input->GetKeyboard()->CheckHitKey(GatesEngine::Keys::D))
 	{
 		isInputMoveKey = true;
 		moveVector += playerAxis.x;
 		isFirstTapKeys[3] = true;
+		moveVelDecayTime = 0;
 	}
 
 	const float ADD_SPEED = 100;
@@ -152,19 +156,8 @@ void PlayerBehaviour::Move()
 		decayTime = 0;
 	}
 
-	float addVelLength = addVel.Length();
-	const float MAX_DECAY_TIME = 1;
-	if (addVelLength > 0)
-	{
-		decayTime += PER_FRAME;
-		GatesEngine::Math::Vector3 decayVector = addVel.Normalize() * 2;
-		addVel -= decayVector;
-		if (decayTime > MAX_DECAY_TIME || addVel.Length() < decayVector.Length())
-		{
-			decayTime = 0;
-			addVel = {};
-		}
-	}
+	DecayVelocity(addVel, decayTime, 1);
+
 	moveVel = moveVector.Normalize() * MOVE_SPEED;
 	addVel += addVector.Normalize() * ADD_SPEED;
 
@@ -302,6 +295,23 @@ void PlayerBehaviour::ClearTargets()
 	for (auto& g : targets)
 	{
 		g.Initialize();
+	}
+}
+
+void PlayerBehaviour::DecayVelocity(GatesEngine::Math::Vector3& vec, float& time, const float MAX_TIME)
+{
+	float velLength = vec.Length();
+	const float PER_FRAME = 1.0f / 60.0f;
+	if (velLength > 0)
+	{
+		time += PER_FRAME;
+		GatesEngine::Math::Vector3 decayVector = vec.Normalize() * 2;
+		vec -= decayVector;
+		if (time > MAX_TIME || vec.Length() < decayVector.Length())
+		{
+			time = 0;
+			vec = {};
+		}
 	}
 }
 
