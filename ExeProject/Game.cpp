@@ -70,7 +70,7 @@ bool Game::LoadContents()
 	meshShadowShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
 
 	auto* pointShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Point")), "PointShader");
-	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV }, BlendMode::BLENDMODE_ADD, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
+	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ADD, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true);
 
 	auto* outlineShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
 	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
@@ -164,6 +164,9 @@ bool Game::LoadContents()
 	//MeshData<VertexInfo::Vertex_UV_Normal> testG3M;
 	//MeshCreater::LoadGates3DModelData("testModel", testG3M);
 	//meshManager->Add("testG3M")->Create(&graphicsDevice, testG3M);
+
+	auto* tex = textureManager->Add(new Texture(), "particleTex");
+	tex->Load("particle.png", &graphicsDevice);
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));

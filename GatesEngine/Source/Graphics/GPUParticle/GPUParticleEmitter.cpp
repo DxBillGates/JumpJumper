@@ -44,6 +44,7 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, camera->GetData());
 	graphicsDevice->GetMainCamera()->Set(2);
 	graphicsDevice->GetCmdList()->SetGraphicsRootDescriptorTable(3, graphicsDevice->GetCBVSRVUAVHeap()->GetSRVHandleForSRV(srvValue));
+	ResourceManager::GetTextureManager()->GetTexture("particleTex")->Set(4);
 	ResourceManager::GetMeshManager()->GetMesh("Point")->Draw(useParticleValue);
 
 	ID3D12DescriptorHeap* heap = manager->GetHeap();

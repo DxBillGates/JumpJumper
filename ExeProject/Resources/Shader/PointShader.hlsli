@@ -21,6 +21,7 @@ struct PSInput
 {
 	float4 svpos : SV_POSITION;
 	uint index : TEXCOORD;
+	float2 uv : TEXCOORD1;
 };
 
 float3 GetPosition(matrix mat)
@@ -50,3 +51,9 @@ struct ParticleData
 	float alpha;
 };
 StructuredBuffer<ParticleData> posData : register(t0);
+Texture2D<float4> tex : register(t1);
+
+SamplerState wrapPointSampler : register(s0);
+SamplerState clampPointSampler : register(s1);
+SamplerState wrapLinearSampler  : register(s2);
+SamplerState clampLinearSampler : register(s3);
