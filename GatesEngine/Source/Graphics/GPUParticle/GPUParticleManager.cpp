@@ -2,7 +2,7 @@
 #include "..\..\..\Header\Graphics\COMRelease.h"
 
 GatesEngine::GPUParticleManager::GPUParticleManager(GraphicsDevice* pGraphicsDevice)
-	: maxParticleValue(1000000)
+	: maxParticleValue(256000)
 	, nextParticleOffset(0)
 	, maxDescriptorValue(400)
 	, uavNextOffset(0)
