@@ -372,11 +372,11 @@ void PlayerBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	mainCamera->Set(2);
+	//mainCamera->Set(2);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,1,0},{1,1,1,1} });
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Player")->Draw();
 
 }
 

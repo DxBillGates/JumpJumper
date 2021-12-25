@@ -31,9 +31,9 @@ void BlockBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
-	shader->Set();
+	//shader->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{0,0,0,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{0.2f,0.2f,0.2f,1} });
 	mesh->Draw();
 }
 

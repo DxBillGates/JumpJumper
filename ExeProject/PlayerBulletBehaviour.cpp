@@ -63,7 +63,7 @@ void BulletBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Sphere")->Draw();
 }

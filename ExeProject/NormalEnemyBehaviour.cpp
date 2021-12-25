@@ -91,7 +91,7 @@ void NormalEnemyBehaviour::Update()
 void NormalEnemyBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 
 	GatesEngine::Transform* transform = gameObject->GetTransform();
 	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(transform->scale);

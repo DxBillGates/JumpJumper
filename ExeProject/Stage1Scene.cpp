@@ -474,6 +474,9 @@ void Stage1Scene::LateDraw()
 	//meshManager->GetMesh("2DPlane")->Draw();
 
 	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &redrawRenderTexture, &redrawDepthTex);
+	shaderManager->GetShader("DefaultMeshShader")->Set();
+
+	mainCamera->Set(2);
 	gameObjectManager.Draw();
 	gameObjectManager.SecondDraw();
 
@@ -496,7 +499,7 @@ void Stage1Scene::LateDraw()
 	shaderManager->GetShader("BrightnessSamplingShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	color = { 0.2f,1,1,1 };
+	color = { 0.4f,1,1,1 };
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, color);
 	//subPostprocessTexture.Set(3);
 	//resultRenderTex.Set(3);

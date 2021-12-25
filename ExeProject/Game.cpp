@@ -155,10 +155,10 @@ bool Game::LoadContents()
 	MeshCreater::LoadModelData("uv_sphere", testModel);
 	meshManager->Add("testModel")->Create(&graphicsDevice, testModel);
 
-	////ƒ‚ƒfƒ‹“Ç‚İ‚İ
-	//MeshData<VertexInfo::Vertex_UV_Normal> skydomeModel;
-	//MeshCreater::LoadModelData("skydome", skydomeModel);
-	//meshManager->Add("skydome")->Create(&graphicsDevice, skydomeModel);
+	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	MeshData<VertexInfo::Vertex_UV_Normal> skydomeModel;
+	MeshCreater::LoadModelData("Player", skydomeModel);
+	meshManager->Add("Player")->Create(&graphicsDevice, skydomeModel);
 
 	////ƒ‚ƒfƒ‹“Ç‚İ‚İ
 	//MeshData<VertexInfo::Vertex_UV_Normal> testG3M;
