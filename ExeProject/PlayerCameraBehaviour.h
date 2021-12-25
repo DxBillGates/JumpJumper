@@ -11,6 +11,7 @@ private:
 	GatesEngine::GameObject* playerObject;
 	const float DEFAULT_CAMERA_DISTANCE;
 	float cameraDistance;
+	float oldCameraDistance;
 public:
 	PlayerCameraBehaviour();
 	void Start() override;

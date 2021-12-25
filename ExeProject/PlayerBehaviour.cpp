@@ -326,7 +326,7 @@ PlayerBehaviour::PlayerBehaviour()
 	, MAX_TARGET(100)
 	, currentFrameTargetCount(0)
 	, unuseBulletCount(0)
-	, MAX_HP(10)
+	, MAX_HP(100)
 	, hp(MAX_HP)
 {
 	mainCamera = new PlayerCamera();
@@ -344,7 +344,7 @@ void PlayerBehaviour::Start()
 	isJump = true;
 	gameObject->GetTransform()->position.y = 1000;
 	fuelValue = MAX_FUEL;
-	hp = 10;
+	hp = MAX_HP;
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -385,7 +385,7 @@ void PlayerBehaviour::OnLateDraw()
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
 	//float persent = fuelValue / MAX_FUEL;
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 100,persent * 1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920,1080/2,0 }));
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
@@ -426,6 +426,32 @@ void PlayerBehaviour::OnLateDraw()
 	//GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(size);
 	//GatesEngine::Math::Matrix4x4 rotateMatrix = mainCamera->GetRotation();
 	//GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(center);
+
+	// HP•\Ž¦
+	float persent = (float)hp / MAX_HP;
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 300 * persent,25,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 25,25,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlanee")->Draw();
+
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 300,25,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 25,25,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 0, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlanee")->Draw();
+
+	// Žc’e”‚Ì•\Ž¦
+	persent = (float)unuseBulletCount / 20;
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 300 * persent,25,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 25,75,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 1, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlanee")->Draw();
+
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 300,25,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 25,75,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 0, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlanee")->Draw();
 
 	//for (int i = 0; i < hp; ++i)
 	//{
@@ -469,10 +495,10 @@ void PlayerBehaviour::OnCollision(GatesEngine::Collider* hitCollider)
 		fuelValue += CHARGE_FUEL;
 	}
 
-	//if (hitCollider->GetGameObject()->GetTag() == "enemyBullet")
-	//{
-	//	--hp;
-	//}
+	if (hitCollider->GetGameObject()->GetTag() == "enemyBullet")
+	{
+		--hp;
+	}
 }
 
 void PlayerBehaviour::SetCamera(PlayerCamera* pCamera)

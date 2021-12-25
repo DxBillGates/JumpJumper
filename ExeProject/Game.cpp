@@ -112,8 +112,11 @@ bool Game::LoadContents()
 
 	//画面サイズ / 10 板ポリ生成
 	MeshData<VertexInfo::Vertex_UV_Normal> testMeshData3;
-	MeshCreater::Create2DQuad({ 1,1 }, { 1,1 }, testMeshData3);
+	MeshCreater::Create2DQuad({ 1,1 }, { 1,1 }, testMeshData3, {0,0});
 	meshManager->Add("2DPlane")->Create(&graphicsDevice, testMeshData3);
+
+	MeshCreater::Create2DQuad({ 1,1 }, { 1,1 }, testMeshData3, { -1,0 });
+	meshManager->Add("2DPlanee")->Create(&graphicsDevice, testMeshData3);
 
 	//グリッド生成
 	MeshData<VertexInfo::Vertex_Color> testLineMeshData;

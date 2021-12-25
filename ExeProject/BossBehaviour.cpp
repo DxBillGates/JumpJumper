@@ -116,7 +116,7 @@ void BossBehaviour::Update()
 
 		if (mainCamera)
 		{
-			mainCamera->SetShake(0.5f/2, 10);
+			mainCamera->SetShake(0.5f/2, 100);
 		}
 	}
 
@@ -153,9 +153,9 @@ void BossBehaviour::OnDraw()
 void BossBehaviour::OnLateDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
-	float persent = hp / MAX_HP;
+	float persent = hp / MAX_HP - 0.05f;
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * persent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,25,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * persent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 - 50,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();

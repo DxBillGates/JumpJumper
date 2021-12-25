@@ -22,16 +22,22 @@ void GatesEngine::MeshCreater::CreatePlane(Math::Vector2 size, Math::Vector2 uvM
 	indices->push_back(0);
 }
 
-void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
+void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData, Math::Vector2 center)
 {
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
 	std::vector<unsigned int>* indices = meshData.GetIndices();
 
+	Math::Vector3 pivot = { center.x,center.y,0 };
+	pivot = Math::Vector3::Max(pivot, Math::Vector3(1) / 2);
+	pivot = Math::Vector3::Min(pivot, -Math::Vector3(1) / 2);
+	pivot.x *= size.x;
+	pivot.y *= size.y;
+
 	using namespace Math;
-	vertices->push_back({ Vector3(-size.x / 2.0f, size.y / 2.0f,0),Vector2(0,0),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(size.x / 2.0f, size.y / 2.0f,0),Vector2(uvMax.x,0),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(size.x / 2.0f,-size.y / 2.0f,0),Vector2(uvMax.x,uvMax.y),Vector3(0,0,0 - 1) });
-	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0),Vector2(0,uvMax.y),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(-size.x / 2.0f, size.y / 2.0f,0) + pivot,Vector2(0,0),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(size.x / 2.0f, size.y / 2.0f,0)  + pivot,Vector2(uvMax.x,0),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(size.x / 2.0f,-size.y / 2.0f,0)  + pivot,Vector2(uvMax.x,uvMax.y),Vector3(0,0,0 - 1) });
+	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0) + pivot,Vector2(0,uvMax.y),Vector3(0,0,-1) });
 
 	indices->push_back(0);
 	indices->push_back(1);
@@ -80,16 +86,24 @@ void GatesEngine::MeshCreater::CreateQuad(Math::Vector2 size, Math::Vector2 uvMa
 	}
 }
 
-void GatesEngine::MeshCreater::Create2DQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData)
+void GatesEngine::MeshCreater::Create2DQuad(Math::Vector2 size, Math::Vector2 uvMax, MeshData<VertexInfo::Vertex_UV_Normal>& meshData, Math::Vector2 center)
 {
+	meshData.Clear();
 	std::vector<VertexInfo::Vertex_UV_Normal>* vertices = meshData.GetVertices();
 	std::vector<unsigned int>* indices = meshData.GetIndices();
 
+	center = -center;
+	Math::Vector3 pivot = { center.x,center.y,0 };
+	pivot = Math::Vector3::Max(pivot, Math::Vector3(1) / 2);
+	pivot = Math::Vector3::Min(pivot, -Math::Vector3(1) / 2);
+	pivot.x *= size.x;
+	pivot.y *= size.y;
+
 	using namespace Math;
-	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0),Vector2(0,0),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(size.x / 2.0f,-size.y / 2.0f,0),Vector2(uvMax.x,0),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(size.x / 2.0f,size.y / 2.0f,0),Vector2(uvMax.x,uvMax.y),Vector3(0,0,-1) });
-	vertices->push_back({ Vector3(-size.x / 2.0f,size.y / 2.0f,0),Vector2(0,uvMax.y),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(-size.x / 2.0f,-size.y / 2.0f,0)+pivot,Vector2(0,0),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(size.x / 2.0f,-size.y / 2.0f,0) +pivot,Vector2(uvMax.x,0),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(size.x / 2.0f,size.y / 2.0f,0)  +pivot,Vector2(uvMax.x,uvMax.y),Vector3(0,0,-1) });
+	vertices->push_back({ Vector3(-size.x / 2.0f,size.y / 2.0f,0) +pivot,Vector2(0,uvMax.y),Vector3(0,0,-1) });
 
 	indices->push_back(0);
 	indices->push_back(1);
