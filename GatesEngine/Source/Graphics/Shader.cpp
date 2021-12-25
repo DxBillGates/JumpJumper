@@ -49,7 +49,7 @@ GatesEngine::Shader::~Shader()
 	}
 }
 
-void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, bool depthFlag, int rtvCount)
+void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType, bool depthFlag, int rtvCount, bool alphaToCovarage)
 {
 	SetInputLayout(inputLayouts);
 	SetRootParamerters(rangeTypes);
@@ -57,6 +57,7 @@ void GatesEngine::Shader::Create(const std::vector<InputLayout>& inputLayouts, c
 	SetPrimitiveTopology((GatesEngine::PrimiriveTopologyType)topologyType);
 	SetIsUseDepth(depthFlag);
 	SetRtvCount(rtvCount);
+	SetAlphaToCoverageEnable(alphaToCovarage);
 
 	CreatePipeline();
 }
@@ -153,6 +154,12 @@ bool GatesEngine::Shader::SetRtvCount(unsigned int value)
 	return isSetRtvCount;
 }
 
+bool GatesEngine::Shader::SetAlphaToCoverageEnable(bool flag)
+{
+	isSetAlphaToCoverageEnable = flag;
+	return isSetAlphaToCoverageEnable;
+}
+
 bool GatesEngine::Shader::Check()
 {
 	bool isTrueReturn = true;
@@ -216,7 +223,7 @@ void GatesEngine::Shader::CreatePipeline()
 	rootSignature->Create();
 
 	pipeline = new Pipeline(pGraphicsDevice, rootSignature, inputLayouts, blendMode, topologyType);
-	pipeline->Create({ vsBlob,psBlob,gsBlob,hsBlob,dsBlob }, depthFlag, rtvCount);
+	pipeline->Create({ vsBlob,psBlob,gsBlob,hsBlob,dsBlob }, depthFlag, rtvCount,isSetAlphaToCoverageEnable);
 
 	isCreate = true;
 	isCreatePipelineOrRootSignature = true;

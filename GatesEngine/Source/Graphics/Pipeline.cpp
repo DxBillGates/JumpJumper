@@ -54,7 +54,7 @@ GatesEngine::Pipeline::~Pipeline()
 	COM_RELEASE(wirePso);
 }
 
-void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag, int rtvCount)
+void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag, int rtvCount, bool alphaCoverage)
 {
 	D3D12_INPUT_ELEMENT_DESC* inputDesc = new D3D12_INPUT_ELEMENT_DESC[(int)inputLayout.size()];
 	//引数のインプットレイアウトからPSOのインプットレイアウトを設定
@@ -119,7 +119,7 @@ void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag,
 		psoDesc.DepthStencilState.DepthEnable = FALSE;
 		psoDesc.DepthStencilState.StencilEnable = FALSE;
 	}
-	psoDesc.BlendState.AlphaToCoverageEnable = true;
+	psoDesc.BlendState.AlphaToCoverageEnable = alphaCoverage;
 	//psoDesc.BlendState.AlphaToCoverageEnable = false;
 
 	psoDesc.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;

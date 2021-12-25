@@ -38,12 +38,13 @@ namespace GatesEngine
 		bool isSetPrimitiveTopologyType;
 		bool isSetDepthFlag;
 		bool isSetRtvCount;
+		bool isSetAlphaToCoverageEnable;
 	public:
 		Shader();
 		Shader(GraphicsDevice* graphicsDevice, const std::wstring& fileName);
 		~Shader();
 		void Create(const std::vector<InputLayout>& inputLayouts, const std::vector<RangeType>& rangeTypes,
-			        BlendMode blendMode = BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,bool depthFlag = true,int rtvCount = 1);
+			        BlendMode blendMode = BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,bool depthFlag = true,int rtvCount = 1,bool alphaToCovarage = false);
 		void Create();
 
 		bool SetGraphicsDevice(GraphicsDevice* graphicsDevice);
@@ -54,6 +55,7 @@ namespace GatesEngine
 		bool SetPrimitiveTopology(PrimiriveTopologyType type);
 		bool SetIsUseDepth(bool depthFlag);
 		bool SetRtvCount(unsigned int value);
+		bool SetAlphaToCoverageEnable(bool flag);
 		bool Check();
 		void CreatePipeline();
 
