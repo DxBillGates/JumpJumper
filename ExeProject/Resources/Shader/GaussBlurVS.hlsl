@@ -1,4 +1,9 @@
-float4 main( float4 pos : POSITION ) : SV_POSITION
+#include "GaussBlurShader.hlsli"
+
+VSOutput main(VSInput input)
 {
-	return pos;
+	VSOutput output;
+	output.svpos = mul(projMatrix, mul(modelMatrix, input.pos));
+	output.uv = input.uv;
+	return output;
 }

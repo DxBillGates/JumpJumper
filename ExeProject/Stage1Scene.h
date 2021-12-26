@@ -57,6 +57,19 @@ private:
 	//ID3D12Resource* particlesDrawData;
 	//ID3D12Resource* worldData;
 	//ID3D12Resource* emittersData;
+	struct GaussFilterData
+	{
+		GatesEngine::Math::Vector4 data[16];
+	};
+	GaussFilterData gaussData[6];
+
+	GatesEngine::RenderTexture blurRenderTextures[6];
+	GatesEngine::RenderTexture reverceResoTextures[3];
+private:
+	// ガウシアンフィルタの重みを計算する関数
+	float GaussFilter(const GatesEngine::Math::Vector2& pos, float value);
+	// 参照ピクセルへの情報とガウシアンフィルタの重みを計算してセットする関数
+	void SetGaussFilterData(const GatesEngine::Math::Vector2& size, GatesEngine::Math::Vector2& dir, float gaussValue,GaussFilterData* data,int dataSize);
 public:
 	Stage1Scene();
 	Stage1Scene(const char* sceneName);

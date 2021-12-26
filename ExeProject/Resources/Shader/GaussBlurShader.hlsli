@@ -8,6 +8,11 @@ cbuffer Orthograph : register(b1)
 	matrix projMatrix;
 }
 
+cbuffer GaussFilterData : register(b2)
+{
+	float4 data[16];
+}
+
 struct VSInput
 {
 	float4 pos : POSITION;

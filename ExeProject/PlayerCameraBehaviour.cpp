@@ -33,7 +33,7 @@ void PlayerCameraBehaviour::Update()
 	// プレイヤーとカメラの距離
 	float cameraToPlayerDis = GatesEngine::Math::Vector3::Distance(beforeFramePos, pos);
 	float cameraDistanceDiff = cameraToPlayerDis - cameraDistance;
-	GatesEngine::Utility::Printf("%f\n", cameraDistanceDiff);
+	//GatesEngine::Utility::Printf("%f\n", cameraDistanceDiff);
 
 	GatesEngine::Math::Vector3 newCameraPos = GatesEngine::Math::Vector3(pos.x, pos.y + 100, pos.z) - cAxis.z * cameraDistance;
 

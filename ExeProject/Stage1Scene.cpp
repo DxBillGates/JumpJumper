@@ -11,6 +11,41 @@
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 
+float Stage1Scene::GaussFilter(const GatesEngine::Math::Vector2& pos, float value)
+{
+	return exp(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * value * value));
+}
+
+void Stage1Scene::SetGaussFilterData(const GatesEngine::Math::Vector2& size, GatesEngine::Math::Vector2& dir, float gaussValue, GaussFilterData* data, int dataSize)
+{
+	GatesEngine::Math::Vector2 perPixel = { 1.0f / size.x,1.0f / size.y };
+
+	data->data[0] = GatesEngine::Math::Vector4();
+	data->data[0].z = GaussFilter({ 0,0 }, gaussValue);
+	float totalWeight = data[0].data->z;
+
+	for (int i = 1; i < 8; ++i)
+	{
+		data->data[i].x = dir.x * i * perPixel.x;
+		data->data[i].y = dir.y * i * perPixel.y;
+		data->data[i].z = GaussFilter(dir * (float)i, gaussValue);
+		totalWeight += data->data[i].z * 2;
+	}
+
+	for (int i = 0; i < 8; ++i)
+	{
+		data->data[i].z / totalWeight;
+	}
+
+	// 負の方向の値もセット
+	for (int i = 8; i < 15; ++i)
+	{
+		data->data[i].x = -data->data[i - 7].x;
+		data->data[i].y = -data->data[i - 7].y;
+		data->data[i].z = data->data[i - 7].z;
+	}
+}
+
 Stage1Scene::Stage1Scene() : Stage1Scene("Stage1Scene", nullptr)
 {
 }
@@ -146,7 +181,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	shadowDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	resultDepthTex.Create(graphicsDevice, renderTextureSize);
-	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141/2, 219/2, 228/2, 255));
+	lateDrawResultRenderTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(141 / 2, 219 / 2, 228 / 2, 255));
 	lateDrawResultDepthTex.Create(graphicsDevice, renderTextureSize);
 	resultRenderShadowTex.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	parlinNoiseTex.Create(graphicsDevice, renderTextureSize);
@@ -160,6 +195,29 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	redrawDepthTex.Create(graphicsDevice, renderTextureSize);
 	blurPlusParticleTex.Create(graphicsDevice, renderTextureSize);
 
+	GatesEngine::Math::Vector2 right, up;
+	right = { 1,0 };
+	up = { 0,1 };
+	float gaussValue = 2.5f;
+	SetGaussFilterData(renderTextureSize / 2, right, gaussValue, &gaussData[0], 0);
+	SetGaussFilterData(renderTextureSize / 2, up, gaussValue, &gaussData[1], 0);
+	gaussValue *= 2;
+	SetGaussFilterData(renderTextureSize / 4, right, gaussValue, &gaussData[2], 0);
+	SetGaussFilterData(renderTextureSize / 4, up, gaussValue, &gaussData[3], 0);
+	gaussValue *= 2;
+	SetGaussFilterData(renderTextureSize / 8, right, gaussValue, &gaussData[4], 0);
+	SetGaussFilterData(renderTextureSize / 8, up, gaussValue, &gaussData[5], 0);
+
+	blurRenderTextures[0].Create(graphicsDevice, renderTextureSize);
+	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize);
+	blurRenderTextures[2].Create(graphicsDevice, renderTextureSize / 2);
+	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 2);
+	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 4);
+	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 4);
+
+	reverceResoTextures[0].Create(graphicsDevice, renderTextureSize / 8);
+	reverceResoTextures[1].Create(graphicsDevice, renderTextureSize / 4);
+	reverceResoTextures[2].Create(graphicsDevice, renderTextureSize / 4);
 
 
 	for (int i = 0; i < 20; ++i)
@@ -423,7 +481,7 @@ void Stage1Scene::LateDraw()
 	GatesEngine::Camera* mainCamera = app->GetMainCamera();
 
 	//グリッドの描画
-	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141/2, 219/2, 228/2, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141 / 2, 219 / 2, 228 / 2, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
 	shaderManager->GetShader("Line")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
@@ -522,36 +580,88 @@ void Stage1Scene::LateDraw()
 	//brightnessTexture[0].Set(3);
 	//meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture);
+	for (int i = 0; i < 6; ++i)
+	{
+		graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &blurRenderTextures[i]);
+		shaderManager->GetShader("GaussBlurShader")->Set();
 
-	shaderManager->GetShader("HGaussBlurShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, gaussData[i]);
+		// 偶数なら輝度抽出テクスチャをセット
+		if (i % 2 == 0)
+		{
+			brightnessTexture.Set(3);
+		}
+		// 奇数なら横ブラーした結果をセット
+		else
+		{
+			blurRenderTextures[i - 1].Set(3);
+		}
+
+		meshManager->GetMesh("2DPlane")->Draw();
+	}
+
+	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[0]);
+	shaderManager->GetShader("TextureSpriteShader")->Set();
+
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	brightnessTexture.Set(3);
+	blurRenderTextures[5].Set(3);
+
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture2);
+	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[1]);
+	shaderManager->GetShader("TextureSpriteShader")->Set();
 
-	shaderManager->GetShader("HGaussBlurShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	blurRenderTexture.Set(3);
+	reverceResoTextures[0].Set(3);
+
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture3);
+	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[2]);
+	shaderManager->GetShader("TextureSpriteShader")->Set();
 
-	shaderManager->GetShader("HGaussBlurShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	blurRenderTexture2.Set(3);
+	blurRenderTextures[3].Set(3);
+
 	meshManager->GetMesh("2DPlane")->Draw();
+
+
+	//graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture);
+
+	//shaderManager->GetShader("HGaussBlurShader")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//brightnessTexture.Set(3);
+	//meshManager->GetMesh("2DPlane")->Draw();
+
+	//graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture2);
+
+	//shaderManager->GetShader("HGaussBlurShader")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//blurRenderTexture.Set(3);
+	//meshManager->GetMesh("2DPlane")->Draw();
+
+	//graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture3);
+
+	//shaderManager->GetShader("HGaussBlurShader")->Set();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//blurRenderTexture2.Set(3);
+	//meshManager->GetMesh("2DPlane")->Draw();
 
 	graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurPlusParticleTex);
 	shaderManager->GetShader("BloomShader")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	redrawRenderTexture.Set(2);
-	blurRenderTexture3.Set(3);
+	blurRenderTextures[1].Set(3);
+	blurRenderTextures[3].Set(4);
+	blurRenderTextures[5].Set(5);
 	meshManager->GetMesh("2DPlane")->Draw();
 
 	static bool flag = false;
@@ -579,8 +689,6 @@ void Stage1Scene::LateDraw()
 		blurPlusParticleTex.Set(3);
 		meshManager->GetMesh("2DPlane")->Draw();
 	}
-
-
 
 	//gameObjectManager.LateDraw();
 	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS, 1000);
