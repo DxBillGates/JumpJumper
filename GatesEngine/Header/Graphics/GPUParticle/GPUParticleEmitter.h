@@ -18,6 +18,8 @@ namespace GatesEngine
 		UINT addDataSrvValue;
 		ID3D12Resource* addBuffer;
 		ParticleData* addData;
+		//int usingParticeCount;
+		//int newUseParticleCount;
 	public:
 		GPUParticleEmitter();
 		virtual ~GPUParticleEmitter();

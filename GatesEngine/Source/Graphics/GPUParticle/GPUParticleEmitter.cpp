@@ -26,6 +26,17 @@ GatesEngine::GPUParticleEmitter::~GPUParticleEmitter()
 
 void GatesEngine::GPUParticleEmitter::Update()
 {
+	//newUseParticleCount = 1;
+
+	//if (usingParticeCount >= useParticleValue)return;
+	//for (int i = 0; i < newUseParticleCount; ++i)
+	//{
+	//	particleData[useParticleOffset + usingParticeCount].isDead = false;
+	//	//particleData += useParticleOffset;
+	//	//particleData->isDead = false;
+	//	//usingParticeCount = 0;
+	//	++usingParticeCount;
+	//}
 	////std::vector<ParticleData> date(useParticleValue);
 	////ComputeShaderでUpdateしたパーティクルデータを先頭アドレスずらしてSRVのバッファにコピー
 	//memcpy(updateParticleData + useParticleOffset, particleData + useParticleOffset, sizeof(ParticleData) * useParticleValue);
@@ -132,6 +143,7 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 		particleData[useParticleOffset + i].vel = { (float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,-(float)(rand() % 5),(float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,1 };
 		particleData[useParticleOffset + i].vel = particleData[useParticleOffset + i].vel.Normalize();
 		particleData[useParticleOffset + i].vel.w = 0;
+		particleData[useParticleOffset + i].isDead = true;
 	}
 
 	//memcpy(updateParticleData + useParticleOffset, particleData + useParticleOffset, sizeof(ParticleData) * useParticleValue);
