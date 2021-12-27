@@ -208,12 +208,12 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	SetGaussFilterData(renderTextureSize / 8, right, gaussValue, &gaussData[4], 0);
 	SetGaussFilterData(renderTextureSize / 8, up, gaussValue, &gaussData[5], 0);
 
-	blurRenderTextures[0].Create(graphicsDevice, renderTextureSize);
-	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize);
-	blurRenderTextures[2].Create(graphicsDevice, renderTextureSize / 2);
-	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 2);
-	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 4);
-	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 4);
+	blurRenderTextures[0].Create(graphicsDevice, renderTextureSize / 2);
+	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize / 2);
+	blurRenderTextures[2].Create(graphicsDevice, renderTextureSize / 4);
+	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 4);
+	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 8);
+	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 8);
 
 	reverceResoTextures[0].Create(graphicsDevice, renderTextureSize / 8);
 	reverceResoTextures[1].Create(graphicsDevice, renderTextureSize / 4);
@@ -591,7 +591,14 @@ void Stage1Scene::LateDraw()
 		// 偶数なら輝度抽出テクスチャをセット
 		if (i % 2 == 0)
 		{
+			if (i == 0)
+			{
 			brightnessTexture.Set(3);
+			}
+			else
+			{
+				blurRenderTextures[i - 1].Set(3);
+			}
 		}
 		// 奇数なら横ブラーした結果をセット
 		else

@@ -18,6 +18,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 bloomColor2 = brightnessGaussTex2.Sample(clampLinearSampler, input.uv);
 	float4 bloomColor3 = brightnessGaussTex3.Sample(clampLinearSampler, input.uv);
 	float4 bloomResult = bloomColor.rgba + bloomColor2.rgba + bloomColor3.rgba;
+	//bloomResult /= 3;
 	//return float4(texColor.rgb + bloomColor.rgb, 1.0f);
 	//return float4(texColor.rgb + bloomColor2.rgb, 1.0f);
 	//return float4(texColor.rgb + bloomColor3.rgb, 1.0f);
