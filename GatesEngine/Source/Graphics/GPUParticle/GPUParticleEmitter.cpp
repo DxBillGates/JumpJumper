@@ -3,6 +3,7 @@
 #include "..\..\..\Header\Graphics\COMRelease.h"
 #include "..\..\..\Header\Graphics\Graphics.h"
 #include "..\..\..\Header\Graphics\Manager\ResourceManager.h"
+#include "..\..\..\Header\Util\Random.h"
 #include <vector>
 
 GatesEngine::GPUParticleEmitter::GPUParticleEmitter()
@@ -26,17 +27,28 @@ GatesEngine::GPUParticleEmitter::~GPUParticleEmitter()
 
 void GatesEngine::GPUParticleEmitter::Update()
 {
+	const int NEW_USE_PARTICLE_COUNT = 2;
 	//newUseParticleCount = 1;
 
 	//if (usingParticeCount >= useParticleValue)return;
-	//for (int i = 0; i < newUseParticleCount; ++i)
-	//{
-	//	particleData[useParticleOffset + usingParticeCount].isDead = false;
-	//	//particleData += useParticleOffset;
-	//	//particleData->isDead = false;
-	//	//usingParticeCount = 0;
-	//	++usingParticeCount;
-	//}
+	int count = 0;
+	for (int i = 0; i < useParticleValue; ++i)
+	{
+		if (count >= NEW_USE_PARTICLE_COUNT)break;
+
+		if (particleData[useParticleOffset + i].isDead)
+		{
+			particleData[useParticleOffset + i].state = 0;
+			++count;
+		}
+		else
+		{
+			continue;
+		}
+		//particleData += useParticleOffset;
+		//particleData->isDead = false;
+		//usingParticeCount = 0;
+	}
 	////std::vector<ParticleData> date(useParticleValue);
 	////ComputeShaderでUpdateしたパーティクルデータを先頭アドレスずらしてSRVのバッファにコピー
 	//memcpy(updateParticleData + useParticleOffset, particleData + useParticleOffset, sizeof(ParticleData) * useParticleValue);
@@ -140,9 +152,10 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	//先頭アドレスを進める
 	for (int i = 0; i < (int)useParticleValue; ++i)
 	{
+		particleData[useParticleOffset + i].pos = {0,-1000,0,0};
 		particleData[useParticleOffset + i].vel = { (float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,-(float)(rand() % 5),(float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,1 };
 		particleData[useParticleOffset + i].vel = particleData[useParticleOffset + i].vel.Normalize();
-		particleData[useParticleOffset + i].vel.w = 0;
+		particleData[useParticleOffset + i].vel.w = GatesEngine::Random::Rand(0,1);
 		particleData[useParticleOffset + i].isDead = true;
 	}
 
