@@ -27,6 +27,11 @@ private:
 
 	const float MAX_HP;
 	float hp;
+
+	float oldHP;
+	bool decreaseHpTimeFlag;
+	float decreaseHpTime;
+	const float MAX_DECREASE_HP_TIME;
 private:
 	void InitState();
 	void JoinOrLeft(BossState state);

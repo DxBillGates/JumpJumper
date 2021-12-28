@@ -43,7 +43,7 @@ void BulletBehaviour::Update()
 			const float SPEED = 0.5f;
 			homingTime -= PER_FRAME * SPEED;
 
-			const float MAX_ACC = 100000;
+			const float MAX_ACC = 300000;
 			if (acc.Length() > MAX_ACC)
 			{
 				acc = acc.Normalize() * MAX_ACC;

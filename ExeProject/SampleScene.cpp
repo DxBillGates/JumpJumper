@@ -28,7 +28,6 @@ void SampleScene::Initialize()
 void SampleScene::Update()
 {
 	gameObjectManager.Update();
-	//collisionManager.Update();
 }
 
 void SampleScene::Draw()

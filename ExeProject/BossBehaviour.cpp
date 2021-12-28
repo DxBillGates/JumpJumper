@@ -67,7 +67,7 @@ void BossBehaviour::Stoping()
 	const int HEALING_VALUE_PER_FRAME = 1;
 
 	hp = GatesEngine::Math::Lerp(0, MAX_HP, GatesEngine::Math::Easing::EaseInOutQuint(stopingTime));
-
+	oldHP = hp;
 	if (stopingTime >= 1)
 	{
 		state = BossState::NONE;
@@ -89,6 +89,8 @@ BossBehaviour::BossBehaviour()
 	, stopingTime(0)
 	, MAX_HP(100)
 	, hp(MAX_HP)
+	, decreaseHpTime(0)
+	, MAX_DECREASE_HP_TIME(1)
 {
 }
 
@@ -102,6 +104,7 @@ void BossBehaviour::Start()
 	stopFlag = false;
 	stopingTime = 0;
 	hp = 0;
+	oldHP = hp;
 }
 
 void BossBehaviour::Update()
@@ -121,6 +124,10 @@ void BossBehaviour::Update()
 	}
 
 	if (stopFlag)Stoping();
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	if (decreaseHpTime >= 1)decreaseHpTimeFlag = false;
+	if (decreaseHpTimeFlag)decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
 }
 
 void BossBehaviour::OnDraw()
@@ -154,11 +161,25 @@ void BossBehaviour::OnLateDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 	float persent = hp / MAX_HP - 0.05f;
+	float oldPersent = oldHP / MAX_HP - 0.05f;
+	float maxPersent = 1 - 0.05f;
+
+	float easeInExpo = GatesEngine::Math::Easing::EaseInExpo(decreaseHpTime);
+	float easeOutElastic = GatesEngine::Math::Easing::EaseOutElastic(decreaseHpTime);
+	float resultPersent = GatesEngine::Math::Lerp(oldPersent, persent, easeOutElastic);
+
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * persent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 - 50,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * resultPersent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 - 50,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+
+	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920 * maxPersent,50,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 - 50,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 0, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+
 }
 
 void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
@@ -167,7 +188,12 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 
 	if (object->GetTag() == "playerBullet")
 	{
+		oldHP = hp;
 		hp -= MAX_HP / 10;
+		const float PER_FRAME = 1.0f / 60.0f;
+		decreaseHpTimeFlag = true;
+		decreaseHpTime = 0;
+		//decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
 	}
 }
 
