@@ -19,5 +19,6 @@ public:
 	void SetComputeShader(GatesEngine::ComputePipeline* setShader);
 	void SetInitializeShader(GatesEngine::ComputePipeline* setShader);
 	void DispatchInitializeShader();
+	void ExternalUpdate();
 };
 

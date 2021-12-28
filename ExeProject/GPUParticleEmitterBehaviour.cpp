@@ -19,7 +19,6 @@ void GPUParticleEmitterBehaviour::Start()
 
 void GPUParticleEmitterBehaviour::Update()
 {
-	gParticleEmitter->Update();
 }
 
 void GPUParticleEmitterBehaviour::OnDraw()
@@ -55,4 +54,9 @@ void GPUParticleEmitterBehaviour::DispatchInitializeShader()
 {
 	if (!pInitializeComputeShader)return;
 	gParticleEmitter->Draw(nullptr, pInitializeComputeShader, gameObject->GetTransform()->position);
+}
+
+void GPUParticleEmitterBehaviour::ExternalUpdate()
+{
+	gParticleEmitter->Update();
 }

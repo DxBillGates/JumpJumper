@@ -65,30 +65,30 @@ StructuredBuffer<TestData> addVector : register(t0);
 [numthreads(128, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-	if (real[DTid.x].vel.w < 0)
-	{
-		real[DTid.x].pos.xyz = addVector[0].pos.xyz;
-		real[DTid.x].vel.xyz = float3(0, 0, 0);
-		real[DTid.x].vel.w = 0;
-	}
+	//if (real[DTid.x].isDead)
+	//{
+	//	real[DTid.x].pos.xyz = addVector[0].pos.xyz;
+	//	real[DTid.x].vel.xyz = float3(0, 0, 0);
+	//	real[DTid.x].vel.w = 0;
+	//}
 
-	//Žõ–½‚ÌÝ’è
-	float maxSec = 1;
+	////Žõ–½‚ÌÝ’è
+	//float maxSec = 1;
 
-	//Žõ–½‚Ì‰ÁŽZ
-	float frame = 1.0f / 60.0f;
-	float minR = frame / 10;
-	float maxR = frame;
+	////Žõ–½‚Ì‰ÁŽZ
+	//float frame = 1.0f / 60.0f;
+	//float minR = frame / 10;
+	//float maxR = frame;
 
-	float3 random = GetRandomVector(GetRandomVector(DTid.x), float3(minR, minR, minR), float3(maxR, maxR, maxR));
-	real[DTid.x].vel.w -= (random.x + random.y + random.z) / 3.0f;
+	//float3 random = GetRandomVector(GetRandomVector(DTid.x), float3(minR, minR, minR), float3(maxR, maxR, maxR));
+	//real[DTid.x].vel.w -= (random.x + random.y + random.z) / 3.0f;
 
-	real[DTid.x].pos.xyz += real[DTid.x].vel.xyz / 10;
+	//real[DTid.x].pos.xyz += real[DTid.x].vel.xyz / 10;
 
-	if (real[DTid.x].vel.w < 0)
-	{
-		real[DTid.x].pos.xyz = addVector[0].pos.xyz;
-		real[DTid.x].vel.xyz = float3(0, 0, 0);
-		real[DTid.x].vel.w = 0;
-	}
+	//if (real[DTid.x].vel.w < 0)
+	//{
+	//	real[DTid.x].pos.xyz = addVector[0].pos.xyz;
+	//	real[DTid.x].vel.xyz = float3(0, 0, 0);
+	//	real[DTid.x].vel.w = 0;
+	//}
 }

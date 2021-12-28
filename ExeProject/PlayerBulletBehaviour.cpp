@@ -24,6 +24,7 @@ void BulletBehaviour::Update()
 {
 	if (isUse)
 	{
+		gpuParticleEmitter->ExternalUpdate();
 		if (!isHoming)
 		{
 			vel += shotVector;
@@ -70,24 +71,12 @@ void BulletBehaviour::OnDraw()
 
 void BulletBehaviour::OnSecondDraw()
 {
-	if (!isUse)
-	{
-		gpuParticleEmitter->DispatchInitializeShader();
-		return;
-	}
 	if (!gpuParticleEmitter)return;
 	gpuParticleEmitter->ExternalDraw();
 }
 
 void BulletBehaviour::OnLateDraw()
 {
-	//if (!isUse)
-	//{
-	//	gpuParticleEmitter->DispatchInitializeShader();
-	//	return;
-	//}
-	//if (!gpuParticleEmitter)return;
-	//gpuParticleEmitter->ExternalDraw();
 }
 
 void BulletBehaviour::OnCollision(GatesEngine::Collider* otherCollider)

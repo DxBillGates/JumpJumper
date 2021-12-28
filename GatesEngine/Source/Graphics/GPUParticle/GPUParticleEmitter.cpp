@@ -157,6 +157,7 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 		particleData[useParticleOffset + i].vel = particleData[useParticleOffset + i].vel.Normalize();
 		particleData[useParticleOffset + i].vel.w = GatesEngine::Random::Rand(0,1);
 		particleData[useParticleOffset + i].isDead = true;
+		particleData[useParticleOffset + i].state = 3;
 	}
 
 	//memcpy(updateParticleData + useParticleOffset, particleData + useParticleOffset, sizeof(ParticleData) * useParticleValue);
