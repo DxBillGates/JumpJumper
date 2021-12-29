@@ -58,7 +58,7 @@ void GatesEngine::GPUParticleEmitter::Update()
 void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel)
 {
 	addData[0].pos = { pos.x,pos.y,pos.z,0 };
-	addData[0].vel = addVel;
+	//addData[0].vel = addVel;
 
 	GraphicsDevice* graphicsDevice = manager->GetDevice();
 	graphicsDevice->GetCBVSRVUAVHeap()->Set();
@@ -166,4 +166,9 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	//date.assign((ParticleData*)updateParticleData + useParticleOffset, (ParticleData*)updateParticleData + useParticleOffset + useParticleValue);
 
 	this->manager = manager;
+}
+
+GatesEngine::ParticleData* GatesEngine::GPUParticleEmitter::GetAddData()
+{
+	return addData;
 }

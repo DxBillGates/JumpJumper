@@ -26,5 +26,6 @@ namespace GatesEngine
 		virtual void Update();
 		virtual void Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel = {});
 		void Create(GPUParticleManager* manager,UINT useParticleValue);
+		ParticleData* GetAddData();
 	};
 }
