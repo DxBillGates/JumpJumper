@@ -59,7 +59,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	, playerBehaviour(nullptr)
 	, testCS(nullptr)
 	, gpuParticleManager(nullptr)
-	, gpuParticleEmitter({})
 {
 	//GPUパーティクル用のコンピュートシェーダー読み込み
 	testCS = new GatesEngine::ComputePipeline(graphicsDevice, L"test");
@@ -69,9 +68,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	testInitializeCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV });
 
 	//GPUパーティクル用のマネージャー生成
-	gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
-	//GPUパーティクルマネージャーからパーティクル1万個確保
-	gpuParticleEmitter.Create(gpuParticleManager, 1000);
+	//gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
+	gpuParticleManager = graphicsDevice->GetParticleManager();
 
 	////八分木空間分割すり抜けバグ多発したため一旦なし
 	//collisionManager.Initialize(5, { -10000,-100,-10000 }, { 10000 });
@@ -295,7 +293,6 @@ void Stage1Scene::Initialize()
 void Stage1Scene::Update()
 {
 	gameState.Update(app->GetTimer()->GetElapsedTime());
-	gpuParticleEmitter.Update();
 	enemyManager.Update(battleCount);
 	gameObjectManager.Update();
 	////八分木空間分割すり抜けバグ多発したため一旦なし

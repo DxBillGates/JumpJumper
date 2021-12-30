@@ -6,6 +6,7 @@
 #include "..\..\Header\Graphics\CBufferAllocater.h"
 #include "..\..\Header\Graphics\DepthStencil.h"
 #include "..\..\Header\Graphics\Camera.h"
+#include "..\..\Header\Graphics\GPUParticle\GPUParticleManager.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -33,6 +34,7 @@ GatesEngine::GraphicsDevice::GraphicsDevice()
 	, cbvSrvUavHeap(nullptr)
 	, cBufferAllocater(nullptr)
 	, mainCamera(nullptr)
+	, particleManager(nullptr)
 {
 #ifdef _DEBUG
 	HRESULT result;
@@ -72,6 +74,7 @@ GatesEngine::GraphicsDevice::~GraphicsDevice()
 	delete descriptorHeapManager;
 	delete cBufferAllocater;
 	delete cbvSrvUavHeap;
+	delete particleManager;
 }
 
 bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
@@ -96,6 +99,7 @@ bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
 	cBufferAllocater->SetHeap(cbvSrvUavHeap);
 	cBufferAllocater->Create();
 
+	particleManager = new GPUParticleManager(this);
 
 	return true;
 }
@@ -401,6 +405,11 @@ GatesEngine::CBufferAllocater* GatesEngine::GraphicsDevice::GetCBufferAllocater(
 GatesEngine::Camera* GatesEngine::GraphicsDevice::GetMainCamera()
 {
 	return mainCamera;
+}
+
+GatesEngine::GPUParticleManager* GatesEngine::GraphicsDevice::GetParticleManager()
+{
+	return particleManager;
 }
 
 void GatesEngine::GraphicsDevice::CreateDxgiFactory()

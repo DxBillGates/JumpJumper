@@ -20,7 +20,6 @@ private:
 	GatesEngine::ComputePipeline* testCS;
 	GatesEngine::ComputePipeline* testInitializeCS;
 	GatesEngine::GPUParticleManager* gpuParticleManager;
-	GatesEngine::GPUParticleEmitter gpuParticleEmitter;
 
 	GatesEngine::RenderTexture shadowRenderTex;
 	GatesEngine::DepthStencilTexture shadowDepthTex;

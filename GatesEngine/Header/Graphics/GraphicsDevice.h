@@ -14,6 +14,7 @@ namespace GatesEngine
 	class CBufferAllocater;
 	class DepthStencil;
 	class Camera;
+	class GPUParticleManager;
 	class GraphicsDevice
 	{
 	private:
@@ -42,6 +43,7 @@ namespace GatesEngine
 		CBufferAllocater* cBufferAllocater;
 
 		Camera* mainCamera;
+		GPUParticleManager* particleManager;
 	private:
 		void CreateDxgiFactory();
 		void CreateDevice();
@@ -185,5 +187,7 @@ namespace GatesEngine
 		/// </summary>
 		/// <returns>メインカメラのポインタ</returns>
 		Camera* GetMainCamera();
+
+		GPUParticleManager* GetParticleManager();
 	};
 }
