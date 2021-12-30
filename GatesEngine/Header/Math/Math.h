@@ -10,6 +10,11 @@ namespace GatesEngine
 {
 	namespace Math
 	{
+		struct GaussFilterData
+		{
+			GatesEngine::Math::Vector4 data[16];
+		};
+
 		const float PI = 3.14159265f;
 
 		/// <summary>
@@ -27,5 +32,10 @@ namespace GatesEngine
 		/// <param name="t">タイム</param>
 		/// <returns>線形補間の値</returns>
 		float Lerp(float s, float e, float t);
+
+		// ガウシアンフィルタの重みを計算する関数
+		float GaussFilter(const GatesEngine::Math::Vector2& pos, float value);
+		// 参照ピクセルへの情報とガウシアンフィルタの重みを計算してセットする関数
+		void SetGaussFilterData(const GatesEngine::Math::Vector2& size, GatesEngine::Math::Vector2& dir, float gaussValue, GaussFilterData* data, int dataSize);
 	}
 }

@@ -153,6 +153,7 @@ void GameObjectCollisionManager::CheckCollisionHitEnemyToCameraRay()
 
 void GameObjectCollisionManager::CheckCollisionHitBossTo()
 {
+	if (!bossCollider)return;
 	for (auto& pBullet : playerBulletColliders)
 	{
 		if (!pBullet->GetEnabled())continue;

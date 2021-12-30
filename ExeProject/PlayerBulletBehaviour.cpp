@@ -22,9 +22,9 @@ void BulletBehaviour::Start()
 
 void BulletBehaviour::Update()
 {
-		gpuParticleEmitter->ExternalUpdate();
 	if (isUse)
 	{
+		gpuParticleEmitter->ExternalUpdate();
 		if (!isHoming)
 		{
 			vel += shotVector;

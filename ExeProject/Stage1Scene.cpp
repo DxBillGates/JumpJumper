@@ -68,7 +68,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	testInitializeCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV });
 
 	//GPUパーティクル用のマネージャー生成
-	//gpuParticleManager = new GatesEngine::GPUParticleManager(graphicsDevice);
 	gpuParticleManager = graphicsDevice->GetParticleManager();
 
 	////八分木空間分割すり抜けバグ多発したため一旦なし
@@ -278,7 +277,7 @@ Stage1Scene::~Stage1Scene()
 {
 	delete testCS;
 	delete testInitializeCS;
-	delete gpuParticleManager;
+	//delete gpuParticleManager;
 }
 
 void Stage1Scene::Initialize()
@@ -606,32 +605,32 @@ void Stage1Scene::LateDraw()
 		meshManager->GetMesh("2DPlane")->Draw();
 	}
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[0]);
-	shaderManager->GetShader("TextureSpriteShader")->Set();
+	//graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[0]);
+	//shaderManager->GetShader("TextureSpriteShader")->Set();
 
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	blurRenderTextures[5].Set(3);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//blurRenderTextures[5].Set(3);
 
-	meshManager->GetMesh("2DPlane")->Draw();
+	//meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[1]);
-	shaderManager->GetShader("TextureSpriteShader")->Set();
+	//graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[1]);
+	//shaderManager->GetShader("TextureSpriteShader")->Set();
 
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	reverceResoTextures[0].Set(3);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//reverceResoTextures[0].Set(3);
 
-	meshManager->GetMesh("2DPlane")->Draw();
+	//meshManager->GetMesh("2DPlane")->Draw();
 
-	graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[2]);
-	shaderManager->GetShader("TextureSpriteShader")->Set();
+	//graphicsDevice->ClearRenderTarget({ 0,0,0,1 }, true, &reverceResoTextures[2]);
+	//shaderManager->GetShader("TextureSpriteShader")->Set();
 
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	blurRenderTextures[3].Set(3);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	//blurRenderTextures[3].Set(3);
 
-	meshManager->GetMesh("2DPlane")->Draw();
+	//meshManager->GetMesh("2DPlane")->Draw();
 
 
 	//graphicsDevice->ClearRenderTarget({ 0,0,0, 255 }, true, &blurRenderTexture);

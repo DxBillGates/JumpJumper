@@ -156,6 +156,9 @@
     <ClCompile Include="TitleButtonUIBehaviour.cpp" />
     <ClCompile Include="TitleManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="TutorialSystem.cpp" />
+    <ClCompile Include="TutorialUI.cpp" />
+    <ClCompile Include="TutorialUIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GatesEngine\GatesEngine.vcxproj">
@@ -189,6 +192,10 @@
     <ClInclude Include="TitleButtonUIBehaviour.h" />
     <ClInclude Include="TitleManager.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="TutorialState.h" />
+    <ClInclude Include="TutorialSystem.h" />
+    <ClInclude Include="TutorialUI.h" />
+    <ClInclude Include="TutorialUIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\BloomPS.hlsl">
