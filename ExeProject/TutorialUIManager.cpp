@@ -33,8 +33,8 @@ TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 				auto& addUI = parent.uies.back();
 				addUI = parent.uies.back();
 				addUI.SetPosition({ offset[i] });
-				addUI.SetScale({ 100 });
-				addUI.SetScaleWeight({});
+				addUI.SetScale({ 50/2 });
+				addUI.SetScaleWeight({100});
 				addUI.SetColor({ 1,0,0,1 });
 				addUI.SetGraphicsDevice(device);
 			}

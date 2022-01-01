@@ -34,7 +34,6 @@ void TutorialSystem::Update()
 	//}
 	tutorialUIManager.SetCurrentState(currentState);
 	tutorialUIManager.Update(currentStateClearCount, isUIScaleAnimation);
-
 	isUIScaleAnimation = false;
 }
 
@@ -57,4 +56,9 @@ void TutorialSystem::TransCurrentState()
 		currentState = (TutorialState)(nextState);
 		currentStateClearCount = 0;
 	}
+}
+
+void TutorialSystem::ChangeCurrentState(TutorialState setState)
+{
+	currentState = setState;
 }

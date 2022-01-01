@@ -19,5 +19,6 @@ public:
 	void Draw();
 	void AddClearCount();
 	void TransCurrentState();
+	void ChangeCurrentState(TutorialState setState);
 };
 

@@ -25,16 +25,21 @@ void TutorialUI::Update()
 	if (!scaleAnimationFlag)return;
 	if (easeingTime >= 1)
 	{
+		easeingTime = 1;
 		scaleAnimationFlag = false;
 	}
 
 	const float PER_FRAME = 1.0f / 60.0f;
-	easeingTime += PER_FRAME;
+
+	if (scaleAnimationFlag)
+	{
+		easeingTime += PER_FRAME;
+	}
 }
 
 void TutorialUI::Draw()
 {
-	float easeingValue = GatesEngine::Math::Easing::EaseInExpo(easeingTime);
+	float easeingValue = GatesEngine::Math::Easing::EaseOutBack(easeingTime);
 	GatesEngine::Math::Vector3 drawScale = GatesEngine::Math::Vector3::Lerp(scale, scaleWeight, easeingValue);
 
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
