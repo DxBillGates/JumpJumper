@@ -12,6 +12,7 @@ NormalAttackTask::~NormalAttackTask()
 void NormalAttackTask::Initialize()
 {
 	if (!player)errorTaskFlag = true;
+	TutorialTask::Initialize();
 }
 
 void NormalAttackTask::Update()

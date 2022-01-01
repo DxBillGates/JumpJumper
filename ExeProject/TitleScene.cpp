@@ -93,7 +93,7 @@ void TitleScene::Update()
 		switch (sceneTransType)
 		{
 		case ButtonUIType::START:
-			app->GetSceneManager()->ChangeScene("Stage1Scene");
+			app->GetSceneManager()->ChangeScene("SampleScene");
 			app->Initialize();
 			break;
 		case ButtonUIType::EXIT:

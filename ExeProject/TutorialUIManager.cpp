@@ -33,8 +33,8 @@ TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 				auto& addUI = parent.uies.back();
 				addUI = parent.uies.back();
 				addUI.SetPosition({ offset[i] });
-				addUI.SetScale({ 50/2 });
-				addUI.SetScaleWeight({100});
+				addUI.SetScale({ 50 / 2 });
+				addUI.SetScaleWeight({ 100 });
 				addUI.SetColor({ 1,0,0,1 });
 				addUI.SetGraphicsDevice(device);
 			}
@@ -66,6 +66,13 @@ TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 
 void TutorialUIManager::Initialize()
 {
+	for (auto& parent : tutorialUI)
+	{
+		for (auto& ui : parent.uies)
+		{
+			ui.Initialize();
+		}
+	}
 }
 
 void TutorialUIManager::Update(int currentClearCount, bool isAnimation)
@@ -76,7 +83,7 @@ void TutorialUIManager::Update(int currentClearCount, bool isAnimation)
 		{
 			if (isAnimation)
 			{
-				int offset = clearUIoffset + currentClearCount-1;
+				int offset = clearUIoffset + currentClearCount - 1;
 				if (offset < 0)offset = 0;
 				parent.uies[offset].SetScaleAnimationFlag(true);
 			}

@@ -19,6 +19,7 @@ TutorialTask::TutorialTask()
 	: preClearFlag(false)
 	, clearFlag(false)
 	, errorTaskFlag(false)
+	, clearTaskCount(0)
 {
 }
 
@@ -29,6 +30,7 @@ TutorialTask::~TutorialTask()
 void TutorialTask::Initialize()
 {
 	preClearFlag = clearFlag = errorTaskFlag = false;
+	clearTaskCount = 0;
 }
 
 void TutorialTask::Update()

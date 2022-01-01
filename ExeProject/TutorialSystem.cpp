@@ -9,6 +9,12 @@ TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	, transStateFlag(false)
 	, currentStateClearCount(0)
 	, tutorialUIManager(device)
+	, transStateIntervalFlag(false)
+	, transStateIntervalTime(0)
+	, preEndTutorialFlag(false)
+	, endTutorialTime(0)
+	, MAX_END_TUTORIAL_TIME(10)
+	, endTutorialFlag(false)
 {
 	tutorialTasks.push_back(new NormalAttackTask());
 	tutorialTasks.push_back(new LockonAttackTask());
@@ -33,6 +39,16 @@ void TutorialSystem::Initialize()
 	{
 		task->Initialize();
 	}
+
+	currentState = TutorialState::NORMAL_ATTACK;
+	isUIScaleAnimation = false;
+	transStateFlag = false;
+	currentStateClearCount = 0;
+	transStateIntervalFlag = false;
+	transStateIntervalTime = 0;
+	preEndTutorialFlag = false;
+	endTutorialTime = 0;
+	endTutorialFlag = false;
 }
 
 void TutorialSystem::Update()
@@ -44,9 +60,9 @@ void TutorialSystem::Update()
 		TransCurrentState();
 	}
 
+	const float PER_FRAME = 1.0f / 60.0f;
 	if (transStateIntervalFlag)
 	{
-		const float PER_FRAME = 1.0f / 60.0f;
 		const float INTERVAL = 10;
 		transStateIntervalTime += PER_FRAME / INTERVAL;
 	}
@@ -64,6 +80,16 @@ void TutorialSystem::Update()
 			AddClearCount();
 		}
 		tutorialTasks[currentIntState]->Update();
+	}
+
+	if (endTutorialTime > 1)
+	{
+		Initialize();
+		endTutorialFlag = true;
+	}
+	if (preEndTutorialFlag)
+	{
+		endTutorialTime += PER_FRAME / MAX_END_TUTORIAL_TIME;
 	}
 
 	//if (transStateFlag)
@@ -96,6 +122,7 @@ void TutorialSystem::AddClearCount()
 {
 	isUIScaleAnimation = true;
 	++currentStateClearCount;
+	if (currentStateClearCount > 3)currentStateClearCount = 3;
 }
 
 void TutorialSystem::TransCurrentState()
@@ -105,6 +132,10 @@ void TutorialSystem::TransCurrentState()
 	{
 		currentState = (TutorialState)(nextState);
 		currentStateClearCount = 0;
+	}
+	else
+	{
+		preEndTutorialFlag = true;
 	}
 }
 
@@ -128,4 +159,9 @@ void TutorialSystem::SetPlayerBehaviour(PlayerBehaviour* player)
 	EmitteAttackTask* emitteAttackTask = dynamic_cast<EmitteAttackTask*>(tutorialTasks[2]);
 	if (!emitteAttackTask)return;
 	emitteAttackTask->SetPlayer(player);
+}
+
+bool TutorialSystem::GetEndTutorialFlag()
+{
+	return endTutorialFlag;
 }

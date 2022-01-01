@@ -48,6 +48,13 @@ private:
 
 	GatesEngine::RenderTexture blurRenderTextures[6];
 	TutorialSystem* tutorialSystem;
+
+	bool isIncreaseBlack;
+	bool isDecreaseBlack;
+	bool isSceneTransition;
+	float black;
+	GatesEngine::RenderTexture sceneRenderTexture;
+	GatesEngine::DepthStencilTexture sceneDepthTexture;
 public:
 	SampleScene();
 	SampleScene(const char* sceneName);

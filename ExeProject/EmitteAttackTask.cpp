@@ -12,6 +12,7 @@ EmitteAttackTask::~EmitteAttackTask()
 void EmitteAttackTask::Initialize()
 {
 	if (!player)errorTaskFlag = true;
+	TutorialTask::Initialize();
 }
 
 void EmitteAttackTask::Update()

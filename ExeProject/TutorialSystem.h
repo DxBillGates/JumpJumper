@@ -18,6 +18,12 @@ private:
 
 	bool transStateIntervalFlag;
 	float transStateIntervalTime;
+
+	bool preEndTutorialFlag;
+	float endTutorialTime;
+	const float MAX_END_TUTORIAL_TIME;
+
+	bool endTutorialFlag;
 public:
 	TutorialSystem(GatesEngine::GraphicsDevice* device);
 	~TutorialSystem();
@@ -28,5 +34,6 @@ public:
 	void TransCurrentState();
 	void ChangeCurrentState(TutorialState setState);
 	void SetPlayerBehaviour(PlayerBehaviour* player);
+	bool GetEndTutorialFlag();
 };
 

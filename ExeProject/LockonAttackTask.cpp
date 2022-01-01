@@ -12,6 +12,7 @@ LockonAttackTask::~LockonAttackTask()
 void LockonAttackTask::Initialize()
 {
 	if (!player)errorTaskFlag = true;
+	TutorialTask::Initialize();
 }
 
 void LockonAttackTask::Update()
