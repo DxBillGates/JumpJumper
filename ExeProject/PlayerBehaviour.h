@@ -43,6 +43,8 @@ private:
 	float moveVelDecayTime;
 
 	bool normalAttackFlag;
+	bool lockonAttackFlag;
+	bool emitteAttackFlag;
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”
@@ -105,4 +107,6 @@ public:
 	void AddTarget(GatesEngine::GameObject* other);
 	int GetHp();
 	bool GetNormalAttackFlag();
+	bool GetLockonAttackFlag();
+	bool GetEmitteAttackFlag();
 };

@@ -1,5 +1,7 @@
 #include "TutorialSystem.h"
 #include "NormalAttackTask.h"
+#include "LockonAttackTask.h"
+#include "EmitteAttackTask.h"
 
 TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	: currentState(TutorialState::NORMAL_ATTACK)
@@ -9,6 +11,8 @@ TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	, tutorialUIManager(device)
 {
 	tutorialTasks.push_back(new NormalAttackTask());
+	tutorialTasks.push_back(new LockonAttackTask());
+	tutorialTasks.push_back(new EmitteAttackTask());
 }
 
 TutorialSystem::~TutorialSystem()
@@ -116,4 +120,12 @@ void TutorialSystem::SetPlayerBehaviour(PlayerBehaviour* player)
 	NormalAttackTask* normalAttackTask = dynamic_cast<NormalAttackTask*>(tutorialTasks[0]);
 	if (!normalAttackTask)return;
 	normalAttackTask->SetPlayer(player);
+
+	LockonAttackTask* lockonAttackTask = dynamic_cast<LockonAttackTask*>(tutorialTasks[1]);
+	if (!lockonAttackTask)return;
+	lockonAttackTask->SetPlayer(player);
+
+	EmitteAttackTask* emitteAttackTask = dynamic_cast<EmitteAttackTask*>(tutorialTasks[2]);
+	if (!emitteAttackTask)return;
+	emitteAttackTask->SetPlayer(player);
 }

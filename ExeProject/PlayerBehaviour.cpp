@@ -207,7 +207,7 @@ void PlayerBehaviour::Attack()
 				isShot = true;
 				isShotInterval = true;
 				normalAttackFlag = true;
-				GatesEngine::Utility::Printf("Shot\n");
+				//GatesEngine::Utility::Printf("Shot\n");
 			}
 		}
 		else
@@ -269,6 +269,7 @@ void PlayerBehaviour::LockOnAttack()
 			}
 		}
 
+		lockonAttackFlag = true;
 		currentFrameTargetCount = 0;
 		ClearTargets();
 	}
@@ -282,6 +283,7 @@ void PlayerBehaviour::EmittionAttack()
 	//// 左クリックを離していないなら関数を終了
 	//if (!input->GetMouse()->GetCheckReleaseTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))return;
 
+	bool isShot = false;
 	int useCount = 0;
 	for (auto& b : bullets)
 	{
@@ -292,9 +294,11 @@ void PlayerBehaviour::EmittionAttack()
 
 
 		b->Shot(cameraAxis.z, 1, cameraAxis);
-
+		isShot = true;
 		++useCount;
 	}
+
+	emitteAttackFlag = isShot;
 }
 
 void PlayerBehaviour::ClearTargets()
@@ -368,6 +372,9 @@ void PlayerBehaviour::Start()
 void PlayerBehaviour::Update()
 {
 	normalAttackFlag = false;
+	lockonAttackFlag = false;
+	emitteAttackFlag = false;
+
 	for (auto& t : targets)
 	{
 		t.Update();
@@ -527,8 +534,6 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 			break;
 		}
 	}
-
-
 }
 
 int PlayerBehaviour::GetHp()
@@ -539,4 +544,14 @@ int PlayerBehaviour::GetHp()
 bool PlayerBehaviour::GetNormalAttackFlag()
 {
 	return normalAttackFlag;
+}
+
+bool PlayerBehaviour::GetLockonAttackFlag()
+{
+	return lockonAttackFlag;
+}
+
+bool PlayerBehaviour::GetEmitteAttackFlag()
+{
+	return emitteAttackFlag;
 }
