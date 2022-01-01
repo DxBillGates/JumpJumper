@@ -187,6 +187,7 @@ SampleScene::~SampleScene()
 
 void SampleScene::Initialize()
 {
+	tutorialSystem->SetPlayerBehaviour(playerBehaviour);
 	tutorialSystem->Initialize();
 	gameObjectManager.Start();
 	stage.GetCollisionManager()->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));

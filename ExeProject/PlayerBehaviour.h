@@ -41,6 +41,8 @@ private:
 	float decayTime;
 
 	float moveVelDecayTime;
+
+	bool normalAttackFlag;
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”
@@ -102,4 +104,5 @@ public:
 	void AddBullet(Bullet* newBullet);
 	void AddTarget(GatesEngine::GameObject* other);
 	int GetHp();
+	bool GetNormalAttackFlag();
 };

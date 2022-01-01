@@ -6,6 +6,7 @@
 #include "Header/Math/Vector3.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Graphics/Camera2D.h"
+#include "Header/Util/Utility.h"
 
 void PlayerBehaviour::SetVelocity()
 {
@@ -182,6 +183,10 @@ void PlayerBehaviour::Attack()
 	{
 		shotInterval -= PER_FRAME;
 	}
+	else
+	{
+		shotInterval = MAX_SHOT_INTERVAL;
+	}
 
 	if (shotInterval < 0)
 	{
@@ -201,6 +206,8 @@ void PlayerBehaviour::Attack()
 				(*bullets[i]).Shot(cameraAxis.z.Normalize());
 				isShot = true;
 				isShotInterval = true;
+				normalAttackFlag = true;
+				GatesEngine::Utility::Printf("Shot\n");
 			}
 		}
 		else
@@ -360,6 +367,7 @@ void PlayerBehaviour::Start()
 
 void PlayerBehaviour::Update()
 {
+	normalAttackFlag = false;
 	for (auto& t : targets)
 	{
 		t.Update();
@@ -526,4 +534,9 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 int PlayerBehaviour::GetHp()
 {
 	return hp;
+}
+
+bool PlayerBehaviour::GetNormalAttackFlag()
+{
+	return normalAttackFlag;
 }

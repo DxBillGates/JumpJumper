@@ -140,6 +140,7 @@
     <ClCompile Include="GPUParticleEmitterBehaviour.cpp" />
     <ClCompile Include="LockonTarget.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NormalAttackTask.cpp" />
     <ClCompile Include="NormalEnemyBehaviour.cpp" />
     <ClCompile Include="PlayerBehaviour.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="TitleManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TutorialSystem.cpp" />
+    <ClCompile Include="TutorialTask.cpp" />
     <ClCompile Include="TutorialUI.cpp" />
     <ClCompile Include="TutorialUIManager.cpp" />
   </ItemGroup>
@@ -176,6 +178,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GPUParticleEmitterBehaviour.h" />
     <ClInclude Include="LockonTarget.h" />
+    <ClInclude Include="NormalAttackTask.h" />
     <ClInclude Include="NormalEnemyBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="PlayerBullet.h" />
@@ -194,6 +197,7 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TutorialState.h" />
     <ClInclude Include="TutorialSystem.h" />
+    <ClInclude Include="TutorialTask.h" />
     <ClInclude Include="TutorialUI.h" />
     <ClInclude Include="TutorialUIManager.h" />
   </ItemGroup>
