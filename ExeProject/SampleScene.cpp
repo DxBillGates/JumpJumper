@@ -242,7 +242,8 @@ void SampleScene::Update()
 		isIncreaseBlack = false;
 	}
 
-	tutorialSystem->Update();
+	bool isCurrentSceneTransMode = !(!isIncreaseBlack && !isDecreaseBlack);
+	tutorialSystem->Update(isCurrentSceneTransMode);
 	stage.Update();
 	gpuParticleManager->Update();
 	gameObjectManager.Update();

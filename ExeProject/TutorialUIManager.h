@@ -19,7 +19,7 @@ private:
 public:
 	TutorialUIManager(GatesEngine::GraphicsDevice* device);
 	void Initialize();
-	void Update(int currentClearCount,bool isAnimation);
+	void Update(int currentClearCount,bool isAnimation,bool endScene = false);
 	void Draw();
 	void SetCurrentState(TutorialState currentState);
 	TutorialUI* GetCurrentUIInfo(int currentClearCount);

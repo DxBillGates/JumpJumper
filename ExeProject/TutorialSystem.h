@@ -28,7 +28,7 @@ public:
 	TutorialSystem(GatesEngine::GraphicsDevice* device);
 	~TutorialSystem();
 	void Initialize();
-	void Update();
+	void Update(bool sceneTransFlag = false);
 	void Draw();
 	void AddClearCount();
 	void TransCurrentState();

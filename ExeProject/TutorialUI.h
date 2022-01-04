@@ -13,6 +13,16 @@ private:
 	GatesEngine::Math::Vector4 color;
 	bool scaleAnimationFlag;
 	float easeingTime;
+
+	bool firstEndFlag;
+	bool endStartFlag;
+	bool startEndFlag;
+	bool startWeightAnimationFlag;
+	bool startHeightAnimationFlag;
+	bool endWeightAnimationFlag;
+	bool endHeightAnimationFlag;
+	float startAndEndWeightAnimationTime;
+	float startAndEndHeightAnimationTime;
 public:
 	TutorialUI();
 	void Initialize();
@@ -25,6 +35,8 @@ public:
 	void SetScaleWeight(const GatesEngine::Math::Vector3& vec);
 	void SetColor(const GatesEngine::Math::Vector4& vec);
 	void SetScaleAnimationFlag(bool flag);
+	void SetEndFlag(bool flag);
 	bool GetScaleAnimationFlag();
+	bool GetStartFlag();
 };
 

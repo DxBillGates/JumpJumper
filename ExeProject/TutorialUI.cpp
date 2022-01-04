@@ -17,12 +17,21 @@ TutorialUI::TutorialUI()
 void TutorialUI::Initialize()
 {
 	scaleAnimationFlag = false;
+	endStartFlag = true;
+	startEndFlag = false;
+	startWeightAnimationFlag = true;
+	startHeightAnimationFlag = false;
+	startAndEndWeightAnimationTime = 0;
+	startAndEndHeightAnimationTime = 0;
+	endHeightAnimationFlag = false;
+	endWeightAnimationFlag = false;
 	easeingTime = 0;
+	firstEndFlag = false;
 }
 
 void TutorialUI::Update()
 {
-	if (!scaleAnimationFlag)return;
+	//if (!scaleAnimationFlag)return;
 	if (easeingTime >= 1)
 	{
 		easeingTime = 1;
@@ -35,12 +44,88 @@ void TutorialUI::Update()
 	{
 		easeingTime += PER_FRAME;
 	}
+
+	const float MAX_WEIGHT_ANIMATION_TIME = 1;
+	const float MAX_HEIGHT_ANIMATION_TIME = 1;
+	if (startEndFlag)
+	{
+		if (endHeightAnimationFlag && startAndEndHeightAnimationTime <= 0)
+		{
+			startAndEndHeightAnimationTime = 0;
+			endHeightAnimationFlag = false;
+			endWeightAnimationFlag = true;
+		}
+		else if (endWeightAnimationFlag && startAndEndWeightAnimationTime <= 0)
+		{
+			startAndEndWeightAnimationTime = 0;
+			endWeightAnimationFlag = false;
+			startEndFlag = false;
+		}
+
+		if (endHeightAnimationFlag)
+		{
+			startAndEndHeightAnimationTime -= PER_FRAME / MAX_HEIGHT_ANIMATION_TIME;
+		}
+		else if (endWeightAnimationFlag)
+		{
+			startAndEndWeightAnimationTime -= PER_FRAME / MAX_WEIGHT_ANIMATION_TIME;
+		}
+	}
+
+	if (endStartFlag)
+	{
+		if (startAndEndWeightAnimationTime >= 1)
+		{
+			startWeightAnimationFlag = false;
+			startAndEndWeightAnimationTime = 1;
+			startHeightAnimationFlag = true;
+		}
+		if (startAndEndHeightAnimationTime >= 1)
+		{
+			startHeightAnimationFlag = false;
+			startAndEndHeightAnimationTime = 1;
+			endStartFlag = false;
+		}
+	}
+	if (startWeightAnimationFlag)startAndEndWeightAnimationTime += PER_FRAME / MAX_WEIGHT_ANIMATION_TIME;
+	else if (startHeightAnimationFlag)startAndEndHeightAnimationTime += PER_FRAME / MAX_HEIGHT_ANIMATION_TIME;
 }
 
 void TutorialUI::Draw()
 {
 	float easeingValue = GatesEngine::Math::Easing::EaseOutBack(easeingTime);
-	GatesEngine::Math::Vector3 drawScale = GatesEngine::Math::Vector3::Lerp(scale, scaleWeight, easeingValue);
+
+	GatesEngine::Math::Vector3 drawScale;
+	if (startWeightAnimationFlag)
+	{
+		easeingValue = GatesEngine::Math::Easing::EaseOutBack(startAndEndWeightAnimationTime);
+		drawScale = GatesEngine::Math::Vector3::Lerp({ 0 }, { scale.x,scale.y / 10,0 }, easeingValue);
+	}
+	else if (startHeightAnimationFlag)
+	{
+		easeingValue = GatesEngine::Math::Easing::EaseOutBack(startAndEndHeightAnimationTime);
+		drawScale = GatesEngine::Math::Vector3::Lerp({ scale.x,0,0 }, { scale.x,scale.y,0 }, easeingValue);
+	}
+	else if (endHeightAnimationFlag)
+	{
+		easeingValue = GatesEngine::Math::Easing::EaseOutBack(1-startAndEndHeightAnimationTime);
+		drawScale = GatesEngine::Math::Vector3::Lerp({ scale.x,scale.y,0 } ,{ scale.x,scale.y / 10,0 }, easeingValue);
+	}
+	else if (endWeightAnimationFlag)
+	{
+		easeingValue = GatesEngine::Math::Easing::EaseOutBack(1-startAndEndWeightAnimationTime);
+		drawScale = GatesEngine::Math::Vector3::Lerp({ scale.x,scale.y / 10,0 } ,{ 0 }, easeingValue);
+	}
+	else
+	{
+		easeingValue = GatesEngine::Math::Easing::EaseOutBack(easeingTime);
+		drawScale = GatesEngine::Math::Vector3::Lerp(scale, scaleWeight, easeingValue);
+	}
+
+	if (!endHeightAnimationFlag && !endWeightAnimationFlag && firstEndFlag)
+	{
+		drawScale = {};
+	}
 
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
 	gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(drawScale) * GatesEngine::Math::Matrix4x4::Translate(pos));
@@ -84,7 +169,22 @@ void TutorialUI::SetScaleAnimationFlag(bool flag)
 	scaleAnimationFlag = flag;
 }
 
+void TutorialUI::SetEndFlag(bool flag)
+{
+	if (!firstEndFlag)
+	{
+		startEndFlag = flag;
+		endHeightAnimationFlag = flag;
+		firstEndFlag = flag;
+	}
+}
+
 bool TutorialUI::GetScaleAnimationFlag()
 {
 	return scaleAnimationFlag;
+}
+
+bool TutorialUI::GetStartFlag()
+{
+	return endStartFlag;
 }

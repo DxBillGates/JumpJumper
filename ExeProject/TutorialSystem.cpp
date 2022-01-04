@@ -51,7 +51,7 @@ void TutorialSystem::Initialize()
 	endTutorialFlag = false;
 }
 
-void TutorialSystem::Update()
+void TutorialSystem::Update(bool sceneTransFlag)
 {
 	if (transStateIntervalTime >= 1)
 	{
@@ -108,9 +108,12 @@ void TutorialSystem::Update()
 	//		transStateFlag = true;
 	//	}
 	//}
-	tutorialUIManager.SetCurrentState(currentState);
-	tutorialUIManager.Update(currentStateClearCount, isUIScaleAnimation);
-	isUIScaleAnimation = false;
+	if (!sceneTransFlag)
+	{
+		tutorialUIManager.SetCurrentState(currentState);
+		tutorialUIManager.Update(currentStateClearCount, isUIScaleAnimation,preEndTutorialFlag);
+		isUIScaleAnimation = false;
+	}
 }
 
 void TutorialSystem::Draw()

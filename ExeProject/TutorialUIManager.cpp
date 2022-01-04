@@ -75,7 +75,7 @@ void TutorialUIManager::Initialize()
 	}
 }
 
-void TutorialUIManager::Update(int currentClearCount, bool isAnimation)
+void TutorialUIManager::Update(int currentClearCount, bool isAnimation,bool endScene)
 {
 	for (auto& parent : tutorialUI)
 	{
@@ -85,10 +85,17 @@ void TutorialUIManager::Update(int currentClearCount, bool isAnimation)
 			{
 				int offset = clearUIoffset + currentClearCount - 1;
 				if (offset < 0)offset = 0;
-				parent.uies[offset].SetScaleAnimationFlag(true);
+				if (!parent.uies[offset].GetStartFlag())
+				{
+					parent.uies[offset].SetScaleAnimationFlag(true);
+				}
 			}
 			for (auto& ui : parent.uies)
 			{
+				if (endScene)
+				{
+					ui.SetEndFlag(true);
+				}
 				ui.Update();
 			}
 		}
