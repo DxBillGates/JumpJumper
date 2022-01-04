@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BlockBehaviour.cpp" />
+    <ClCompile Include="BoostMoveTask.cpp" />
     <ClCompile Include="BossBehaviour.cpp" />
     <ClCompile Include="ButtonUI.cpp" />
     <ClCompile Include="EmitteAttackTask.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlockBehaviour.h" />
+    <ClInclude Include="BoostMoveTask.h" />
     <ClInclude Include="BossBehaviour.h" />
     <ClInclude Include="ButtonUI.h" />
     <ClInclude Include="EmitteAttackTask.h" />

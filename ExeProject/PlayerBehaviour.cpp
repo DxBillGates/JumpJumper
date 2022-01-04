@@ -138,23 +138,31 @@ void PlayerBehaviour::Move()
 	GatesEngine::Math::Vector3 addVector;
 	if (doubleTapKeys[0])
 	{
-		addVector += playerAxis.z, doubleTapKeys[0] = false;
+		addVector += playerAxis.z;
+		doubleTapKeys[0] = false;
 		decayTime = 0;
+		boostMoveFlag = true;
 	}
 	if (doubleTapKeys[1])
 	{
-		addVector -= playerAxis.x, doubleTapKeys[1] = false;
+		addVector -= playerAxis.x;
+		doubleTapKeys[1] = false;
 		decayTime = 0;
+		boostMoveFlag = true;
 	}
 	if (doubleTapKeys[2])
 	{
-		addVector -= playerAxis.z, doubleTapKeys[2] = false;
+		addVector -= playerAxis.z;
+		doubleTapKeys[2] = false;
 		decayTime = 0;
+		boostMoveFlag = true;
 	}
 	if (doubleTapKeys[3])
 	{
-		addVector += playerAxis.x, doubleTapKeys[3] = false;
+		addVector += playerAxis.x;
+		doubleTapKeys[3] = false;
 		decayTime = 0;
+		boostMoveFlag = true;
 	}
 
 	DecayVelocity(addVel, decayTime, 1);
@@ -374,6 +382,7 @@ void PlayerBehaviour::Update()
 	normalAttackFlag = false;
 	lockonAttackFlag = false;
 	emitteAttackFlag = false;
+	boostMoveFlag = false;
 
 	for (auto& t : targets)
 	{
@@ -554,4 +563,9 @@ bool PlayerBehaviour::GetLockonAttackFlag()
 bool PlayerBehaviour::GetEmitteAttackFlag()
 {
 	return emitteAttackFlag;
+}
+
+bool PlayerBehaviour::GetBoostMoveFlag()
+{
+	return boostMoveFlag;
 }

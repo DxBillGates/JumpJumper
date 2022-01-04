@@ -18,12 +18,15 @@ private:
 
 	bool transStateIntervalFlag;
 	float transStateIntervalTime;
+	float preTransStateIntervalTime;
 
 	bool preEndTutorialFlag;
 	float endTutorialTime;
 	const float MAX_END_TUTORIAL_TIME;
 
 	bool endTutorialFlag;
+
+	bool endCurrentTutorialFlag;
 public:
 	TutorialSystem(GatesEngine::GraphicsDevice* device);
 	~TutorialSystem();

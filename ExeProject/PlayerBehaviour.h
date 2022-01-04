@@ -45,6 +45,7 @@ private:
 	bool normalAttackFlag;
 	bool lockonAttackFlag;
 	bool emitteAttackFlag;
+	bool boostMoveFlag;
 private:
 	/// <summary>
 	/// moveVel‚ÆjetVel‚Ì•â³‚Ævel‚É‘Î‚µ‚ÄƒZƒbƒg‚·‚éŠÖ”
@@ -109,4 +110,5 @@ public:
 	bool GetNormalAttackFlag();
 	bool GetLockonAttackFlag();
 	bool GetEmitteAttackFlag();
+	bool GetBoostMoveFlag();
 };

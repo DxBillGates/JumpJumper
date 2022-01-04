@@ -2,6 +2,7 @@
 #include "NormalAttackTask.h"
 #include "LockonAttackTask.h"
 #include "EmitteAttackTask.h"
+#include "BoostMoveTask.h"
 
 TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	: currentState(TutorialState::NORMAL_ATTACK)
@@ -19,6 +20,7 @@ TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	tutorialTasks.push_back(new NormalAttackTask());
 	tutorialTasks.push_back(new LockonAttackTask());
 	tutorialTasks.push_back(new EmitteAttackTask());
+	tutorialTasks.push_back(new BoostMoveTask());
 }
 
 TutorialSystem::~TutorialSystem()
@@ -46,13 +48,17 @@ void TutorialSystem::Initialize()
 	currentStateClearCount = 0;
 	transStateIntervalFlag = false;
 	transStateIntervalTime = 0;
+	preTransStateIntervalTime = 0;
 	preEndTutorialFlag = false;
 	endTutorialTime = 0;
 	endTutorialFlag = false;
+	endCurrentTutorialFlag = false;
 }
 
 void TutorialSystem::Update(bool sceneTransFlag)
 {
+	preTransStateIntervalTime = transStateIntervalTime;
+	endCurrentTutorialFlag = false;
 	if (transStateIntervalTime >= 1)
 	{
 		transStateIntervalFlag = false;
@@ -64,7 +70,13 @@ void TutorialSystem::Update(bool sceneTransFlag)
 	if (transStateIntervalFlag)
 	{
 		const float INTERVAL = 10;
+
 		transStateIntervalTime += PER_FRAME / INTERVAL;
+		float interval = INTERVAL / INTERVAL / 2;
+		if (preTransStateIntervalTime <= interval && transStateIntervalTime >= interval)
+		{
+			endCurrentTutorialFlag = true;
+		}
 	}
 
 	int currentIntState = (int)currentState;
@@ -111,7 +123,7 @@ void TutorialSystem::Update(bool sceneTransFlag)
 	if (!sceneTransFlag)
 	{
 		tutorialUIManager.SetCurrentState(currentState);
-		tutorialUIManager.Update(currentStateClearCount, isUIScaleAnimation,preEndTutorialFlag);
+		tutorialUIManager.Update(currentStateClearCount, isUIScaleAnimation,endCurrentTutorialFlag);
 		isUIScaleAnimation = false;
 	}
 }
@@ -162,6 +174,10 @@ void TutorialSystem::SetPlayerBehaviour(PlayerBehaviour* player)
 	EmitteAttackTask* emitteAttackTask = dynamic_cast<EmitteAttackTask*>(tutorialTasks[2]);
 	if (!emitteAttackTask)return;
 	emitteAttackTask->SetPlayer(player);
+
+	BoostMoveTask* boostMoveTask = dynamic_cast<BoostMoveTask*>(tutorialTasks[3]);
+	if (!boostMoveTask)return;
+	boostMoveTask->SetPlayer(player);
 }
 
 bool TutorialSystem::GetEndTutorialFlag()
