@@ -137,12 +137,7 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 
 		g->SetTag("enemy");
 		g->SetName("enemy");
-		float x, y, z;
-		float range = 3000;
-		x = Random::Rand(-range, range);
-		y = Random::Rand(-100, range);
-		z = Random::Rand(-range, range);
-		g->GetTransform()->position = { -1000,0,0 };
+		g->GetTransform()->position = { 0,3000,0 };
 		g->Start();
 
 		auto* bullet = gameObjectManager.Add(new GameObject());
@@ -233,7 +228,7 @@ void SampleScene::Update()
 	const float INCREASE_TIME = 2;
 	if (isIncreaseBlack)black += PER_FRAME / INCREASE_TIME;
 
-	const float DECREASE_TIME = 2;
+	const float DECREASE_TIME = 6;
 	if (isDecreaseBlack)black -= PER_FRAME / DECREASE_TIME;
 
 	if (black >= 1)
