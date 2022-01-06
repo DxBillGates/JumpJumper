@@ -1,7 +1,6 @@
 #include "..\..\Header\Graphics\GraphicsDevice.h"
 #include "..\..\Header\Graphics\COMRelease.h"
 #include "..\..\Header\Graphics\RenderTarget.h"
-#include "..\..\Header\Graphics\DescriptorHeapManager.h"
 #include "..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\Header\Graphics\CBufferAllocater.h"
 #include "..\..\Header\Graphics\DepthStencil.h"
@@ -30,7 +29,6 @@ GatesEngine::GraphicsDevice::GraphicsDevice()
 	, mDepthBuffer(nullptr)
 	, mFence(nullptr)
 	, mFenceValue(0)
-	, descriptorHeapManager(nullptr)
 	, cbvSrvUavHeap(nullptr)
 	, cBufferAllocater(nullptr)
 	, mainCamera(nullptr)
@@ -71,7 +69,6 @@ GatesEngine::GraphicsDevice::~GraphicsDevice()
 	COM_RELEASE(mDsvHeap);
 	COM_RELEASE(mFence);
 
-	delete descriptorHeapManager;
 	delete cBufferAllocater;
 	delete cbvSrvUavHeap;
 	delete particleManager;
@@ -88,11 +85,10 @@ bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
 	CreateDsv();
 	CreateFence();
 
-	descriptorHeapManager = new DescriptorHeapManager(this, 640, 64);
 	cbvSrvUavHeap = new CBVSRVUAVHeap();
 	cBufferAllocater = new CBufferAllocater();
 
-	cbvSrvUavHeap->SetGraphicsDevice(this);
+	cbvSrvUavHeap->SetGraphicsDevice(mDevice,mCmdList);
 	cbvSrvUavHeap->Create({ 100000,256,0 });
 
 	cBufferAllocater->SetGraphicsDevice(this);
@@ -291,11 +287,6 @@ void GatesEngine::GraphicsDevice::SetViewport(const Vector2& size, const Vector2
 	mRect = { 0,0,(int)size.x,(int)size.y };
 }
 
-void GatesEngine::GraphicsDevice::SetDescriptorHeap()
-{
-	descriptorHeapManager->Set();
-}
-
 void GatesEngine::GraphicsDevice::SetMultiRenderTarget(std::vector<RenderTarget*> renderTargets, DepthStencil* depthStencil, const Math::Vector4& clearColor)
 {
 	int renderTargetSize = (int)renderTargets.size();
@@ -384,11 +375,6 @@ ID3D12Resource* GatesEngine::GraphicsDevice::GetDepthBuffer()
 ID3D12DescriptorHeap* GatesEngine::GraphicsDevice::GetRtvHeap()
 {
 	return nullptr;
-}
-
-GatesEngine::DescriptorHeapManager* GatesEngine::GraphicsDevice::GetDescriptorHeapManager()
-{
-	return descriptorHeapManager;
 }
 
 GatesEngine::CBVSRVUAVHeap* GatesEngine::GraphicsDevice::GetCBVSRVUAVHeap()

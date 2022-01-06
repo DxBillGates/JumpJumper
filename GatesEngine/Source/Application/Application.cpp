@@ -12,17 +12,12 @@ GatesEngine::Application::Application(const Math::Vector2& wSize, const char* ti
 	, input(Input::GetInstance())
 	, sceneManager(SceneManager::GetInstance())
 	, gameObjectManager(GameObjectManager())
-	, worldLightInfo({})
 	, mainCamera(nullptr)
 {
 	mainWindow.Create(wSize, title);
 	mainWindow.PreviewWindow();
 	input->Create(mainWindow.GetHandle(), mainWindow.GetHInstance());
 	graphicsDevice.Create(&mainWindow);
-
-	worldLightInfo.Create(&graphicsDevice,3);
-	worldLightInfo.Map({ Math::Vector4(0,1,1,0).Normalize(),Math::Vector4(1,0,0,1) });
-
 
 	ResourceManager::Initialize(&graphicsDevice);
 }

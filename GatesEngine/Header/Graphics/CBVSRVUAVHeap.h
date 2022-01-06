@@ -1,12 +1,16 @@
 #pragma once
-#include "GraphicsDevice.h"
+//#include "GraphicsDevice.h"
+#include "..\Math\Vector3.h"
+#include <d3d12.h>
 
 namespace GatesEngine
 {
 	class CBVSRVUAVHeap
 	{
 	private:
-		GraphicsDevice* graphicsDevice;
+		//GraphicsDevice* graphicsDevice;
+		ID3D12Device* pDevice;
+		ID3D12GraphicsCommandList* pCmdList;
 		ID3D12DescriptorHeap* heap;
 		Math::Vector3 useCount;
 		bool isCreated;
@@ -23,7 +27,7 @@ namespace GatesEngine
 		/// GraphicsDeviceのポインタをセットする関数
 		/// </summary>
 		/// <param name="pGraphicsDevice">GraphicsDeviceのポインタ</param>
-		void SetGraphicsDevice(GraphicsDevice* pGraphicsDevice);
+		void SetGraphicsDevice(ID3D12Device* device,ID3D12GraphicsCommandList* cmdList);
 
 		/// <summary>
 		/// ヒープの生成関数

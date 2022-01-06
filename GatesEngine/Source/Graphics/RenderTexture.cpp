@@ -1,5 +1,4 @@
 #include "..\..\Header\Graphics\RenderTexture.h"
-#include "..\..\Header\Graphics\DescriptorHeapManager.h"
 #include "..\..\Header\Graphics\CBVSRVUAVHeap.h"
 #include "..\..\Header\Graphics\COMRelease.h"
 

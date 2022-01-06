@@ -153,12 +153,6 @@
     <ClInclude Include="Header\Graphics\Shader.h">
       <Filter>Header\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Header\Graphics\DescriptorHeapManager.h">
-      <Filter>Header\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\Graphics\CBuffer.h">
-      <Filter>Header\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Header\Graphics\CBufferStruct.h">
       <Filter>Header\Graphics</Filter>
     </ClInclude>
@@ -330,9 +324,6 @@
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Shader.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\DescriptorHeapManager.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Mesh.cpp">

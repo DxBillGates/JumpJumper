@@ -3,7 +3,6 @@
 #include "..\..\Header\Window\Window.h"
 #include "..\..\Header\Input\Input.h"
 #include "GraphicsDevice.h"
-#include "CBuffer.h"
 #include "CBufferStruct.h"
 namespace GatesEngine
 {

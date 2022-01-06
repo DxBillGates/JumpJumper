@@ -13,7 +13,7 @@
 
 float Stage1Scene::GaussFilter(const GatesEngine::Math::Vector2& pos, float value)
 {
-	return exp(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * value * value));
+	return expf(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * value * value));
 }
 
 void Stage1Scene::SetGaussFilterData(const GatesEngine::Math::Vector2& size, GatesEngine::Math::Vector2& dir, float gaussValue, GaussFilterData* data, int dataSize)
@@ -34,7 +34,7 @@ void Stage1Scene::SetGaussFilterData(const GatesEngine::Math::Vector2& size, Gat
 
 	for (int i = 0; i < 8; ++i)
 	{
-		data->data[i].z / totalWeight;
+		data->data[i].z /= totalWeight;
 	}
 
 	// 負の方向の値もセット

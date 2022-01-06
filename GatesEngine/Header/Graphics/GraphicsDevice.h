@@ -8,7 +8,6 @@
 
 namespace GatesEngine
 {
-	class DescriptorHeapManager;
 	class RenderTarget;
 	class CBVSRVUAVHeap;
 	class CBufferAllocater;
@@ -38,7 +37,6 @@ namespace GatesEngine
 		ID3D12Fence* mFence;
 		UINT64                       mFenceValue;
 
-		DescriptorHeapManager* descriptorHeapManager;
 		CBVSRVUAVHeap* cbvSrvUavHeap;
 		CBufferAllocater* cBufferAllocater;
 
@@ -110,11 +108,6 @@ namespace GatesEngine
 		void SetViewport(const Vector2& size, const Vector2& pos = {});
 
 		/// <summary>
-		/// DescriptorHeapをセットする関数
-		/// </summary>
-		void SetDescriptorHeap();
-
-		/// <summary>
 		/// レンダ―ターゲットを複数セットする関数
 		/// </summary>
 		/// <param name="renderTargets">セットするレンダ―ターゲットの配列  例) {renderTarget1,renderTarget2}</param>
@@ -163,12 +156,6 @@ namespace GatesEngine
 		/// </summary>
 		/// <returns>RenderTarget用のDescriptorHeapのポインタ</returns>
 		ID3D12DescriptorHeap* GetRtvHeap();
-
-		/// <summary>
-		/// DescriptorHeapManagerのポインタを返す関数
-		/// </summary>
-		/// <returns>DescriptorHeapManagerのポインタ</returns>
-		DescriptorHeapManager* GetDescriptorHeapManager();
 
 		/// <summary>
 		/// CBVSRVUAVクラスのポインタを返す関数

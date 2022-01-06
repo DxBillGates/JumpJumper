@@ -32,7 +32,7 @@ void GatesEngine::GPUParticleEmitter::Update()
 
 	//if (usingParticeCount >= useParticleValue)return;
 	int count = 0;
-	for (int i = 0; i < useParticleValue; ++i)
+	for (int i = 0; i < (int)useParticleValue; ++i)
 	{
 		if (count >= NEW_USE_PARTICLE_COUNT)break;
 
