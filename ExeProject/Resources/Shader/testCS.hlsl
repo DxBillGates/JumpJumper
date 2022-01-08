@@ -63,7 +63,7 @@ struct EmitterData
 	float3 startForce;
 
 	// エミッターが放っている力
-	float3 addForce;
+	float3 vel;
 
 	// 追加データ
 	float MAX_LIFE;
@@ -102,7 +102,7 @@ struct ParticleData
 RWStructuredBuffer<ParticleData> particles : register(u0);
 
 // 全エミッターデータ
-StructuredBuffer<ParticleData> emitters : register(t0);
+StructuredBuffer<EmitterData> emitters : register(t0);
 
 // 環境データ（風とか重力とか）
 StructuredBuffer<WorldData> worldData : register(t1);
@@ -124,7 +124,7 @@ void InitializeParticle(uint3 id)
 
 	//particles[id.x].scale = emitters[particles[id.x].emitter].initScale;
 	//particles[id.x].rotate = float3(0, 0, 0);
-	particles[id.x].pos = emitters[0].pos;
+	particles[id.x].pos = float4(emitters[0].pos,0);
 	//particles[id.x].alpha = emitters[particles[id.x].emitter].initAlpha;
 
 	//ランダムベクトルの作成
@@ -132,7 +132,7 @@ void InitializeParticle(uint3 id)
 	float4 randomVector = float4(0, 0, 0, 0);
 	randomVector.xyz = GetRandomVector(GetRandomVector(id.x), float3(-range, -range, -range), float3(range, range, range));
 	randomVector = normalize(randomVector) * 100;
-	particles[id.x].vel.xyz = randomVector.xyz;
+	particles[id.x].vel.xyz = randomVector.xyz + emitters[0].startForce;
 }
 
 void UpdatePosition(uint3 id)
@@ -143,7 +143,7 @@ void UpdatePosition(uint3 id)
 	}
 	else
 	{
-		particles[id.x].pos = emitters[0].pos;
+		particles[id.x].pos = float4(emitters[0].pos, 0);
 	}
 }
 
@@ -168,14 +168,14 @@ void UpdateParticle(uint3 id)
 	}
 
 	// 生きているなら所属エミッターから付与されるべき力を加算＆位置更新
-	float4 addVec = emitters[0].pos - particles[id.x].pos;
+	float4 addVec = float4(emitters[0].pos,0) - particles[id.x].pos;
 	particles[id.x].vel.xyz += emitters[0].vel.xyz;
 	UpdatePosition(id);
 	// scaleやrotateなどの追加アイテムの更新
 
 
 	// ライフをデルタタイム分減らす
-	particles[id.x].vel.w -= PER_FRAME;
+	particles[id.x].vel.w -= PER_FRAME / emitters[0].MAX_LIFE;
 	//particles[id.x].life -= worldData.deltaTime;
 }
 
@@ -194,7 +194,7 @@ void TerminateParticle(uint3 id)
 
 	particles[id.x].scale = float3(0, 0, 0);
 	particles[id.x].rotate = float3(0, 0, 0);
-	particles[id.x].pos = emitters[0].pos;
+	particles[id.x].pos = float4(emitters[0].pos,0);
 	particles[id.x].vel = float4(0, 0, 0,0);
 	particles[id.x].alpha = 0;
 }

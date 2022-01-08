@@ -57,7 +57,7 @@ void GatesEngine::GPUParticleEmitter::Update()
 
 void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel)
 {
-	addData[0].pos = { pos.x,pos.y,pos.z,0 };
+	addData[0].pos = { pos.x,pos.y,pos.z };
 	//addData[0].vel = addVel;
 
 	GraphicsDevice* graphicsDevice = manager->GetDevice();
@@ -132,12 +132,12 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	resDesc.MipLevels = 1;
 	resDesc.SampleDesc = { 1,0 };
-	resDesc.Width = sizeof(ParticleData);
+	resDesc.Width = sizeof(EmitterData);
 	manager->GetDevice()->GetDevice()->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&addBuffer));
 
 	srvDesc.Buffer.FirstElement = 0;
 	srvDesc.Buffer.NumElements = 1;
-	//srvDesc.Buffer.StructureByteStride = sizeof(GatesEngine::Math::Vector4);
+	srvDesc.Buffer.StructureByteStride = sizeof(EmitterData);
 	addDataSrvValue = manager->GetSrvNextOffset();
 	manager->CreateSRV(addBuffer, srvDesc);
 
@@ -145,8 +145,10 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	manager->GetUpdateParticleBuffer()->Map(0, nullptr, (void**)&updateParticleData);
 	addBuffer->Map(0, nullptr, (void**)&addData);
 
-	addData[0].pos = { 0,0,0,0 };
-	addData[0].vel = { 0,0,0,0 };
+	addData[0].pos = { 0,0,0 };
+	addData[0].vel = { 0,0,0 };
+	addData[0].MAX_LIFE = 10;
+	addData[0].startForce = { 0,0,0 };
 
 	//std::vector<ParticleData> date(useParticleValue);
 
@@ -168,7 +170,7 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	this->manager = manager;
 }
 
-GatesEngine::ParticleData* GatesEngine::GPUParticleEmitter::GetAddData()
+GatesEngine::EmitterData* GatesEngine::GPUParticleEmitter::GetAddData()
 {
 	return addData;
 }

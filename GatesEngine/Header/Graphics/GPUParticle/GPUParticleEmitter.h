@@ -5,6 +5,26 @@
 
 namespace GatesEngine
 {
+	struct EmitterData
+	{
+		// エミッターの状態
+		int state;
+
+		// エミッターのローカル座標
+		Math::Vector3 pos;
+
+		// エミッターから放出されるときのベクトル
+		Math::Vector3 startForce;
+
+		// エミッターが放っている力
+		Math::Vector3 vel;
+
+		// 追加データ
+		float MAX_LIFE;
+		Math::Vector3 initScale;
+		float initAlpha;
+	};
+
 	class GPUParticleEmitter
 	{
 	protected:
@@ -17,7 +37,7 @@ namespace GatesEngine
 		UINT srvValue;
 		UINT addDataSrvValue;
 		ID3D12Resource* addBuffer;
-		ParticleData* addData;
+		EmitterData* addData;
 		//int usingParticeCount;
 		//int newUseParticleCount;
 	public:
@@ -26,6 +46,6 @@ namespace GatesEngine
 		virtual void Update();
 		virtual void Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel = {});
 		void Create(GPUParticleManager* manager,UINT useParticleValue);
-		ParticleData* GetAddData();
+		EmitterData* GetAddData();
 	};
 }

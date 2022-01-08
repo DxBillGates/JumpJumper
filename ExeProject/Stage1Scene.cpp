@@ -209,8 +209,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize / 2);
 	blurRenderTextures[2].Create(graphicsDevice, renderTextureSize / 4);
 	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 4);
-	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 8);
-	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 8);
+	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 6);
+	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 6);
 
 	reverceResoTextures[0].Create(graphicsDevice, renderTextureSize / 8);
 	reverceResoTextures[1].Create(graphicsDevice, renderTextureSize / 4);
