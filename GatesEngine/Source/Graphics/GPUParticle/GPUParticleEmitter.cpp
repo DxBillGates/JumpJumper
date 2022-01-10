@@ -147,7 +147,7 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 
 	addData[0].pos = { 0,0,0 };
 	addData[0].vel = { 0,0,0 };
-	addData[0].MAX_LIFE = 10;
+	addData[0].MAX_LIFE = 1;
 	addData[0].startForce = { 0,0,0 };
 
 	//std::vector<ParticleData> date(useParticleValue);

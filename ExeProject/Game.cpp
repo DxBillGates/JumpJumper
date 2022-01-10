@@ -172,6 +172,18 @@ bool Game::LoadContents()
 	auto* tex = textureManager->Add(new Texture(), "particleTex");
 	tex->Load("particle.png", &graphicsDevice);
 
+	tex = textureManager->Add(new Texture(), "normalAttackTutorialTaskTex");
+	tex->Load("normal_tutorial_task.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "lockonAttackTutorialTaskTex");
+	tex->Load("lockon_tutorial_task.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "emitteAttackTutorialTaskTex");
+	tex->Load("emitte_tutorial_task.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "moveTutorialTaskTex");
+	tex->Load("move_tutorial_task.png", &graphicsDevice);
+
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));

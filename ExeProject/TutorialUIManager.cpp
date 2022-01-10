@@ -1,5 +1,6 @@
 #include "TutorialUIManager.h"
-
+#include "Header/Graphics/Manager/ResourceManager.h"
+#include "Header/Graphics/Manager/TextureManager.h"
 
 TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 {
@@ -13,9 +14,17 @@ TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 	// 合計チュートリアル数分UIを生成して各ステートをセット
 	tutorialUI.resize(4);
 	int count = 0;
-	GatesEngine::Math::Vector3 centerOffset = { 1920,1080,0 };
+	float height = 1080, weight = 1920;
+	float persent = 25;
+	GatesEngine::Math::Vector3 centerOffset = { weight,height,0 };
 	centerOffset /= 2;
-	centerOffset.y -= 300;
+	centerOffset.y -= (height / 100) * persent;
+	centerOffset.x += (weight / 100) * persent * 1.25f;
+	GatesEngine::Texture* textures[4];
+	textures[0] = GatesEngine::ResourceManager::GetTextureManager()->GetTexture("normalAttackTutorialTaskTex");
+	textures[1] = GatesEngine::ResourceManager::GetTextureManager()->GetTexture("lockonAttackTutorialTaskTex");
+	textures[2] = GatesEngine::ResourceManager::GetTextureManager()->GetTexture("emitteAttackTutorialTaskTex");
+	textures[3] = GatesEngine::ResourceManager::GetTextureManager()->GetTexture("moveTutorialTaskTex");
 	for (auto& parent : tutorialUI)
 	{
 		parent.state = tutorialStates[count];
@@ -34,31 +43,32 @@ TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
 				addUI = parent.uies.back();
 				addUI.SetPosition({ offset[i] });
 				addUI.SetScale({ 50 / 2 });
-				addUI.SetScaleWeight({ 100 });
+				addUI.SetScaleWeight({ 75 });
 				addUI.SetColor({ 1,0,0,1 });
 				addUI.SetGraphicsDevice(device);
 			}
 		}
 
-		// チュートリアルの説明をするUI情報
-		{
-			parent.uies.push_back(TutorialUI());
-			auto& addUI = parent.uies.back();
-			addUI.SetPosition({ centerOffset });
-			addUI.SetScale({ 500,250,0 });
-			addUI.SetScaleWeight({});
-			addUI.SetColor({ 1,1,1,0.3f });
-			addUI.SetGraphicsDevice(device);
-		}
 		// 背景となるUI情報
 		{
 			parent.uies.push_back(TutorialUI());
 			auto& addUI = parent.uies.back();
-			addUI.SetPosition({ centerOffset });
-			addUI.SetScale({ 500,250,0 });
+			addUI.SetPosition({ centerOffset + GatesEngine::Math::Vector3(0,0,0) });
+			addUI.SetScale({ 500,400,0 });
 			addUI.SetScaleWeight({});
 			addUI.SetColor({ 1,1,1,0.3f });
 			addUI.SetGraphicsDevice(device);
+		}
+		// チュートリアルの説明をするUI情報
+		{
+			parent.uies.push_back(TutorialUI());
+			auto& addUI = parent.uies.back();
+			addUI.SetPosition({ centerOffset + GatesEngine::Math::Vector3(0,0,0) });
+			addUI.SetScale({ 500,400,0 });
+			addUI.SetScaleWeight({});
+			addUI.SetColor({ 1,1,1,0.3f });
+			addUI.SetGraphicsDevice(device);
+			addUI.SetTexture(textures[count]);
 		}
 		++count;
 	}
@@ -75,7 +85,7 @@ void TutorialUIManager::Initialize()
 	}
 }
 
-void TutorialUIManager::Update(int currentClearCount, bool isAnimation,bool endScene)
+void TutorialUIManager::Update(int currentClearCount, bool isAnimation, bool endScene)
 {
 	for (auto& parent : tutorialUI)
 	{
