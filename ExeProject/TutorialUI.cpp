@@ -127,11 +127,23 @@ void TutorialUI::Draw()
 		drawScale = {};
 	}
 
-	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
-	gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(drawScale) * GatesEngine::Math::Matrix4x4::Translate(pos));
-	gDevice->GetCBufferAllocater()->BindAndAttach(1, color);
-	gDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	if (!texture)
+	{
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
+		gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(drawScale) * GatesEngine::Math::Matrix4x4::Translate(pos));
+		gDevice->GetCBufferAllocater()->BindAndAttach(1, color);
+		gDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	}
+	else
+	{
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("TextureSpriteShader")->Set();
+		gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale(drawScale) * GatesEngine::Math::Matrix4x4::Translate(pos));
+		gDevice->GetCBufferAllocater()->BindAndAttach(1, color);
+		gDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		texture->Set(3);
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	}
 }
 
 void TutorialUI::SetGraphicsDevice(GatesEngine::GraphicsDevice* device)

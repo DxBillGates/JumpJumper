@@ -12,5 +12,5 @@ float4 main(VSOutput input) : SV_TARGET
 {
 	float4 texColor = tex.Sample(clampLinearSampler,input.uv);
 	//texColor += subtex.Sample(clampPointSampler, input.uv);
-	return float4(texColor.rgb,1);
+	return float4(texColor.rgba);
 }

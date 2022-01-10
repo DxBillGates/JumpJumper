@@ -3,15 +3,16 @@ cbuffer Model : register(b0)
 	matrix modelMatrix;
 }
 
-cbuffer CameraInfo : register(b1)
+cbuffer Color : register(b1)
+{
+	float4 color;
+}
+
+cbuffer ScreenInfo : register(b2)
 {
 	matrix projMatrix;
 }
 
-cbuffer ColorInfo : register(b3)
-{
-	float4 color;
-}
 
 struct VSInput
 {

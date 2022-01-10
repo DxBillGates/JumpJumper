@@ -93,7 +93,7 @@ bool Game::LoadContents()
 	sceneTransFadeShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
 
 	auto* textureSpriteShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"TextureSprite")), "TextureSpriteShader");
-	textureSpriteShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV });
+	textureSpriteShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV },BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,false);
 
 	auto* gaussBlurShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"GaussBlur")), "GaussBlurShader");
 	gaussBlurShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
@@ -176,8 +176,8 @@ bool Game::LoadContents()
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
 	//sceneManager->ChangeSceneWithoutInitialize("Stage1Scene");
-	sceneManager->ChangeSceneWithoutInitialize("TitleScene");
-	//sceneManager->ChangeSceneWithoutInitialize("SampleScene");
+	//sceneManager->ChangeSceneWithoutInitialize("TitleScene");
+	sceneManager->ChangeSceneWithoutInitialize("SampleScene");
 
 	return true;
 }
