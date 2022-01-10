@@ -384,13 +384,17 @@ void PlayerBehaviour::Update()
 	emitteAttackFlag = false;
 	boostMoveFlag = false;
 
+	bool targetsIsEmpty = true;
 	for (auto& t : targets)
 	{
+		if(t.GetIsLockon())targetsIsEmpty = false;
 		t.Update();
 	}
 	Move();
 	Attack();
+	if (targetsIsEmpty)currentFrameTargetCount = 0;
 	LockOnAttack();
+
 }
 
 void PlayerBehaviour::OnDraw()
