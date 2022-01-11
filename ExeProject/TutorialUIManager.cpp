@@ -3,6 +3,7 @@
 #include "Header/Graphics/Manager/TextureManager.h"
 
 TutorialUIManager::TutorialUIManager(GatesEngine::GraphicsDevice* device)
+	: currentState(TutorialState::NORMAL_ATTACK)
 {
 	TutorialState tutorialStates[4] =
 	{
@@ -141,4 +142,6 @@ TutorialUI* TutorialUIManager::GetCurrentUIInfo(int currentClearCount)
 			return &parent.uies[offset];
 		}
 	}
+
+	return nullptr;
 }

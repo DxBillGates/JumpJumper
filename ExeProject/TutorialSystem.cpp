@@ -13,9 +13,11 @@ TutorialSystem::TutorialSystem(GatesEngine::GraphicsDevice* device)
 	, transStateIntervalFlag(false)
 	, transStateIntervalTime(0)
 	, preEndTutorialFlag(false)
+	, preTransStateIntervalTime(0)
 	, endTutorialTime(0)
 	, MAX_END_TUTORIAL_TIME(10)
 	, endTutorialFlag(false)
+	, endCurrentTutorialFlag(false)
 {
 	tutorialTasks.push_back(new NormalAttackTask());
 	tutorialTasks.push_back(new LockonAttackTask());
