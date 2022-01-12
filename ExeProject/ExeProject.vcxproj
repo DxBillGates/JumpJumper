@@ -133,9 +133,11 @@
     <ClCompile Include="BoostMoveTask.cpp" />
     <ClCompile Include="BossBehaviour.cpp" />
     <ClCompile Include="ButtonUI.cpp" />
+    <ClCompile Include="DefaultGPUParticleEmitterBehaviour.cpp" />
     <ClCompile Include="EmitteAttackTask.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="ExplosionGPUParticleEmitterBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjectCollisionManager.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -150,6 +152,9 @@
     <ClCompile Include="PlayerBulletBehaviour.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="PlayerCameraBehaviour.cpp" />
+    <ClCompile Include="PlayerGPUParticleEmitterBehaviour.cpp" />
+    <ClCompile Include="RotateAxisBehaviour.cpp" />
+    <ClCompile Include="RotateAxisParticleManager.cpp" />
     <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Stage1.cpp" />
@@ -175,9 +180,11 @@
     <ClInclude Include="BoostMoveTask.h" />
     <ClInclude Include="BossBehaviour.h" />
     <ClInclude Include="ButtonUI.h" />
+    <ClInclude Include="DefaultGPUParticleEmitterBehaviour.h" />
     <ClInclude Include="EmitteAttackTask.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="ExplosionGPUParticleEmitterBehaviour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjectCollisionManager.h" />
     <ClInclude Include="GameState.h" />
@@ -191,6 +198,9 @@
     <ClInclude Include="PlayerBulletBehaviour.h" />
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="PlayerCameraBehaviour.h" />
+    <ClInclude Include="PlayerGPUParticleEmitterBehaviour.h" />
+    <ClInclude Include="RotateAxisBehaviour.h" />
+    <ClInclude Include="RotateAxisParticleManager.h" />
     <ClInclude Include="SampleScene.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Stage1.h" />

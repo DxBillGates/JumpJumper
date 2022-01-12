@@ -25,37 +25,38 @@ GatesEngine::GPUParticleEmitter::~GPUParticleEmitter()
 	COM_RELEASE(addBuffer);
 }
 
-void GatesEngine::GPUParticleEmitter::Update()
+void GatesEngine::GPUParticleEmitter::Update(int addParticleValue, float addCyclePerFrame)
 {
-	const int NEW_USE_PARTICLE_COUNT = 2;
-	//newUseParticleCount = 1;
-
-	//if (usingParticeCount >= useParticleValue)return;
-	int count = 0;
-	for (int i = 0; i < (int)useParticleValue; ++i)
+	bool addFlag = false;
+	if (cycle > addCyclePerFrame)
 	{
-		if (count >= NEW_USE_PARTICLE_COUNT)break;
-
-		if (particleData[useParticleOffset + i].isDead)
-		{
-			particleData[useParticleOffset + i].state = 0;
-			++count;
-		}
-		else
-		{
-			continue;
-		}
-		//particleData += useParticleOffset;
-		//particleData->isDead = false;
-		//usingParticeCount = 0;
+		addFlag = true;
+		cycle = 0;
 	}
-	////std::vector<ParticleData> date(useParticleValue);
-	////ComputeShaderでUpdateしたパーティクルデータを先頭アドレスずらしてSRVのバッファにコピー
-	//memcpy(updateParticleData + useParticleOffset, particleData + useParticleOffset, sizeof(ParticleData) * useParticleValue);
-	////date.assign((ParticleData*)updateParticleData + useParticleOffset, (ParticleData*)updateParticleData + useParticleOffset + useParticleValue);
+
+	if (addFlag)
+	{
+		int count = 0;
+		for (int i = 0; i < (int)useParticleValue; ++i)
+		{
+			if (count >= addParticleValue)break;
+
+			if (particleData[useParticleOffset + i].isDead)
+			{
+				particleData[useParticleOffset + i].state = 0;
+				++count;
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+
+	cycle++;
 }
 
-void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel)
+void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, Texture* tex)
 {
 	addData[0].pos = { pos.x,pos.y,pos.z };
 	//addData[0].vel = addVel;
@@ -68,7 +69,15 @@ void GatesEngine::GPUParticleEmitter::Draw(Camera* camera, ComputePipeline* comp
 	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, camera->GetData());
 	graphicsDevice->GetMainCamera()->Set(2);
 	graphicsDevice->GetCmdList()->SetGraphicsRootDescriptorTable(3, graphicsDevice->GetCBVSRVUAVHeap()->GetSRVHandleForSRV(srvValue));
-	ResourceManager::GetTextureManager()->GetTexture("particleTex")->Set(4);
+
+	if (!tex)
+	{
+		ResourceManager::GetTextureManager()->GetTexture("particleTex")->Set(4);
+	}
+	else
+	{
+		tex->Set(4);
+	}
 	ResourceManager::GetMeshManager()->GetMesh("Point")->Draw(useParticleValue);
 
 	ID3D12DescriptorHeap* heap = manager->GetHeap();
@@ -148,17 +157,19 @@ void GatesEngine::GPUParticleEmitter::Create(GPUParticleManager* manager, UINT u
 	addData[0].pos = { 0,0,0 };
 	addData[0].vel = { 0,0,0 };
 	addData[0].MAX_LIFE = 1;
-	addData[0].startForce = { 0,0,0 };
+	addData[0].startForceMin = -1;
+	addData[0].startForceMax = 1;
+	addData[0].startForce = { 1,1,1 };
 
 	//std::vector<ParticleData> date(useParticleValue);
 
 	//先頭アドレスを進める
 	for (int i = 0; i < (int)useParticleValue; ++i)
 	{
-		particleData[useParticleOffset + i].pos = {0,-1000,0,0};
+		particleData[useParticleOffset + i].pos = { 1000000,0,0,0 };
 		particleData[useParticleOffset + i].vel = { (float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,-(float)(rand() % 5),(float)std::rand() / RAND_MAX * 100 - 100 / 2.0f,1 };
 		particleData[useParticleOffset + i].vel = particleData[useParticleOffset + i].vel.Normalize();
-		particleData[useParticleOffset + i].vel.w = GatesEngine::Random::Rand(0,1);
+		particleData[useParticleOffset + i].vel.w = GatesEngine::Random::Rand(0, 1);
 		particleData[useParticleOffset + i].isDead = true;
 		particleData[useParticleOffset + i].state = 3;
 	}

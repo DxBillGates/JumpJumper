@@ -14,6 +14,7 @@ PlayerCameraBehaviour::PlayerCameraBehaviour()
 void PlayerCameraBehaviour::Start()
 {
 	camera = dynamic_cast<GatesEngine::Camera3D*>(gameObject->GetGraphicsDevice()->GetMainCamera());
+	camera->SetDirection({ 0,1,0 });
 	cameraDistance = DEFAULT_CAMERA_DISTANCE;
 	oldCameraDistance = cameraDistance;
 }

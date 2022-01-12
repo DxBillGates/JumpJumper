@@ -105,6 +105,10 @@ void BossBehaviour::Start()
 	stopingTime = 0;
 	hp = 0;
 	oldHP = hp;
+	gameObject->GetTransform()->position = { 0,10000,0 };
+	gameObject->GetTransform()->scale = 500;
+	scale = gameObject->GetTransform()->scale.x;
+	isDead = false;
 }
 
 void BossBehaviour::Update()
@@ -128,6 +132,17 @@ void BossBehaviour::Update()
 	const float PER_FRAME = 1.0f / 60.0f;
 	if (decreaseHpTime >= 1)decreaseHpTimeFlag = false;
 	if (decreaseHpTimeFlag)decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
+
+	if (scale <= 0)
+	{
+		scale = 0;
+		isDead = false;
+	}
+	gameObject->GetTransform()->scale = scale;
+	if (isDead)
+	{
+		scale -= 1;
+	}
 }
 
 void BossBehaviour::OnDraw()
@@ -136,7 +151,7 @@ void BossBehaviour::OnDraw()
 
 	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
 
 
@@ -145,7 +160,7 @@ void BossBehaviour::OnDraw()
 
 	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
 
@@ -153,7 +168,7 @@ void BossBehaviour::OnDraw()
 
 	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,1,1,1} });
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 }
 
@@ -194,6 +209,10 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 		decreaseHpTimeFlag = true;
 		decreaseHpTime = 0;
 		//decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
+		if (hp <= 0)
+		{
+			isDead = true;
+		}
 	}
 }
 
@@ -230,4 +249,25 @@ BossState BossBehaviour::GetState()
 float BossBehaviour::GetHp()
 {
 	return hp;
+}
+
+bool BossBehaviour::GetIsEndScaleAnimation()
+{
+	bool flag = false;
+
+	if (scale <= 0)
+	{
+		flag = true;
+	}
+	return flag;
+}
+
+void BossBehaviour::SetInitScale(float value)
+{
+	initScale = value;
+}
+
+bool BossBehaviour::GetIsDead()
+{
+	return isDead;
 }

@@ -9,6 +9,7 @@
 #include "Header/Graphics/DepthStencilTexture.h"
 #include "GameState.h"
 #include "BossBehaviour.h"
+#include "RotateAxisParticleManager.h"
 
 class Stage1Scene : public GatesEngine::Scene
 {
@@ -64,6 +65,15 @@ private:
 
 	GatesEngine::RenderTexture blurRenderTextures[6];
 	GatesEngine::RenderTexture reverceResoTextures[3];
+
+	bool isIncreaseBlack;
+	bool isDecreaseBlack;
+	bool isSceneTransition;
+	float black;
+	GatesEngine::RenderTexture sceneRenderTexture;
+	GatesEngine::DepthStencilTexture sceneDepthTexture;
+
+	RotateAxisParticleManager rotateAxisParticleManager;
 private:
 	// ガウシアンフィルタの重みを計算する関数
 	float GaussFilter(const GatesEngine::Math::Vector2& pos, float value);

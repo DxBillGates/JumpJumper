@@ -184,12 +184,21 @@ bool Game::LoadContents()
 	tex = textureManager->Add(new Texture(), "moveTutorialTaskTex");
 	tex->Load("move_tutorial_task.png", &graphicsDevice);
 
+	tex = textureManager->Add(new Texture(), "fire_particleTex");
+	tex->Load("fire_particle.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "water_particleTex");
+	tex->Load("water_particle.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "snow_particleTex");
+	tex->Load("snow_particle.png", &graphicsDevice);
+
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));
 	sceneManager->AddScene(new Stage1Scene("Stage1Scene", this));
-	//sceneManager->ChangeSceneWithoutInitialize("Stage1Scene");
+	sceneManager->ChangeSceneWithoutInitialize("Stage1Scene");
 	//sceneManager->ChangeSceneWithoutInitialize("TitleScene");
-	sceneManager->ChangeSceneWithoutInitialize("SampleScene");
+	//sceneManager->ChangeSceneWithoutInitialize("SampleScene");
 
 	return true;
 }

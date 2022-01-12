@@ -10,6 +10,10 @@
 #include "Header/Util/Random.h"
 #include "Header/Graphics/Graphics.h"
 #include "Header/Graphics/Manager/ResourceManager.h"
+#include "DefaultGPUParticleEmitterBehaviour.h"
+#include "ExplosionGPUParticleEmitterBehaviour.h"
+#include "PlayerGPUParticleEmitterBehaviour.h"
+#include "RotateAxisBehaviour.h"
 
 float Stage1Scene::GaussFilter(const GatesEngine::Math::Vector2& pos, float value)
 {
@@ -81,6 +85,9 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	//gp->GetComponent<PlayerBehaviour>()->SetCamera(app->GetMainCamera());
 	stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(gp->AddComponent<Collider>()), GColliderType::PLAYER);
 	stage.GetCollisionManager()->SetPlayerBehaviour(playerBehaviour);
+	auto* emitter = gp->AddComponent<PlayerGPUParticleEmitterBehaviour>();
+	emitter->SetComputeShader(testCS);
+	emitter->CreateParticleEmitter(gpuParticleManager, 256);
 	gp->SetCollider();
 	gp->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	gp->GetCollider()->SetSize({ 1 });
@@ -117,7 +124,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	b->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
 	b->GetCollider()->SetSize({ 2 });
 	b->GetTransform()->scale = 500;
-	b->GetTransform()->position = { 0,1000,-5000 };
+	bossBehaviour->SetInitScale(500);
+	b->GetTransform()->position = { 0,10000,0 };
 	b->SetTag("Boss");
 	boss = b;
 
@@ -271,6 +279,38 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 	//gpuParticleCS = new GatesEngine::ComputePipeline(graphicsDevice, L"GPUParticle");
 	//gpuParticleCS->Create({ GatesEngine::RangeType::UAV,GatesEngine::RangeType::SRV,GatesEngine::RangeType::SRV });
+
+	sceneRenderTexture.Create(graphicsDevice, app->GetWindow()->GetWindowSize(), { 141, 219, 228, 255 });
+	sceneDepthTexture.Create(graphicsDevice, app->GetWindow()->GetWindowSize());
+
+	// デフォルトパーティクルオブジェクト作成
+	{
+		auto* gameObject = gameObjectManager.Add(new GatesEngine::GameObject());
+		gameObject->SetGraphicsDevice(graphicsDevice);
+		gameObject->SetName("explosionParticleEmitter");
+		gameObject->SetEnabled(false);
+		auto* emitter = gameObject->AddComponent<ExplosionGPUParticleEmitterBehaviour>();
+		emitter->SetComputeShader(testCS);
+		emitter->CreateParticleEmitter(gpuParticleManager, 256);
+	}
+
+	// デフォルトパーティクル + 軸回転オブジェクト作成
+	{
+		const int GAMEOBJECT_NUMBER = 100;
+		for (int i = 0; i < GAMEOBJECT_NUMBER; ++i)
+		{
+			auto* gameObject = gameObjectManager.Add(new GatesEngine::GameObject());
+			gameObject->SetGraphicsDevice(graphicsDevice);
+			auto* emitter = gameObject->AddComponent<DefaultGPUParticleEmitterBehaviour>();
+			emitter->SetComputeShader(testCS);
+			emitter->CreateParticleEmitter(gpuParticleManager, 256);
+
+			auto* rotateAxis = gameObject->AddComponent<RotateAxisBehaviour>();
+			rotateAxis->SetCenter(boss->GetTransform()->position);
+
+			rotateAxisParticleManager.Add(rotateAxis, emitter);
+		}
+	}
 }
 
 Stage1Scene::~Stage1Scene()
@@ -282,15 +322,25 @@ Stage1Scene::~Stage1Scene()
 
 void Stage1Scene::Initialize()
 {
+	isSceneTransition = false;
+	isIncreaseBlack = true;
+	isDecreaseBlack = false;
+	black = 0;
+
+	enemyManager.Initialize();
 	gameState.Initialize();
 	gameObjectManager.Start();
 	stage.GetCollisionManager()->SetCamera(dynamic_cast<GatesEngine::Camera3D*>(app->GetMainCamera()));
 	//app->GetTimer()->SetFrameRate(60);
 	battleCount = 1;
+	rotateAxisParticleManager.Initialize();
 }
 
 void Stage1Scene::Update()
 {
+	bool preBossIsDead = bossBehaviour->GetIsDead();
+	bool preIsEndparticle = rotateAxisParticleManager.GetIsEndParticles(bossBehaviour->GetGameObject()->GetTransform()->position);
+	BossState preBossState = bossBehaviour->GetState();
 	gameState.Update(app->GetTimer()->GetElapsedTime());
 	enemyManager.Update(battleCount);
 	gameObjectManager.Update();
@@ -303,21 +353,36 @@ void Stage1Scene::Update()
 		gameState.ChangeState();
 	}
 
-	if (bossBehaviour->GetHp() <= 0 && bossBehaviour->GetState() == BossState::NONE)
+	//if (bossBehaviour->GetHp() <= 0 && bossBehaviour->GetState() == BossState::NONE)
+	//{
+	//	if (gameState.GetCurrentState() == GameState::BOSS_BATTLE || gameState.GetCurrentState() == GameState::FISRT_BOSS_BATTLE)
+	//	{
+	//		gameState.ChangeState();
+	//		bossBehaviour->SetBossState(BossState::LEFT);
+	//		battleCount++;
+	//	}
+	//}
+
+	if (!preIsEndparticle && rotateAxisParticleManager.GetIsEndParticles(bossBehaviour->GetGameObject()->GetTransform()->position))
 	{
-		if (gameState.GetCurrentState() == GameState::BOSS_BATTLE || gameState.GetCurrentState() == GameState::FISRT_BOSS_BATTLE)
-		{
-			gameState.ChangeState();
-			bossBehaviour->SetBossState(BossState::LEFT);
-			battleCount++;
-		}
+		//rotateAxisParticleManager.EndParticles();
+		rotateAxisParticleManager.ReverseParticle();
+		bossBehaviour->SetBossState(BossState::JOIN);
+		gameState.ChangeState();
+	}
+
+	if (preBossState == BossState::JOIN && bossBehaviour->GetState() == BossState::HEALING)
+	{
+		rotateAxisParticleManager.EndParticles();
 	}
 
 	if (enemyManager.IsDestroyAllGroup())
 	{
-		bossBehaviour->SetBossState(BossState::JOIN);
-		gameState.ChangeState();
+		//bossBehaviour->SetBossState(BossState::JOIN);
+		rotateAxisParticleManager.StartParticles(bossBehaviour->GetGameObject()->GetTransform()->position);
+		//gameState.ChangeState();
 	}
+
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
 	{
@@ -400,6 +465,46 @@ void Stage1Scene::Update()
 	}
 	++i;
 	gpuParticleManager->Update();
+
+	if (!preBossIsDead && bossBehaviour->GetIsDead())
+	{
+		GatesEngine::GameObject* gameObject = gameObjectManager.Find("explosionParticleEmitter");
+		gameObject->Start();
+		gameObject->GetTransform()->position = boss->GetTransform()->position;
+	}
+
+	bool preIsDecreaseBlack = isDecreaseBlack;
+	isDecreaseBlack = bossBehaviour->GetIsEndScaleAnimation();
+	if (!preIsDecreaseBlack && isDecreaseBlack)
+	{
+		GatesEngine::GameObject* gameObject = gameObjectManager.Find("explosionParticleEmitter");
+		gameObject->SetEnabled(false);
+	}
+	if (black <= 0)
+	{
+		if (isDecreaseBlack)
+		{
+			isSceneTransition = true;
+		}
+	}
+	if (isSceneTransition)
+	{
+		app->GetSceneManager()->ChangeScene("TitleScene");
+		app->Initialize();
+	}
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float INCREASE_TIME = 2;
+	if (isIncreaseBlack)black += PER_FRAME / INCREASE_TIME;
+
+	const float DECREASE_TIME = 6;
+	if (isDecreaseBlack)black -= PER_FRAME / DECREASE_TIME;
+
+	if (black >= 1)
+	{
+		black = 1;
+		isIncreaseBlack = false;
+	}
 }
 
 void Stage1Scene::Draw()
@@ -477,7 +582,7 @@ void Stage1Scene::LateDraw()
 	GatesEngine::Camera* mainCamera = app->GetMainCamera();
 
 	//グリッドの描画
-	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141 / 2, 219 / 2, 228 / 2, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
+	graphicsDevice->ClearRenderTarget(GatesEngine::Math::Vector4(141/2, 219/2, 228/2, 255), true, &lateDrawResultRenderTex, &lateDrawResultDepthTex);
 	shaderManager->GetShader("Line")->Set();
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Translate({ 0,0,0 }));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(),GatesEngine::Math::Vector4() });
@@ -589,7 +694,7 @@ void Stage1Scene::LateDraw()
 		{
 			if (i == 0)
 			{
-			brightnessTexture.Set(3);
+				brightnessTexture.Set(3);
 			}
 			else
 			{
@@ -667,32 +772,28 @@ void Stage1Scene::LateDraw()
 	blurRenderTextures[5].Set(5);
 	meshManager->GetMesh("2DPlane")->Draw();
 
-	static bool flag = false;
-	if (app->GetInput()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::D1))
-		flag = !flag;
-	if (flag)
-	{
-		graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true, & sceneRenderTexture, & sceneDepthTexture);
+	shaderManager->GetShader("BloomShader")->Set();
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 })* GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	subPostprocessTexture.Set(2);
+	blurPlusParticleTex.Set(3);
+	meshManager->GetMesh("2DPlane")->Draw();
 
-		shaderManager->GetShader("BloomShader")->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-		subPostprocessTexture.Set(2);
-		blurPlusParticleTex.Set(3);
-		meshManager->GetMesh("2DPlane")->Draw();
-	}
-	else
-	{
-		graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
 
-		shaderManager->GetShader("BloomShader")->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 1920,1080,1 }) * GatesEngine::Math::Matrix4x4::Translate({ 1920 / 2,1080 / 2,0 }));
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-		subPostprocessTexture.Set(2);
-		blurPlusParticleTex.Set(3);
-		meshManager->GetMesh("2DPlane")->Draw();
-	}
+	graphicsDevice->ClearRenderTarget({ 141, 219, 228, 255 }, true);
+	GatesEngine::Math::Vector2 scale = { 1000,1000 };
+	GatesEngine::Math::Vector2 pos = { 1920 / 2,1080 / 2 };
 
+	shaderManager->GetShader("SceneTransitionFadeShader")->Set();
+	scale = app->GetWindow()->GetWindowSize();
+	pos = scale / 2;
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ scale.x,scale.y,0 })* GatesEngine::Math::Matrix4x4::Translate({ pos.x,pos.y,0 }));
+	float b = GatesEngine::Math::Easing::EaseInExpo(black);
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(b, b, b, 1));
+	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+	sceneRenderTexture.Set(3);
+	meshManager->GetMesh("2DPlane")->Draw();
 	//gameObjectManager.LateDraw();
 	//gpuParticleEmitter.Draw(app->GetMainCamera(), testCS, 1000);
 }

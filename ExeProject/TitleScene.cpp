@@ -61,6 +61,7 @@ void TitleScene::Initialize()
 
 
 	mainCamera->SetPosition({ 0,500,-1000 });
+	mainCamera->SetDirection({0,1,0});
 	titleManager.SetGraphicsDevice(graphicsDevice);
 	titleManager.Initialize();
 

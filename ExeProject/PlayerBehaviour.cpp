@@ -361,6 +361,7 @@ void PlayerBehaviour::Start()
 {
 	input = GatesEngine::Input::GetInstance();
 	isJump = true;
+	gameObject->GetTransform()->position.x = 0;
 	gameObject->GetTransform()->position.y = 1000;
 	gameObject->GetTransform()->position.z = -5000;
 	fuelValue = MAX_FUEL;

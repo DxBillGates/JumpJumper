@@ -32,6 +32,10 @@ private:
 	bool decreaseHpTimeFlag;
 	float decreaseHpTime;
 	const float MAX_DECREASE_HP_TIME;
+
+	bool isDead;
+	float scale;
+	float initScale;
 private:
 	void InitState();
 	void JoinOrLeft(BossState state);
@@ -47,5 +51,8 @@ public:
 	void SetBossState(BossState state);
 	BossState GetState();
 	float GetHp();
+	bool GetIsEndScaleAnimation();
+	void SetInitScale(float value);
+	bool GetIsDead();
 };
 

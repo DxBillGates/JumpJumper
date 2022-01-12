@@ -2,6 +2,7 @@
 #include "GPUParticleManager.h"
 #include "..\ComputePipeline.h"
 #include "..\Camera.h"
+#include "..\..\Graphics\Texture.h"
 
 namespace GatesEngine
 {
@@ -14,6 +15,7 @@ namespace GatesEngine
 		Math::Vector3 pos;
 
 		// エミッターから放出されるときのベクトル
+		Math::Vector3 startForceMin, startForceMax;
 		Math::Vector3 startForce;
 
 		// エミッターが放っている力
@@ -40,12 +42,13 @@ namespace GatesEngine
 		EmitterData* addData;
 		//int usingParticeCount;
 		//int newUseParticleCount;
+		float cycle;
 	public:
 		GPUParticleEmitter();
 		virtual ~GPUParticleEmitter();
-		virtual void Update();
-		virtual void Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, const Math::Vector3& addVel = {});
-		void Create(GPUParticleManager* manager,UINT useParticleValue);
+		virtual void Update(int addParticleValue = 1, float addCyclePerFrame = 1);
+		virtual void Draw(Camera* camera, ComputePipeline* computeShader, const Math::Vector3& pos, Texture* tex = nullptr);
+		void Create(GPUParticleManager* manager, UINT useParticleValue);
 		EmitterData* GetAddData();
 	};
 }
