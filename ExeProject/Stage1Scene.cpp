@@ -296,14 +296,14 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 	// デフォルトパーティクル + 軸回転オブジェクト作成
 	{
-		const int GAMEOBJECT_NUMBER = 100;
+		const int GAMEOBJECT_NUMBER = 50;
 		for (int i = 0; i < GAMEOBJECT_NUMBER; ++i)
 		{
 			auto* gameObject = gameObjectManager.Add(new GatesEngine::GameObject());
 			gameObject->SetGraphicsDevice(graphicsDevice);
 			auto* emitter = gameObject->AddComponent<DefaultGPUParticleEmitterBehaviour>();
 			emitter->SetComputeShader(testCS);
-			emitter->CreateParticleEmitter(gpuParticleManager, 256);
+			emitter->CreateParticleEmitter(gpuParticleManager, 256 * 5);
 
 			auto* rotateAxis = gameObject->AddComponent<RotateAxisBehaviour>();
 			rotateAxis->SetCenter(boss->GetTransform()->position);

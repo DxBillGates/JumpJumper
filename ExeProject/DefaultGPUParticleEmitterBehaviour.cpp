@@ -19,6 +19,7 @@ DefaultGPUParticleEmitterBehaviour::~DefaultGPUParticleEmitterBehaviour()
 void DefaultGPUParticleEmitterBehaviour::Start()
 {
 	emitterData = gParticleEmitter->GetAddData();
+	emitterData->MAX_LIFE = 4;
 }
 
 void DefaultGPUParticleEmitterBehaviour::Update()
