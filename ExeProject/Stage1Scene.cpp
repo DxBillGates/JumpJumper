@@ -489,7 +489,7 @@ void Stage1Scene::Update()
 	}
 	if (isSceneTransition)
 	{
-		app->GetSceneManager()->ChangeScene("TitleScene");
+		app->GetSceneManager()->ChangeScene("Stage1Scene");
 		app->Initialize();
 	}
 

@@ -15,5 +15,6 @@ float4 main(VSOutput input) : SV_TARGET
 	//texColor *= subTexColor;
 	float greyScale = (texColor.r * 0.299f + texColor.g * 0.587f + texColor.b * 0.114f);
 	float3 stepValue = step(samplingValue.r, texColor.rgb * greyScale);
-	return float4(stepValue * texColor.rgb,1);
+	float diff = step(samplingValue.r, greyScale);
+	return float4(texColor.rgb * diff,1);
 }

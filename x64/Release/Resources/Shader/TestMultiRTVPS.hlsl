@@ -31,7 +31,7 @@ PSOutput main(VSOutput input)
 	float3 posFromLightVP = input.tpos.xyz / input.tpos.w;
 	float2 shadowUV = saturate((posFromLightVP.xy + float2(1, -1)) * float2(0.5, -0.5));
 	float4 depthFromLight = lightDepthTex.Sample(clampPointSampler, shadowUV);
-	shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.0001f) ? 0.7f : 1;
+	shadowWeight = (depthFromLight.r < posFromLightVP.z - 0.0001f) ? 0.1f : 1;
 	output.shadow = float4(shadowWeight, shadowWeight, shadowWeight, 1);
 	return output;
 }

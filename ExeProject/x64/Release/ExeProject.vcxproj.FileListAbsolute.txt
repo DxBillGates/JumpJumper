@@ -61,3 +61,6 @@ C:\Users\K019G1234\Desktop\就職作品\x64\Release\SceneTransitionFadeVS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\testInitializeCS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TextureSpritePS.cso
 C:\Users\K019G1234\Desktop\就職作品\x64\Release\TextureSpriteVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\GaussBlurPS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\GaussBlurVS.cso
+C:\Users\K019G1234\Desktop\就職作品\x64\Release\GPUParticleCS.cso
