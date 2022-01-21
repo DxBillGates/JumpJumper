@@ -63,6 +63,8 @@
     <ClInclude Include="Header\Input\Keys.h" />
     <ClInclude Include="Header\Input\Mouse.h" />
     <ClInclude Include="Header\Input\MouseButtons.h" />
+    <ClInclude Include="Header\Input\XInputController.h" />
+    <ClInclude Include="Header\Input\XInputControllerButton.h" />
     <ClInclude Include="Header\Math\Easing.h" />
     <ClInclude Include="Header\Math\Math.h" />
     <ClInclude Include="Header\Math\Matrix4.h" />
@@ -116,6 +118,7 @@
     <ClCompile Include="Source\Input\Input.cpp" />
     <ClCompile Include="Source\Input\Keyboard.cpp" />
     <ClCompile Include="Source\Input\Mouse.cpp" />
+    <ClCompile Include="Source\Input\XInputController.cpp" />
     <ClCompile Include="Source\Math\Easing.cpp" />
     <ClCompile Include="Source\Math\Math.cpp" />
     <ClCompile Include="Source\Math\Matrix4.cpp" />

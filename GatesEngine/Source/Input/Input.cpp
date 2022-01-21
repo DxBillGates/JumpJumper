@@ -24,12 +24,14 @@ void GatesEngine::Input::Initialize()
 {
 	keyboard.Initialize();
 	mouse.Initialize();
+	xctrler.Initialize();
 }
 
 void GatesEngine::Input::Update()
 {
 	keyboard.Update();
 	mouse.Update();
+	xctrler.Update();
 }
 
 GatesEngine::Keyboard * GatesEngine::Input::GetKeyboard()
@@ -40,6 +42,11 @@ GatesEngine::Keyboard * GatesEngine::Input::GetKeyboard()
 GatesEngine::Mouse * GatesEngine::Input::GetMouse()
 {
 	return &mouse;
+}
+
+GatesEngine::XInputController* GatesEngine::Input::GetXCtrler()
+{
+	return &xctrler;
 }
 
 bool GatesEngine::Input::GetIsFocus()

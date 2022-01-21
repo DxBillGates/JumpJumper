@@ -261,6 +261,12 @@
     <ClInclude Include="Header\Util\Utility.h">
       <Filter>Header\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Header\Input\XInputController.h">
+      <Filter>Header\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Input\XInputControllerButton.h">
+      <Filter>Header\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Math\Easing.cpp">
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="Source\Util\Utility.cpp">
       <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\XInputController.cpp">
+      <Filter>Source\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

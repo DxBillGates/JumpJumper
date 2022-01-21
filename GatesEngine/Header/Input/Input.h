@@ -2,6 +2,7 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "XInputController.h"
 
 #include <dinput.h>
 #include <Xinput.h>
@@ -16,7 +17,7 @@ namespace GatesEngine
 		IDirectInput8* dInput;
 		Keyboard keyboard;
 		Mouse mouse;
-		//XCtrler xctrler;
+		XInputController xctrler;
 		//DCtrler dctrler;
 	public:
 		/// <summary>
@@ -53,6 +54,12 @@ namespace GatesEngine
 		/// </summary>
 		/// <returns>マウス情報を保持しているクラスのポインタ</returns>
 		Mouse* GetMouse();
+
+		/// <summary>
+		/// 接続されているXInputControllerを返す
+		/// </summary>
+		/// <returns></returns>
+		XInputController* GetXCtrler();
 
 		/// <summary>
 		/// 使用しているWindowにフォーカスがあっているか確認する関数
