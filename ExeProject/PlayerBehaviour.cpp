@@ -72,6 +72,10 @@ void PlayerBehaviour::Move()
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_DOUBLE_TAP_PERMIT_TIME = 1;
 
+	moveVector += playerAxis.x * input->GetXCtrler()->GetLStickX();
+	moveVector += playerAxis.z * input->GetXCtrler()->GetLStickY();
+
+
 	// 同じキーのダブルタップを検知
 	for (int i = 0; i < 4; ++i)
 	{
@@ -165,6 +169,7 @@ void PlayerBehaviour::Move()
 		boostMoveFlag = true;
 	}
 
+	if (input->GetXCtrler()->CheckHitButtonTrigger(GatesEngine::XInputControllerButton::XINPUT_A))addVector += moveVector;
 	DecayVelocity(addVel, decayTime, 1);
 
 	moveVel = moveVector.Normalize() * MOVE_SPEED;
@@ -180,7 +185,8 @@ void PlayerBehaviour::Attack()
 {
 	GatesEngine::Math::Axis cameraAxis = mainCamera->GetRotation().GetAxis();
 
-	bool isInputLeftClick = (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::LEFT_CLICK)) ? true : false;
+	bool isInputLeftClick = (input->GetMouse()->GetCheckHitButton(GatesEngine::MouseButtons::LEFT_CLICK) || 
+		input->GetXCtrler()->CheckHitButton(GatesEngine::XInputControllerButton::XINPUT_RT)) ? true : false;
 	bool isShot = false;
 	unuseBulletCount = 0;
 
@@ -236,7 +242,8 @@ void PlayerBehaviour::LockOnAttack()
 	//{
 	//	return;
 	//}
-	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::RIGHT_CLICK))
+	if (input->GetMouse()->GetCheckPressTrigger(GatesEngine::MouseButtons::RIGHT_CLICK) || 
+		input->GetXCtrler()->CheckHitButtonTrigger(GatesEngine::XInputControllerButton::XINPUT_LT))
 	{
 		if (currentFrameTargetCount <= 0)
 		{

@@ -210,8 +210,8 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	SetGaussFilterData(renderTextureSize / 4, right, gaussValue, &gaussData[2], 0);
 	SetGaussFilterData(renderTextureSize / 4, up, gaussValue, &gaussData[3], 0);
 	gaussValue *= 2;
-	SetGaussFilterData(renderTextureSize / 8, right, gaussValue, &gaussData[4], 0);
-	SetGaussFilterData(renderTextureSize / 8, up, gaussValue, &gaussData[5], 0);
+	SetGaussFilterData(renderTextureSize / 6, right, gaussValue, &gaussData[4], 0);
+	SetGaussFilterData(renderTextureSize / 6, up, gaussValue, &gaussData[5], 0);
 
 	blurRenderTextures[0].Create(graphicsDevice, renderTextureSize / 2);
 	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize / 2);

@@ -15,5 +15,5 @@ void PlayerGPUParticleEmitterBehaviour::Start()
 
 	emitterData->MAX_LIFE = 1;
 	emitterData->startForce = { 1/2,1/2,1/2 };
-	emitterData->startForceMin = { -1,-1,-1 };
+	//emitterData->startForceMin = { -1,-1,-1 };
 }

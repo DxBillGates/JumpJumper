@@ -21,8 +21,13 @@ private:
 	std::vector<ButtonUI*> buttons;
 	GatesEngine::Math::Vector2 initializeSize;
 	ButtonUI* clickButton;
+	bool selectInputDeviceIsMouse;
+	bool selectPadButton;
+
+	float selectUIAnimationValue;
 private:
 	ButtonUI* CheckHitButtons();
+	ButtonUI* CheckHitPadButtonIsStart();
 public:
 	TitleManager();
 	~TitleManager();

@@ -68,6 +68,18 @@ void GatesEngine::XInputController::Update()
 	DWORD result = XInputGetState(mIndex, &ctrlState);
 }
 
+bool GatesEngine::XInputController::CheckHitAllButton()
+{
+	for (auto& checkButton : oldKey)
+	{
+		if (checkButton.flag)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool GatesEngine::XInputController::CheckHitButton(XInputControllerButton button)
 {
 	for (auto& checkButton : oldKey)

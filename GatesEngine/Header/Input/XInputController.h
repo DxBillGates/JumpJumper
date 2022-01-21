@@ -24,6 +24,7 @@ namespace GatesEngine
 		~XInputController();
 		void Initialize();
 		void Update();
+		bool CheckHitAllButton();
 		bool CheckHitButton(XInputControllerButton button);
 		bool CheckHitButtonTrigger(XInputControllerButton button);
 		float GetRStickX();

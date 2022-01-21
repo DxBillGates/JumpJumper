@@ -31,6 +31,29 @@ ButtonUI* TitleManager::CheckHitButtons()
 	return returnButton;
 }
 
+ButtonUI* TitleManager::CheckHitPadButtonIsStart()
+{
+	if (!input->GetXCtrler())return nullptr;
+	if (input->GetXCtrler()->CheckHitButtonTrigger(GatesEngine::XInputControllerButton::XINPUT_UP) ||
+		input->GetXCtrler()->CheckHitButtonTrigger(GatesEngine::XInputControllerButton::XINPUT_DOWN))
+	{
+		selectPadButton = !selectPadButton;
+	}
+
+	for (auto& ui : buttons)
+	{
+		if (selectPadButton && ui->GetType() == ButtonUIType::START)
+		{
+			return ui;
+		}
+		else if (!selectPadButton && ui->GetType() == ButtonUIType::EXIT)
+		{
+			return ui;
+		}
+	}
+	return nullptr;
+}
+
 TitleManager::TitleManager()
 	: graphicsDevice(nullptr)
 	, input(nullptr)
@@ -65,10 +88,8 @@ void TitleManager::Initialize()
 
 	for (auto& b : buttons)
 	{
-		//if (!b)continue;
 		b->SetScale(initializeSize);
 		b->SetAlpha(0);
-		//break;
 	}
 }
 
@@ -110,9 +131,14 @@ void TitleManager::Update()
 		buttonsAlpha += PER_FRAME;
 	}
 
-	if (!increaseAlphaFlag && input->GetKeyboard()->CheckHitKeyAll())
+	if (!increaseAlphaFlag)
 	{
-		decreaseAlphaFlag = true;
+		if (input->GetXCtrler())
+		{
+			bool checkHitButton = input->GetXCtrler()->CheckHitAllButton();
+			bool checkHitKey = input->GetKeyboard()->CheckHitKeyAll();
+			if (checkHitButton || checkHitKey)decreaseAlphaFlag = true;
+		}
 	}
 
 	if (!isTitlePause)
@@ -120,13 +146,32 @@ void TitleManager::Update()
 		for (auto& b : buttons)b->SetScale(initializeSize);
 
 		ButtonUI* hitButton = CheckHitButtons();
-		if (!hitButton)return;
+		GatesEngine::Math::Vector2 mouseMove = input->GetMouse()->GetMouseMove();
+		if (mouseMove.x != 0 && mouseMove.y != 0 && hitButton)selectInputDeviceIsMouse = true;
+		if (input->GetXCtrler())
+		{
+			if (input->GetXCtrler()->CheckHitAllButton())selectInputDeviceIsMouse = false;
+		}
 
-		hitButton->SetScale(initializeSize / 2);
+		if (!selectInputDeviceIsMouse)hitButton = CheckHitPadButtonIsStart();
+		else hitButton = CheckHitButtons();
+
+		if (!hitButton)
+		{
+			selectUIAnimationValue = 0;
+			return;
+		}
+
+		hitButton->SetScale(initializeSize + cosf(selectUIAnimationValue) * 50);
 
 		if (input->GetMouse()->GetCheckReleaseTrigger(GatesEngine::MouseButtons::LEFT_CLICK))clickButton = hitButton;
+		if (input->GetXCtrler())
+		{
+			if(input->GetXCtrler()->CheckHitButtonTrigger(GatesEngine::XInputControllerButton::XINPUT_A))clickButton = hitButton;
+		}
 		//GatesEngine::Math::Vector2 preSize = hitButton->GetScale();
 		//CheckHitUIToMouse();
+		selectUIAnimationValue += 0.016f;
 	}
 }
 
