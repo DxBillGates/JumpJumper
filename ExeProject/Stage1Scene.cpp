@@ -128,6 +128,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	b->GetTransform()->position = { 0,10000,0 };
 	b->SetTag("Boss");
 	boss = b;
+	bossBehaviour->SetTarget(playerBehaviour->GetGameObject());
 
 	GatesEngine::GameObject* g = nullptr;
 

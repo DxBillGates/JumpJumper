@@ -1,5 +1,6 @@
 #include "PlayerCamera.h"
 #include "Header/Util/Random.h"
+#include "Header/Util/Utility.h"
 
 void PlayerCamera::Shake()
 {
@@ -63,6 +64,7 @@ void PlayerCamera::Update()
 	{
 		isFocus = true;
 	}
+
 	if (isFocus)
 	{
 		if (input->GetIsFocus())
@@ -71,6 +73,7 @@ void PlayerCamera::Update()
 			//ƒ}ƒEƒX‚ÌˆÚ“®—Ê‚ðŽæ“¾
 			const float PER_FRAME = 1.0f / 60.0f;
 			Math::Vector2 inputValue = input->GetMouse()->GetMouseMove() * PER_FRAME / 10;
+
 			inputValue.x += -input->GetXCtrler()->GetRStick().x/50;
 			inputValue.y += input->GetXCtrler()->GetRStick().y/50;
 

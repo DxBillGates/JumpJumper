@@ -74,9 +74,62 @@ void BossBehaviour::Stoping()
 		stopFlag = false;
 		stopingTime = 0;
 		hp = MAX_HP;
+		chargeFlag = true;
 	}
 
 	stopingTime += PER_FRAME / MAX_STOPING_TIME;
+}
+
+void BossBehaviour::PreChargeAttack()
+{
+	if (!target) return;
+	if (!chargeFlag)return;
+
+	const float MAX_CHARGE_TIME = 3;
+	const float PER_FRAME = 1.0f / 60.0f;
+
+
+	// 攻撃フラグをセット
+	if (chargeTime >= 1)
+	{
+		chargeFlag = false;
+		chargeTime = 0;
+		chargeAttackFlag = true;
+		chargeAttackVector = target->GetTransform()->position - gameObject->GetTransform()->position;
+		//chargeAttackVector = chargeAttackVector.Normalize();
+		startChargeAttackPos = gameObject->GetTransform()->position;
+	}
+
+	float x = GatesEngine::Random::Rand(-100, 100);
+	float y = GatesEngine::Random::Rand(-100, 100);
+	float z = GatesEngine::Random::Rand(-100, 100);
+	gameObject->GetTransform()->position += GatesEngine::Math::Vector3(x, y, z).Normalize() * 10;
+	chargeTime += PER_FRAME / MAX_CHARGE_TIME;
+
+
+}
+
+void BossBehaviour::ChargeAttack()
+{
+	if (!chargeAttackFlag)return;
+
+	const float MAX_ATTACK_TIME = 1;
+	const float PER_FRAME = 1.0f / 60.0f;
+
+	if (chargeAttackTime > 1)
+	{
+		chargeFlag = true;
+		chargeAttackFlag = false;
+		chargeAttackTime = 0;
+		chargeAttackVector = GatesEngine::Math::Vector3();
+		return;
+	}
+
+	const float ATTACK_VALUE = 1;
+	GatesEngine::Math::Vector3 endLerpPos = startChargeAttackPos + chargeAttackVector * ATTACK_VALUE;
+	gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(startChargeAttackPos,endLerpPos, GatesEngine::Math::Easing::EaseInBack(chargeAttackTime));
+
+	chargeAttackTime += PER_FRAME / MAX_ATTACK_TIME;
 }
 
 BossBehaviour::BossBehaviour()
@@ -109,6 +162,12 @@ void BossBehaviour::Start()
 	gameObject->GetTransform()->scale = 500;
 	scale = gameObject->GetTransform()->scale.x;
 	isDead = false;
+
+	chargeFlag = false;
+	chargeAttackFlag = false;
+	chargeAttackTime = 0;
+	chargeTime = 0;
+	chargeAttackVector = {};
 }
 
 void BossBehaviour::Update()
@@ -123,53 +182,61 @@ void BossBehaviour::Update()
 
 		if (mainCamera)
 		{
-			mainCamera->SetShake(0.5f/2, 100);
+			mainCamera->SetShake(0.5f / 2, 100);
 		}
 	}
 
+	// 登場した時の回復演出
 	if (stopFlag)Stoping();
 
+	PreChargeAttack();
+	ChargeAttack();
+
+	// ライフ回復
 	const float PER_FRAME = 1.0f / 60.0f;
 	if (decreaseHpTime >= 1)decreaseHpTimeFlag = false;
 	if (decreaseHpTimeFlag)decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
 
+
+	// スケール変化終了
 	if (scale <= 0)
 	{
 		scale = 0;
 		isDead = false;
 	}
+
+
+	// 死んだときのスケール変化
 	gameObject->GetTransform()->scale = scale;
 	if (isDead)
 	{
 		scale -= 1;
 	}
+
 }
 
 void BossBehaviour::OnDraw()
 {
 	GatesEngine::GraphicsDevice* graphicsDevice = gameObject->GetGraphicsDevice();
 
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("testModel")->Draw();
-
-
-	GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(500);
-	GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(1000, 0, 0));
-
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 
 
-	posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(-1000, 0, 0));
+	//GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(500);
+	//GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(1000, 0, 0));
 
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("testMultiRTVShader")->Set(false);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
-	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+
+
+	//posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(-1000, 0, 0));
+
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
+	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
+	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 }
 
 void BossBehaviour::OnLateDraw()
@@ -208,7 +275,6 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 		const float PER_FRAME = 1.0f / 60.0f;
 		decreaseHpTimeFlag = true;
 		decreaseHpTime = 0;
-		//decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
 		if (hp <= 0)
 		{
 			isDead = true;
@@ -270,4 +336,9 @@ void BossBehaviour::SetInitScale(float value)
 bool BossBehaviour::GetIsDead()
 {
 	return isDead;
+}
+
+void BossBehaviour::SetTarget(GatesEngine::GameObject* targetObject)
+{
+	target = targetObject;
 }

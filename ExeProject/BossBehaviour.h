@@ -36,10 +36,20 @@ private:
 	bool isDead;
 	float scale;
 	float initScale;
+
+	GatesEngine::GameObject* target;
+	bool chargeFlag;
+	bool chargeAttackFlag;
+	GatesEngine::Math::Vector3 chargeAttackVector;
+	GatesEngine::Math::Vector3 startChargeAttackPos;
+	float chargeAttackTime;
+	float chargeTime;
 private:
 	void InitState();
 	void JoinOrLeft(BossState state);
 	void Stoping();
+	void PreChargeAttack();
+	void ChargeAttack();
 public:
 	BossBehaviour();
 	~BossBehaviour();
@@ -54,5 +64,6 @@ public:
 	bool GetIsEndScaleAnimation();
 	void SetInitScale(float value);
 	bool GetIsDead();
+	void SetTarget(GatesEngine::GameObject* targetObject);
 };
 
