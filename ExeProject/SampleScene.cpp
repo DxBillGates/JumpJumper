@@ -66,8 +66,8 @@ SampleScene::SampleScene(const char* sceneName, GatesEngine::Application* app) :
 	blurRenderTextures[1].Create(graphicsDevice, renderTextureSize / 2);
 	blurRenderTextures[2].Create(graphicsDevice, renderTextureSize / 4);
 	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 4);
-	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 8);
-	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 8);
+	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 6);
+	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 6);
 
 	sceneRenderTexture.Create(graphicsDevice, app->GetWindow()->GetWindowSize(), { 141, 219, 228, 255 });
 	sceneDepthTexture.Create(graphicsDevice, app->GetWindow()->GetWindowSize());

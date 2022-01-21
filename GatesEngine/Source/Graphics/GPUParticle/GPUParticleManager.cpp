@@ -4,7 +4,7 @@
 GatesEngine::GPUParticleManager::GPUParticleManager(GraphicsDevice* pGraphicsDevice)
 	: maxParticleValue(256000)
 	, nextParticleOffset(0)
-	, maxDescriptorValue(400)
+	, maxDescriptorValue(4000)
 	, uavNextOffset(0)
 	, srvNextOffset(0)
 	, particleBuffer(nullptr)

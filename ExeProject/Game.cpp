@@ -70,7 +70,7 @@ bool Game::LoadContents()
 	meshShadowShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD ,InputLayout::NORMAL }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV });
 
 	auto* pointShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"Point")), "PointShader");
-	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ADD, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true,1,true);
+	pointShader->Create({ InputLayout::POSITION }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV }, BlendMode::BLENDMODE_ALPHA, D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT, true,1,true);
 
 	auto* outlineShader = shaderManager->Add(new Shader(&graphicsDevice, std::wstring(L"PostEffect_Outline")), "PostEffect_OutlineShader");
 	outlineShader->Create({ InputLayout::POSITION,InputLayout::TEXCOORD }, { RangeType::CBV,RangeType::CBV,RangeType::CBV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV,RangeType::SRV });
@@ -192,6 +192,17 @@ bool Game::LoadContents()
 
 	tex = textureManager->Add(new Texture(), "snow_particleTex");
 	tex->Load("snow_particle.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "ui_start");
+	tex->Load("ui_start.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "ui_end");
+	tex->Load("ui_end.png", &graphicsDevice);
+
+	tex = textureManager->Add(new Texture(), "ui_goTitle");
+	tex->Load("ui_goTitle.png", &graphicsDevice);
+
+	mainCamera = &camera;
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));
 	sceneManager->AddScene(new TitleScene("TitleScene", this));

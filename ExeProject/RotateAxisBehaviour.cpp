@@ -27,7 +27,8 @@ void RotateAxisBehaviour::Start()
 	originPosition = gameObject->GetTransform()->position;
 	angle = 0;
 	isFaceCenter = true;
-	addValue = 1;
+	addValue = GatesEngine::Random::Rand(1, 2);
+	isRotateRight = GatesEngine::Random::Rand(-10, 10) >= 0 ? true : false;
 }
 
 void RotateAxisBehaviour::Update()
@@ -43,6 +44,7 @@ void RotateAxisBehaviour::Update()
 	dirCenter = dirCenter.Normalize();
 
 	if (!isFaceCenter)dirCenter = -dirCenter;
+	if (!isSetCenter)dirVectorValue = 0;
 
 	GatesEngine::Math::Quaternion posQuaternion = { pos.x,pos.y,pos.z,0 };
 	GatesEngine::Math::Quaternion quaternion = { axis,angle };
@@ -50,9 +52,10 @@ void RotateAxisBehaviour::Update()
 
 	quaternion = quaternion * posQuaternion * conjugateQuaternion;
 	GatesEngine::Math::Vector3 newPos = { quaternion.x,quaternion.y,quaternion.z };
-	transform->position = newPos + dirCenter * dirVectorValue * addValue;
+	transform->position = newPos + dirCenter * dirVectorValue + offset;
 
-	angle = INCREASE_ANGLE_VALUE;
+	float rotateValue = INCREASE_ANGLE_VALUE * addValue;
+	angle = isRotateRight ? rotateValue : -rotateValue;
 }
 
 void RotateAxisBehaviour::SetAxis(const GatesEngine::Math::Vector3& axis)
@@ -62,7 +65,13 @@ void RotateAxisBehaviour::SetAxis(const GatesEngine::Math::Vector3& axis)
 
 void RotateAxisBehaviour::SetCenter(const GatesEngine::Math::Vector3& pos)
 {
+	isSetCenter = true;
 	center = pos;
+}
+
+void RotateAxisBehaviour::SetOffset(const GatesEngine::Math::Vector3& pos)
+{
+	offset = pos;
 }
 
 void RotateAxisBehaviour::SetRotatePower(float value)

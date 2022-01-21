@@ -91,8 +91,8 @@ Vector2 GatesEngine::Mouse::GetMousePos()
 {
 	POINT point = { (LONG)mousePos.x,(LONG)mousePos.y };
 	ScreenToClient(hwnd, &point);
-	float a = (point.y / 1080.0f) * 23 * 3;
-	return {(float)point.x,(float)point.y + a};
+	//float a = (point.y / 1080.0f) * 23 * 3;
+	return {(float)point.x,(float)point.y/* + a*/};
 }
 
 void GatesEngine::Mouse::SetMouseCursor(const Vector2& setPos)

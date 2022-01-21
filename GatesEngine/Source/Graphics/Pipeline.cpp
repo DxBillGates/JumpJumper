@@ -79,7 +79,7 @@ void GatesEngine::Pipeline::Create(std::vector<ID3DBlob*> blobs, bool depthFlag,
 	}
 	//ƒuƒŒƒ“ƒhİ’è
 	D3D12_RENDER_TARGET_BLEND_DESC blendDesc = {};
-	SetBlendMode(&blendDesc, BlendMode::BLENDMODE_ALPHA);
+	SetBlendMode(&blendDesc,blendMode);
 	//PSO‚ÌŠeíİ’è
 	HRESULT result;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};

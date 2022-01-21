@@ -225,7 +225,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	reverceResoTextures[2].Create(graphicsDevice, renderTextureSize / 4);
 
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		auto* g = gameObjectManager.Add(new GameObject());
 		g->SetGraphicsDevice(graphicsDevice);
@@ -239,7 +239,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 
 		auto* secondCollider = g->AddComponent<Collider>();
 		secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
-		secondCollider->SetSize(100);
+		secondCollider->SetSize(50);
 		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
 
 		g->SetTag("enemy");
@@ -268,7 +268,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 		bullet->SetTag("enemyBullet");
 		bullet->SetName("enemyBullet");
 
-		e->SetTarget(playerBehaviour->GetGameObject());
+		//e->SetTarget(playerBehaviour->GetGameObject());
 		e->AddBullet(bulletBehaviour);
 
 		bullet->Start();

@@ -88,11 +88,11 @@ void TitleManager::Update()
 	}
 
 	const float PER_FRAME = 1.0f / 60.0f;
-	const float DECREASE_TIME = 5;
+	const float DECREASE_TIME = 1;
 
 	if (decreaseAlphaFlag)alpha -= PER_FRAME / DECREASE_TIME;
 
-	const float INCREASE_TIME = 3;
+	const float INCREASE_TIME = 1;
 	if (increaseAlphaFlag)alpha += PER_FRAME / INCREASE_TIME;
 
 	if (buttonsAlpha > 1)
@@ -161,7 +161,6 @@ void TitleManager::LateDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, a));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	meshManager->GetMesh("2DPlane")->Draw();
-
 }
 
 bool TitleManager::GetIsTitlePause()

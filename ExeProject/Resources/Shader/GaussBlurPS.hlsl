@@ -13,8 +13,8 @@ float4 main(VSOutput input) : SV_TARGET
 
 	for (int i = 0; i < 16; ++i)
 	{
-		result += /*data[i].z * */tex.Sample(clampPointSampler, input.uv + data[i].xy);
+		result += data[i].z * tex.Sample(clampPointSampler, input.uv + data[i].xy);
 	}
 
-	return float4(result.rgb/16,1);
+	return float4(result.rgb,1);
 }
