@@ -10,7 +10,7 @@ SamplerState clampLinearSampler : register(s3);
 
 float4 main(VSOutput input) : SV_TARGET
 {
-	float4 texColor = tex.Sample(clampLinearSampler,input.uv);
+	float4 texColor = tex.Sample(clampLinearSampler,input.uv) * color;
 	//texColor += subtex.Sample(clampPointSampler, input.uv);
 	return float4(texColor.rgba);
 }

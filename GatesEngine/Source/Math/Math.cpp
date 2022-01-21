@@ -36,7 +36,7 @@ void GatesEngine::Math::SetGaussFilterData(const GatesEngine::Math::Vector2& siz
 
 	for (int i = 0; i < 8; ++i)
 	{
-		data->data[i].z / totalWeight;
+		data->data[i].z /= totalWeight;
 	}
 
 	// 負の方向の値もセット

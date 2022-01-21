@@ -89,7 +89,7 @@ bool GatesEngine::GraphicsDevice::Create(Window* mainWindow)
 	cBufferAllocater = new CBufferAllocater();
 
 	cbvSrvUavHeap->SetGraphicsDevice(mDevice,mCmdList);
-	cbvSrvUavHeap->Create({ 100000,256,0 });
+	cbvSrvUavHeap->Create({ 10000,2560,0 });
 
 	cBufferAllocater->SetGraphicsDevice(this);
 	cBufferAllocater->SetHeap(cbvSrvUavHeap);

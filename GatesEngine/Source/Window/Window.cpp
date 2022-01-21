@@ -36,10 +36,10 @@ bool GatesEngine::Window::Create(const Vector2& windowSize, const char* title)
 
 	// WindowÇÃê∂ê¨
 	RECT rect = { 0,0,(LONG)windowSize.x,(LONG)windowSize.y };
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+	AdjustWindowRect(&rect, WS_VISIBLE | WS_POPUP, false);
 	hwnd = CreateWindow(wndClass.lpszClassName,
 		wndClass.lpszClassName,
-		WS_OVERLAPPEDWINDOW,
+		WS_VISIBLE | WS_POPUP,
 		0,
 		0,
 		rect.right - rect.left,

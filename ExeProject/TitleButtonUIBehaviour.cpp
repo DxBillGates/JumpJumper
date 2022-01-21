@@ -4,6 +4,7 @@
 #include "Header/Graphics/Manager/ResourceManager.h"
 
 TitleButtonUIBehaviour::TitleButtonUIBehaviour()
+	: texture(nullptr)
 {
 }
 
@@ -28,10 +29,27 @@ void TitleButtonUIBehaviour::OnLateDraw()
 
 	if (!graphicsDevice)return;
 
-	shaderManager->GetShader("DefaultSpriteShader")->Set();
+	if (texture)
+	{
+		GatesEngine::ResourceManager::GetShaderManager()->GetShader("TextureSpriteShader")->Set();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ scale.x,scale.y,0 }) * GatesEngine::Math::Matrix4x4::Translate({ pos.x,pos.y,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 1,1, alpha));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		texture->Set(3);
+		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+	}
+	else
+	{
+		shaderManager->GetShader("DefaultSpriteShader")->Set();
 
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ scale.x,scale.y,0 }) * GatesEngine::Math::Matrix4x4::Translate({ pos.x,pos.y,0 }));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, alpha));
-	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
-	meshManager->GetMesh("2DPlane")->Draw();
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ scale.x,scale.y,0 }) * GatesEngine::Math::Matrix4x4::Translate({ pos.x,pos.y,0 }));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(1, 0, 0, alpha));
+		graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
+		meshManager->GetMesh("2DPlane")->Draw();
+	}
+}
+
+void TitleButtonUIBehaviour::SetTexture(GatesEngine::Texture* setTexture)
+{
+	texture = setTexture;
 }

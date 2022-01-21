@@ -1,5 +1,8 @@
 #include "DefaultGPUParticleEmitterBehaviour.h"
 #include "Header/GameObject/GameObject.h"
+#include "Header/Graphics/Manager/ResourceManager.h"
+#include "Header/Graphics/Manager/TextureManager.h"
+#include "Header/Util/Random.h"
 
 DefaultGPUParticleEmitterBehaviour::DefaultGPUParticleEmitterBehaviour()
 	: gParticleEmitter(new GatesEngine::GPUParticleEmitter())
@@ -19,7 +22,9 @@ DefaultGPUParticleEmitterBehaviour::~DefaultGPUParticleEmitterBehaviour()
 void DefaultGPUParticleEmitterBehaviour::Start()
 {
 	emitterData = gParticleEmitter->GetAddData();
-	emitterData->MAX_LIFE = 4;
+	emitterData->MAX_LIFE = 2;
+	addParticleCyclePerFrame = 0;
+	tex = GatesEngine::ResourceManager::GetTextureManager()->GetTexture("particleTex");
 }
 
 void DefaultGPUParticleEmitterBehaviour::Update()
