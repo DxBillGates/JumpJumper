@@ -202,6 +202,9 @@ bool Game::LoadContents()
 	tex = textureManager->Add(new Texture(), "ui_goTitle");
 	tex->Load("ui_goTitle.png", &graphicsDevice);
 
+	tex = textureManager->Add(new Texture(), "ui_lockon");
+	tex->Load("ui_lockon.png", &graphicsDevice);
+
 	mainCamera = &camera;
 
 	sceneManager->AddScene(new SampleScene("SampleScene", this));

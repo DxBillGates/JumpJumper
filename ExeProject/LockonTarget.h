@@ -12,11 +12,18 @@ private:
 	const int MAX_LOCKON_TIME;
 	// ÉçÉbÉNÇµÇƒÇ¢ÇÈÇ©
 	bool isLockon;
+
+	float scaleAnimationTime;
+	float angle;
 public:
 	LockonTarget();
 	~LockonTarget();
 	void Initialize();
+	void BaseDataInitialize();
+	void AnimationDataInitialize();
 	void Update();
+	void Draw(GatesEngine::GraphicsDevice* gDevice,const GatesEngine::Math::Matrix4x4& billBoardData);
+
 	void SetLockonTarget(GatesEngine::GameObject* target);
 	GatesEngine::GameObject* GetTarget();
 	float GetLockTime();

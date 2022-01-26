@@ -426,16 +426,18 @@ void PlayerBehaviour::OnLateDraw()
 	for (auto& t : targets)
 	{
 		if (!t.GetIsLockon())continue;
-		float d = 1;
-		if (d < 1)d = 1;
-		float addScale = (t.GetMaxLockonTime() - t.GetLockTime()) / t.GetMaxLockonTime();
-		d *= GatesEngine::Math::Easing::EaseOutQuad(addScale);
-		GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-		graphicsDevice->GetCBVSRVUAVHeap()->Set();
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t.GetTarget()->GetTransform()->position }));
-		graphicsDevice->GetMainCamera()->Set(2);
-		graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
-		GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
+		t.Draw(graphicsDevice, mainCamera->GetRotation());
+
+		//float d = 1;
+		//if (d < 1)d = 1;
+		//float addScale = (t.GetMaxLockonTime() - t.GetLockTime()) / t.GetMaxLockonTime();
+		//d *= GatesEngine::Math::Easing::EaseOutQuad(addScale);
+		//GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+		//graphicsDevice->GetCBVSRVUAVHeap()->Set();
+		//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t.GetTarget()->GetTransform()->position }));
+		//graphicsDevice->GetMainCamera()->Set(2);
+		//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
+		//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 
 
@@ -519,7 +521,7 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 		// ロックオン中の敵がいた場合スキップ
 		if (g.GetTarget() == other)
 		{
-			g.Initialize();
+			g.BaseDataInitialize();
 			g.SetLockonTarget(other);
 			return;
 		}
