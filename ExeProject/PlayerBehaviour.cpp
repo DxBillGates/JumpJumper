@@ -7,6 +7,7 @@
 #include "Header/Graphics/Manager/ResourceManager.h"
 #include "Header/Graphics/Camera2D.h"
 #include "Header/Util/Utility.h"
+#include <algorithm>
 
 void PlayerBehaviour::SetVelocity()
 {
@@ -266,7 +267,7 @@ void PlayerBehaviour::LockOnAttack()
 		int useBulletCount = 0;
 		for (auto& t : targets)
 		{
-			if (!t.GetIsLockon())break;
+			if (!t.GetIsLockon() && !t.GetWasLockon())continue;
 			GatesEngine::Math::Vector3 targetDir = t.GetTarget()->GetTransform()->position - gameObject->GetTransform()->position;
 			targetDir = GatesEngine::Math::Vector3::Normalize(targetDir);
 			for (auto& b : bullets)
@@ -320,7 +321,61 @@ void PlayerBehaviour::ClearTargets()
 {
 	for (auto& g : targets)
 	{
+		if (g.GetIsLockon())
+		{
+			g.SetWasLockon(true);
+			continue;
+		}
 		g.Initialize();
+	}
+}
+
+void PlayerBehaviour::SortTarget()
+{
+	int arraySize = targets.size();
+	LockonTarget* workSpace = new LockonTarget[(size_t)arraySize];
+
+	MergeSort(targets.data(), 0, arraySize - 1, workSpace);
+
+	delete[] workSpace;
+}
+
+void PlayerBehaviour::MergeSort(LockonTarget* data, size_t begin, size_t end, LockonTarget* work)
+{
+	if (begin >= end)return;
+
+	// 真ん中を算出して再帰的に分割
+	size_t mid = (begin + end) / 2;
+	MergeSort(data, begin, mid, work);
+	MergeSort(data, mid + 1,end, work);
+
+	// 前半要素のコピー
+	for (size_t i = begin; i <= mid; ++i)
+	{
+		work[i] = data[i];
+	}
+
+	// 後半要素のコピー
+	for (size_t i = mid + 1, j = end; i <= end; ++i, --j)
+	{
+		work[i] = data[j];
+	}
+
+	size_t i = begin;
+	size_t j = end;
+
+	for (size_t k = begin; k <= end; ++k)
+	{
+		if (work[i].GetDepth() >= work[j].GetDepth())
+		{
+			data[k] = work[i];
+			++i;
+		}
+		else
+		{
+			data[k] = work[j];
+			--j;
+		}
 	}
 }
 
@@ -383,6 +438,11 @@ void PlayerBehaviour::Start()
 
 	isShotInterval = false;
 	shotInterval = 0;
+
+	for (auto& t : targets)
+	{
+		t.Initialize();
+	}
 }
 
 void PlayerBehaviour::Update()
@@ -391,6 +451,11 @@ void PlayerBehaviour::Update()
 	lockonAttackFlag = false;
 	emitteAttackFlag = false;
 	boostMoveFlag = false;
+
+	//if (input->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::SPACE))
+	//{
+	//	SortTarget();
+	//}
 
 	bool targetsIsEmpty = true;
 	for (auto& t : targets)
@@ -427,17 +492,6 @@ void PlayerBehaviour::OnLateDraw()
 	{
 		if (!t.GetIsLockon())continue;
 		t.Draw(graphicsDevice, mainCamera->GetRotation());
-
-		//float d = 1;
-		//if (d < 1)d = 1;
-		//float addScale = (t.GetMaxLockonTime() - t.GetLockTime()) / t.GetMaxLockonTime();
-		//d *= GatesEngine::Math::Easing::EaseOutQuad(addScale);
-		//GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-		//graphicsDevice->GetCBVSRVUAVHeap()->Set();
-		//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * mainCamera->GetRotation() * GatesEngine::Math::Matrix4x4::Translate({ t.GetTarget()->GetTransform()->position }));
-		//graphicsDevice->GetMainCamera()->Set(2);
-		//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
-		//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
 	}
 
 
@@ -516,10 +570,11 @@ void PlayerBehaviour::AddBullet(Bullet* newBullet)
 
 void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 {
+	SortTarget();
 	for (auto& g : targets)
 	{
 		// ロックオン中の敵がいた場合スキップ
-		if (g.GetTarget() == other)
+		if (g.GetTarget() == other && g.GetIsLockon())
 		{
 			g.BaseDataInitialize();
 			g.SetLockonTarget(other);
@@ -531,6 +586,8 @@ void PlayerBehaviour::AddTarget(GatesEngine::GameObject* other)
 		{
 			g.Initialize();
 			g.SetLockonTarget(other);
+			float depth = GatesEngine::Math::Vector3::Distance(mainCamera->GetPosition(),other->GetTransform()->position);
+			g.SetDepth(depth);
 			++currentFrameTargetCount;
 			break;
 		}

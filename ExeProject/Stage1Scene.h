@@ -40,10 +40,6 @@ private:
 	GatesEngine::DepthStencilTexture redrawDepthTex;
 	GatesEngine::RenderTexture subPostprocessTexture;
 	GatesEngine::RenderTexture brightnessTexture;
-	GatesEngine::RenderTexture blurRenderTexture;
-
-	GatesEngine::RenderTexture blurRenderTexture2;
-	GatesEngine::RenderTexture blurRenderTexture3;
 
 	GatesEngine::RenderTexture blurPlusParticleTex;
 
@@ -64,7 +60,6 @@ private:
 	GaussFilterData gaussData[6];
 
 	GatesEngine::RenderTexture blurRenderTextures[6];
-	GatesEngine::RenderTexture reverceResoTextures[3];
 
 	bool isIncreaseBlack;
 	bool isDecreaseBlack;

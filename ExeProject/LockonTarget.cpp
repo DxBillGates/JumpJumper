@@ -16,10 +16,22 @@ LockonTarget::~LockonTarget()
 {
 }
 
+LockonTarget& LockonTarget::operator=(const LockonTarget& other)
+{
+	target = other.target;
+	lockonTime = other.lockonTime;
+	isLockon = other.isLockon;
+	scaleAnimationTime = other.scaleAnimationTime;
+	angle = other.angle;
+	depth = other.depth;
+	return *this;
+}
+
 void LockonTarget::Initialize()
 {
 	BaseDataInitialize();
 	AnimationDataInitialize();
+	depth = -1;
 }
 
 void LockonTarget::BaseDataInitialize()
@@ -27,6 +39,7 @@ void LockonTarget::BaseDataInitialize()
 	target = nullptr;
 	lockonTime = 0;
 	isLockon = false;
+	wasLockon = false;
 }
 
 void LockonTarget::AnimationDataInitialize()
@@ -96,7 +109,12 @@ float LockonTarget::GetLockTime()
 	return lockonTime;
 }
 
-bool LockonTarget::GetIsLockon()
+void LockonTarget::SetWasLockon(bool flag)
+{
+	wasLockon = flag;
+}
+
+const bool LockonTarget::GetIsLockon() const
 {
 	return isLockon;
 }
@@ -104,4 +122,19 @@ bool LockonTarget::GetIsLockon()
 const int LockonTarget::GetMaxLockonTime()
 {
 	return MAX_LOCKON_TIME;
+}
+
+const float LockonTarget::GetDepth() const
+{
+	return depth;
+}
+
+const bool LockonTarget::GetWasLockon() const
+{
+	return wasLockon;
+}
+
+void LockonTarget::SetDepth(float value)
+{
+	depth = value;
 }

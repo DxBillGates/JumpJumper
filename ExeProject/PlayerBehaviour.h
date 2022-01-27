@@ -7,6 +7,11 @@
 #include "PlayerBullet.h"
 #include "PlayerCamera.h"
 
+#include <vector>
+#include <string>
+#include <tuple>
+#include <algorithm>
+
 class PlayerBehaviour : public GatesEngine::Behaviour
 {
 private:
@@ -91,6 +96,13 @@ private:
 	/// ロックオンした敵情報をクリアする関数
 	/// </summary>
 	void ClearTargets();
+
+	/// <summary>
+	/// ターゲットリストの深度ソート
+	/// </summary>
+	void SortTarget();
+
+	void MergeSort(LockonTarget* data, size_t begin, size_t end, LockonTarget* work);
 
 	void DecayVelocity(GatesEngine::Math::Vector3& vec,float& time,const float MAX_TIME);
 public:

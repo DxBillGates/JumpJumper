@@ -194,9 +194,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	parlinNoiseHeightMapTex.Create(graphicsDevice, renderTextureSize);
 	subPostprocessTexture.Create(graphicsDevice, renderTextureSize, GatesEngine::Math::Vector4(1, 1, 1, 255));
 	brightnessTexture.Create(graphicsDevice, renderTextureSize);
-	blurRenderTexture.Create(graphicsDevice, renderTextureSize / 8);
-	blurRenderTexture2.Create(graphicsDevice, renderTextureSize / 4);
-	blurRenderTexture3.Create(graphicsDevice, renderTextureSize / 8);
 	redrawRenderTexture.Create(graphicsDevice, renderTextureSize);
 	redrawDepthTex.Create(graphicsDevice, renderTextureSize);
 	blurPlusParticleTex.Create(graphicsDevice, renderTextureSize);
@@ -220,10 +217,6 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	blurRenderTextures[3].Create(graphicsDevice, renderTextureSize / 4);
 	blurRenderTextures[4].Create(graphicsDevice, renderTextureSize / 6);
 	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 6);
-
-	reverceResoTextures[0].Create(graphicsDevice, renderTextureSize / 8);
-	reverceResoTextures[1].Create(graphicsDevice, renderTextureSize / 4);
-	reverceResoTextures[2].Create(graphicsDevice, renderTextureSize / 4);
 
 
 	for (int i = 0; i < 10; ++i)
