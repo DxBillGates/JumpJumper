@@ -219,7 +219,7 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	blurRenderTextures[5].Create(graphicsDevice, renderTextureSize / 6);
 
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
 		auto* g = gameObjectManager.Add(new GameObject());
 		g->SetGraphicsDevice(graphicsDevice);
@@ -378,68 +378,6 @@ void Stage1Scene::Update()
 	}
 
 
-	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::DOWN))
-	{
-		using namespace GatesEngine;
-		float x, y, z;
-		float range = 3000;
-		x = Random::Rand(-range, range);
-		y = Random::Rand(-100, range);
-		z = Random::Rand(-range, range);
-
-		for (int i = 0; i < 1; ++i)
-		{
-			auto* g = gameObjectManager.Add(new GameObject());
-			g->SetGraphicsDevice(graphicsDevice);
-			auto* e = g->AddComponent<NormalEnemyBehaviour>();
-			e->SetBoss(boss);
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(g->AddComponent<Collider>()), GColliderType::ENEMY);
-			g->SetCollider();
-			g->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			g->GetTransform()->scale = { 100 };
-			g->GetCollider()->SetSize(2);
-
-			auto* secondCollider = g->AddComponent<Collider>();
-			secondCollider->SetType(GatesEngine::ColliderType::SPHERE);
-			secondCollider->SetSize(10);
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(secondCollider), GColliderType::ENEMY);
-
-			g->SetTag("enemy");
-			float x, y, z;
-			float range = 3000;
-			x = Random::Rand(-range, range);
-			y = Random::Rand(-100, range);
-			z = Random::Rand(-range, range);
-			g->GetTransform()->position = { x,y,z };
-			g->Start();
-
-			auto* bullet = gameObjectManager.Add(new GameObject());
-			bullet->SetGraphicsDevice(graphicsDevice);
-			auto* bulletBehaviour = bullet->AddBehavior<BulletBehaviour>();
-			auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
-			bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
-			gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 1280);
-			gParticleEmitter->SetComputeShader(testCS);
-			gParticleEmitter->SetInitializeShader(testInitializeCS);
-			stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::ENEMY_BULLET);
-			bullet->AddComponent<Collider>();
-			bullet->SetCollider();
-			bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
-			bullet->GetCollider()->SetSize({ 1 });
-			bullet->GetTransform()->scale = 10;
-			bullet->SetTag("enemyBullet");
-			bullet->SetName("enemyBullet");
-
-			e->SetTarget(playerBehaviour->GetGameObject());
-			e->AddBullet(bulletBehaviour);
-
-			bullet->Start();
-			bullet->GetTransform()->position = g->GetTransform()->position;
-			//boss->GetComponent<BossBehaviour>()->AddNormalEnemy(g, e);
-
-			enemyManager.RegisterEnemy(e, g);
-		}
-	}
 
 	if (GatesEngine::Input::GetInstance()->GetKeyboard()->CheckPressTrigger(GatesEngine::Keys::I) || playerBehaviour->GetHp() <= 0)
 	{
@@ -467,6 +405,8 @@ void Stage1Scene::Update()
 		gameObject->GetTransform()->position = boss->GetTransform()->position;
 	}
 
+
+	// ƒV[ƒ“‘JˆÚˆ—
 	bool preIsDecreaseBlack = isDecreaseBlack;
 	isDecreaseBlack = bossBehaviour->GetIsEndScaleAnimation();
 	if (!preIsDecreaseBlack && isDecreaseBlack)

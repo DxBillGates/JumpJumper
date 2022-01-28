@@ -5,6 +5,81 @@
 #include "Header/Util/Random.h"
 #include "PlayerCamera.h"
 
+void BossBehaviour::PreAttack()
+{
+	switch (attackMode)
+	{
+	case BossAttackMode::NONE:
+		break;
+	case BossAttackMode::CHARGE_ATTACK:
+		PreChargeAttack();
+		break;
+	default:
+		break;
+	}
+}
+
+void BossBehaviour::Attack()
+{
+	switch (attackMode)
+	{
+	case BossAttackMode::NONE:
+		break;
+	case BossAttackMode::CHARGE_ATTACK:
+		ChargeAttack();
+		break;
+	default:
+		break;
+	}
+}
+
+void BossBehaviour::EndAttack()
+{
+	attackState = BossAttackState::NONE;
+	attackMode = BossAttackMode::NONE;
+}
+
+void BossBehaviour::SetState()
+{
+	// 攻撃ステート変更
+	if (attackState == BossAttackState::NONE)
+	{
+
+		const float CHARGE_ATTACK_DISTAMCE = 5000;
+		float targetDistance = CalcTargetDistance();
+
+		if (targetDistance >= CHARGE_ATTACK_DISTAMCE)
+		{
+			SetAttackMode(BossAttackMode::CHARGE_ATTACK);
+		}
+	}
+
+	// 移動ステート変更
+	if (moveState == BossMoveState::NONE)
+	{
+
+	}
+}
+
+void BossBehaviour::SetAttackMode(BossAttackMode setAttackMode)
+{
+	attackMode = setAttackMode;
+	attackState = BossAttackState::PRE;
+}
+
+void BossBehaviour::SetMoveState(BossMoveState setMoveState)
+{
+	moveState = setMoveState;
+}
+
+float BossBehaviour::CalcTargetDistance()
+{
+	if (!target)return 0;
+
+	float length = GatesEngine::Math::Vector3::Distance(target->GetTransform()->position, gameObject->GetTransform()->position);
+	return length;
+}
+
 void BossBehaviour::InitState()
 {
 	state = BossState::NONE;
@@ -88,8 +163,8 @@ void BossBehaviour::PreChargeAttack()
 	const float MAX_CHARGE_TIME = 3;
 	const float PER_FRAME = 1.0f / 60.0f;
 
-
-	// 攻撃フラグをセット
+	chargeAttackVector = target->GetTransform()->position - gameObject->GetTransform()->position;
+	startChargeAttackPos = gameObject->GetTransform()->position;
 	if (chargeTime >= 1)
 	{
 		chargeFlag = false;
@@ -98,6 +173,7 @@ void BossBehaviour::PreChargeAttack()
 		chargeAttackVector = target->GetTransform()->position - gameObject->GetTransform()->position;
 		//chargeAttackVector = chargeAttackVector.Normalize();
 		startChargeAttackPos = gameObject->GetTransform()->position;
+		attackState = BossAttackState::ATTACK;
 	}
 
 	float x = GatesEngine::Random::Rand(-100, 100);
@@ -105,6 +181,16 @@ void BossBehaviour::PreChargeAttack()
 	float z = GatesEngine::Random::Rand(-100, 100);
 	gameObject->GetTransform()->position += GatesEngine::Math::Vector3(x, y, z).Normalize() * 10;
 	chargeTime += PER_FRAME / MAX_CHARGE_TIME;
+
+
+
+	int incrementChargeFrameCount = 3;
+
+	if (chargeAttackFrameCount % incrementChargeFrameCount == 0)
+	{
+		++chargeAttackDrawCount;
+	}
+	++chargeAttackFrameCount;
 
 
 }
@@ -122,12 +208,27 @@ void BossBehaviour::ChargeAttack()
 		chargeAttackFlag = false;
 		chargeAttackTime = 0;
 		chargeAttackVector = GatesEngine::Math::Vector3();
+		chargeAttackDrawCount = 0;
+		chargeAttackFrameCount = 0;
+		EndAttack();
 		return;
 	}
 
 	const float ATTACK_VALUE = 1;
 	GatesEngine::Math::Vector3 endLerpPos = startChargeAttackPos + chargeAttackVector * ATTACK_VALUE;
-	gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(startChargeAttackPos,endLerpPos, GatesEngine::Math::Easing::EaseInBack(chargeAttackTime));
+	gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(startChargeAttackPos, endLerpPos, GatesEngine::Math::Easing::EaseInBack(chargeAttackTime));
+
+	int incrementChargeFrameCount = 3;
+
+	if (chargeAttackFrameCount % incrementChargeFrameCount == 0)
+	{
+		--chargeAttackDrawCount;
+		if (chargeAttackDrawCount < 0)
+		{
+			chargeAttackDrawCount = 0;
+		}
+	}
+	++chargeAttackFrameCount;
 
 	chargeAttackTime += PER_FRAME / MAX_ATTACK_TIME;
 }
@@ -154,6 +255,10 @@ BossBehaviour::~BossBehaviour()
 void BossBehaviour::Start()
 {
 	InitState();
+
+	attackState = BossAttackState::NONE;
+	attackMode = BossAttackMode::NONE;
+
 	stopFlag = false;
 	stopingTime = 0;
 	hp = 0;
@@ -188,14 +293,24 @@ void BossBehaviour::Update()
 
 	// 登場した時の回復演出
 	if (stopFlag)Stoping();
-
-	PreChargeAttack();
-	ChargeAttack();
-
 	// ライフ回復
 	const float PER_FRAME = 1.0f / 60.0f;
 	if (decreaseHpTime >= 1)decreaseHpTimeFlag = false;
 	if (decreaseHpTimeFlag)decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
+
+
+	// 移動、攻撃処理
+	if (!isDead)
+	{
+		// 攻撃処理
+		if (attackState == BossAttackState::PRE)PreAttack();
+		else if (attackState == BossAttackState::ATTACK)Attack();
+
+
+		SetState();
+		//PreChargeAttack();
+		//ChargeAttack();
+	}
 
 
 	// スケール変化終了
@@ -222,21 +337,6 @@ void BossBehaviour::OnDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, gameObject->GetTransform()->GetMatrix());
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
-
-
-	//GatesEngine::Math::Matrix4x4 scaleMatrix = GatesEngine::Math::Matrix4x4::Scale(500);
-	//GatesEngine::Math::Matrix4x4 posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(1000, 0, 0));
-
-	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
-	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
-
-
-	//posMatrix = GatesEngine::Math::Matrix4x4::Translate(gameObject->GetTransform()->position + GatesEngine::Math::Vector3(-1000, 0, 0));
-
-	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, scaleMatrix * posMatrix);
-	//graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{1,0.5f,0,1} });
-	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
 }
 
 void BossBehaviour::OnLateDraw()
@@ -261,6 +361,35 @@ void BossBehaviour::OnLateDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(1, GatesEngine::Math::Vector4(0, 0, 0, 1));
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
+
+	if (attackMode == BossAttackMode::CHARGE_ATTACK)
+	{
+		const int MAX_DRAW_CHARGE_OBJECT = 30;
+		float objectDistance = chargeAttackVector.Length() / MAX_DRAW_CHARGE_OBJECT;
+		GatesEngine::Math::Vector3 vec;
+		GatesEngine::Math::Vector3 startPos;
+		if (attackState == BossAttackState::PRE)
+		{
+			vec = chargeAttackVector;
+			startPos = startChargeAttackPos;
+		}
+		else if (attackState == BossAttackState::ATTACK)
+		{
+			vec = -chargeAttackVector;
+			startPos = startChargeAttackPos + chargeAttackVector.Normalize() * objectDistance * 30;
+		}
+		chargeAttackDrawCount = chargeAttackDrawCount >= MAX_DRAW_CHARGE_OBJECT ? MAX_DRAW_CHARGE_OBJECT : chargeAttackDrawCount;
+
+		for (int i = 0; i < chargeAttackDrawCount; ++i)
+		{
+			GatesEngine::Math::Vector3 pos = startPos + vec.Normalize() * objectDistance * i;
+			GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
+			graphicsDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 10,10,10 }) * GatesEngine::Math::Matrix4x4::Translate(pos));
+			graphicsDevice->GetMainCamera()->Set(2);
+			graphicsDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ {0,-1,0,0},{0,0.5f,0,1} });
+			GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Cube")->Draw();
+		}
+	}
 
 }
 

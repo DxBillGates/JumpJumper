@@ -11,11 +11,49 @@ enum class BossState
 	LEFT,
 };
 
+enum class BossMoveState
+{
+	NONE,
+
+	// üŒ`ˆÚ“®
+	LERP,
+
+	// ‰ñ“]ˆÚ“®
+	ROTATE,
+};
+
+enum class BossAttackState
+{
+	NONE,
+
+	// UŒ‚€”õ
+	PRE,
+	
+	// UŒ‚
+	ATTACK,
+
+	// UŒ‚ŠJn
+	END,
+};
+
+enum class BossAttackMode
+{
+	NONE,
+
+	// “ËiUŒ‚
+	CHARGE_ATTACK,
+};
+
 class BossBehaviour : public GatesEngine::Behaviour
 {
 private:
-private:
+	GatesEngine::GameObject* target;
+
 	BossState state;
+	BossMoveState moveState;
+	BossAttackState attackState;
+	BossAttackMode attackMode;
+private:
 	bool isJoining;
 	float joiningTime;
 	bool isLefting;
@@ -37,13 +75,22 @@ private:
 	float scale;
 	float initScale;
 
-	GatesEngine::GameObject* target;
 	bool chargeFlag;
 	bool chargeAttackFlag;
 	GatesEngine::Math::Vector3 chargeAttackVector;
 	GatesEngine::Math::Vector3 startChargeAttackPos;
 	float chargeAttackTime;
 	float chargeTime;
+	int chargeAttackDrawCount;
+	int chargeAttackFrameCount;
+private:
+	void PreAttack();
+	void Attack();
+	void EndAttack();
+	void SetState();
+	void SetAttackMode(BossAttackMode setAttackMode);
+	void SetMoveState(BossMoveState setMoveState);
+	float CalcTargetDistance();
 private:
 	void InitState();
 	void JoinOrLeft(BossState state);
