@@ -138,6 +138,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="ExplosionGPUParticleEmitterBehaviour.cpp" />
+    <ClCompile Include="FlagController.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjectCollisionManager.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="ExplosionGPUParticleEmitterBehaviour.h" />
+    <ClInclude Include="FlagController.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjectCollisionManager.h" />
     <ClInclude Include="GameState.h" />

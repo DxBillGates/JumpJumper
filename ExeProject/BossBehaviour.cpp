@@ -83,10 +83,9 @@ float BossBehaviour::CalcTargetDistance()
 void BossBehaviour::InitState()
 {
 	state = BossState::NONE;
-	isJoining = false;
-	joiningTime = 1;
-	isLefting = false;
-	leftingTime = 1;
+	joinFlagController.Initialize();
+	joinFlagController.SetTime(1);
+	leftFlagController.Initialize();
 }
 
 void BossBehaviour::JoinOrLeft(BossState state)
@@ -97,34 +96,33 @@ void BossBehaviour::JoinOrLeft(BossState state)
 	// PER_FRAME / MAX_TIMEを加算することでMAX_TIMEに指定した時間までの1フレームの経過時間を取得
 	const float PER_FRAME = 1.0f / 60.0f;
 	const float MAX_TIME = 3;
-
+	joinFlagController.SetMaxTimeProperty(MAX_TIME);
+	leftFlagController.SetMaxTimeProperty(MAX_TIME);
 
 	// ボス戦に移行したとき、ザコ敵戦に移行したときの処理、線形補間で移動
 	switch (state)
 	{
 	case BossState::JOIN:
 		endPos = {};
-		easingValue = GatesEngine::Math::Easing::EaseInExpo(joiningTime);
+		easingValue = GatesEngine::Math::Easing::EaseInExpo(joinFlagController.GetTime());
 		gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(preLerpPos, endPos, easingValue);
-		joiningTime += PER_FRAME / MAX_TIME;
 		break;
 	case BossState::LEFT:
 		endPos = preLerpPos;
 		endPos.y = preLerpPos.y + 10000;
-		easingValue = GatesEngine::Math::Easing::EaseOutExpo(leftingTime);
+		easingValue = GatesEngine::Math::Easing::EaseOutExpo(leftFlagController.GetTime());
 		gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(preLerpPos, endPos, easingValue);
-		leftingTime += PER_FRAME / MAX_TIME;
 		break;
 	default:
 		break;
 	}
 
 	// 設定した時間を経過したらステートをもとに戻す
-	if (joiningTime > 1 || leftingTime > 1)
+	if (joinFlagController.IsOverTime() || leftFlagController.IsOverTime())
 	{
 		if (state == BossState::JOIN)
 		{
-			stopFlag = true;
+			stopFlagController.SetFlag(true);
 		}
 		InitState();
 	}
@@ -141,35 +139,34 @@ void BossBehaviour::Stoping()
 
 	const int HEALING_VALUE_PER_FRAME = 1;
 
-	hp = GatesEngine::Math::Lerp(0, MAX_HP, GatesEngine::Math::Easing::EaseInOutQuint(stopingTime));
+	hp = GatesEngine::Math::Lerp(0, MAX_HP, GatesEngine::Math::Easing::EaseInOutQuint(stopFlagController.GetTime()));
 	oldHP = hp;
-	if (stopingTime >= 1)
+	if (stopFlagController.GetTime() >= 1)
 	{
 		state = BossState::NONE;
-		stopFlag = false;
-		stopingTime = 0;
+		stopFlagController.Initialize();
 		hp = MAX_HP;
-		chargeFlag = true;
+		chargeFlagController.SetFlag(true);
 	}
 
-	stopingTime += PER_FRAME / MAX_STOPING_TIME;
+	stopFlagController.SetMaxTimeProperty(MAX_STOPING_TIME);
 }
 
 void BossBehaviour::PreChargeAttack()
 {
 	if (!target) return;
-	if (!chargeFlag)return;
+	if (!chargeFlagController.GetFlag())return;
 
 	const float MAX_CHARGE_TIME = 3;
 	const float PER_FRAME = 1.0f / 60.0f;
+	chargeFlagController.SetMaxTimeProperty(MAX_CHARGE_TIME);
 
 	chargeAttackVector = target->GetTransform()->position - gameObject->GetTransform()->position;
 	startChargeAttackPos = gameObject->GetTransform()->position;
-	if (chargeTime >= 1)
+	if (chargeFlagController.IsOverTime())
 	{
-		chargeFlag = false;
-		chargeTime = 0;
-		chargeAttackFlag = true;
+		chargeFlagController.Initialize();
+		chargeAttackFlagController.SetFlag(true);
 		chargeAttackVector = target->GetTransform()->position - gameObject->GetTransform()->position;
 		//chargeAttackVector = chargeAttackVector.Normalize();
 		startChargeAttackPos = gameObject->GetTransform()->position;
@@ -180,7 +177,6 @@ void BossBehaviour::PreChargeAttack()
 	float y = GatesEngine::Random::Rand(-100, 100);
 	float z = GatesEngine::Random::Rand(-100, 100);
 	gameObject->GetTransform()->position += GatesEngine::Math::Vector3(x, y, z).Normalize() * 10;
-	chargeTime += PER_FRAME / MAX_CHARGE_TIME;
 
 
 
@@ -197,16 +193,16 @@ void BossBehaviour::PreChargeAttack()
 
 void BossBehaviour::ChargeAttack()
 {
-	if (!chargeAttackFlag)return;
+	if (!chargeAttackFlagController.GetFlag())return;
 
 	const float MAX_ATTACK_TIME = 1;
 	const float PER_FRAME = 1.0f / 60.0f;
+	chargeAttackFlagController.SetMaxTimeProperty(MAX_ATTACK_TIME);
 
-	if (chargeAttackTime > 1)
+	if (chargeAttackFlagController.IsOverTime())
 	{
-		chargeFlag = true;
-		chargeAttackFlag = false;
-		chargeAttackTime = 0;
+		chargeFlagController.SetFlag(true);
+		chargeAttackFlagController.Initialize();
 		chargeAttackVector = GatesEngine::Math::Vector3();
 		chargeAttackDrawCount = 0;
 		chargeAttackFrameCount = 0;
@@ -216,7 +212,7 @@ void BossBehaviour::ChargeAttack()
 
 	const float ATTACK_VALUE = 1;
 	GatesEngine::Math::Vector3 endLerpPos = startChargeAttackPos + chargeAttackVector * ATTACK_VALUE;
-	gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(startChargeAttackPos, endLerpPos, GatesEngine::Math::Easing::EaseInBack(chargeAttackTime));
+	gameObject->GetTransform()->position = GatesEngine::Math::Vector3::Lerp(startChargeAttackPos, endLerpPos, GatesEngine::Math::Easing::EaseInBack(chargeAttackFlagController.GetTime()));
 
 	int incrementChargeFrameCount = 3;
 
@@ -229,22 +225,12 @@ void BossBehaviour::ChargeAttack()
 		}
 	}
 	++chargeAttackFrameCount;
-
-	chargeAttackTime += PER_FRAME / MAX_ATTACK_TIME;
 }
 
 BossBehaviour::BossBehaviour()
 	: state(BossState::NONE)
-	, isJoining(false)
-	, joiningTime(0)
-	, isLefting(false)
-	, leftingTime(0)
-	, stopFlag(false)
-	, stopingTime(0)
 	, MAX_HP(100)
 	, hp(MAX_HP)
-	, decreaseHpTime(0)
-	, MAX_DECREASE_HP_TIME(1)
 {
 }
 
@@ -259,8 +245,7 @@ void BossBehaviour::Start()
 	attackState = BossAttackState::NONE;
 	attackMode = BossAttackMode::NONE;
 
-	stopFlag = false;
-	stopingTime = 0;
+	stopFlagController.Initialize();
 	hp = 0;
 	oldHP = hp;
 	gameObject->GetTransform()->position = { 0,10000,0 };
@@ -268,20 +253,19 @@ void BossBehaviour::Start()
 	scale = gameObject->GetTransform()->scale.x;
 	isDead = false;
 
-	chargeFlag = false;
-	chargeAttackFlag = false;
-	chargeAttackTime = 0;
-	chargeTime = 0;
+	decreaseHPFlagController.Initialize();
+	chargeFlagController.Initialize();
+	chargeAttackFlagController.Initialize();
 	chargeAttackVector = {};
 }
 
 void BossBehaviour::Update()
 {
-	if (isJoining)JoinOrLeft(BossState::JOIN);
-	else if (isLefting)JoinOrLeft(BossState::LEFT);
+	if (joinFlagController.GetFlag())JoinOrLeft(BossState::JOIN);
+	else if (leftFlagController.GetFlag())JoinOrLeft(BossState::LEFT);
 
 	// ボスのステートがJOINからNONEに変わりstopFlag(回復モード)になったフレームに画面揺れを発生させる(着地時)
-	if (state == BossState::NONE && stopFlag)
+	if (state == BossState::NONE && stopFlagController.GetFlag())
 	{
 		PlayerCamera* mainCamera = dynamic_cast<PlayerCamera*>(gameObject->GetGraphicsDevice()->GetMainCamera());
 
@@ -292,11 +276,13 @@ void BossBehaviour::Update()
 	}
 
 	// 登場した時の回復演出
-	if (stopFlag)Stoping();
+	if (stopFlagController.GetFlag())Stoping();
 	// ライフ回復
 	const float PER_FRAME = 1.0f / 60.0f;
-	if (decreaseHpTime >= 1)decreaseHpTimeFlag = false;
-	if (decreaseHpTimeFlag)decreaseHpTime += PER_FRAME / MAX_DECREASE_HP_TIME;
+	const float MAX_DECREASE_HP_VALUE = 1;
+	decreaseHPFlagController.SetMaxTimeProperty(MAX_DECREASE_HP_VALUE);
+
+	if (decreaseHPFlagController.IsOverTime())decreaseHPFlagController.SetFlag(false);;
 
 
 	// 移動、攻撃処理
@@ -328,6 +314,13 @@ void BossBehaviour::Update()
 		scale -= 1;
 	}
 
+	// 各種フラグコントローラーの更新
+	decreaseHPFlagController.Update(PER_FRAME);
+	joinFlagController.Update(PER_FRAME);
+	leftFlagController.Update(PER_FRAME);
+	stopFlagController.Update(PER_FRAME);
+	chargeFlagController.Update(PER_FRAME);
+	chargeAttackFlagController.Update(PER_FRAME);
 }
 
 void BossBehaviour::OnDraw()
@@ -346,8 +339,8 @@ void BossBehaviour::OnLateDraw()
 	float oldPersent = oldHP / MAX_HP - 0.05f;
 	float maxPersent = 1 - 0.05f;
 
-	float easeInExpo = GatesEngine::Math::Easing::EaseInExpo(decreaseHpTime);
-	float easeOutElastic = GatesEngine::Math::Easing::EaseOutElastic(decreaseHpTime);
+	float easeInExpo = GatesEngine::Math::Easing::EaseInExpo(decreaseHPFlagController.GetTime());
+	float easeOutElastic = GatesEngine::Math::Easing::EaseOutElastic(decreaseHPFlagController.GetTime());
 	float resultPersent = GatesEngine::Math::Lerp(oldPersent, persent, easeOutElastic);
 
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultSpriteShader")->Set();
@@ -401,9 +394,8 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 	{
 		oldHP = hp;
 		hp -= MAX_HP / 10;
-		const float PER_FRAME = 1.0f / 60.0f;
-		decreaseHpTimeFlag = true;
-		decreaseHpTime = 0;
+		decreaseHPFlagController.Initialize();
+		decreaseHPFlagController.SetFlag(true);
 		if (hp <= 0)
 		{
 			isDead = true;
@@ -420,18 +412,16 @@ void BossBehaviour::SetBossState(BossState state)
 	switch (state)
 	{
 	case BossState::NONE:
-		isJoining = false;
-		joiningTime = 0;
-		isLefting = false;
-		leftingTime = 0;
+		joinFlagController.Initialize();
+		leftFlagController.Initialize();
 		break;
 	case BossState::JOIN:
-		isJoining = true;
-		joiningTime = 0;
+		joinFlagController.SetFlag(true);
+		joinFlagController.SetTime(0);
 		break;
 	case BossState::LEFT:
-		isLefting = true;
-		leftingTime = 0;
+		leftFlagController.SetFlag(true);
+		leftFlagController.SetTime(0);
 		break;
 	}
 }

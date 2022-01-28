@@ -2,6 +2,7 @@
 #include "Header/Component/Behaviour.h"
 #include "GameState.h"
 #include "Header/Math/Vector3.h"
+#include "FlagController.h"
 
 enum class BossState
 {
@@ -14,10 +15,8 @@ enum class BossState
 enum class BossMoveState
 {
 	NONE,
-
 	// üŒ`ˆÚ“®
 	LERP,
-
 	// ‰ñ“]ˆÚ“®
 	ROTATE,
 };
@@ -25,13 +24,10 @@ enum class BossMoveState
 enum class BossAttackState
 {
 	NONE,
-
 	// UŒ‚€”õ
 	PRE,
-	
 	// UŒ‚
 	ATTACK,
-
 	// UŒ‚ŠJn
 	END,
 };
@@ -39,7 +35,6 @@ enum class BossAttackState
 enum class BossAttackMode
 {
 	NONE,
-
 	// “ËiUŒ‚
 	CHARGE_ATTACK,
 };
@@ -54,33 +49,25 @@ private:
 	BossAttackState attackState;
 	BossAttackMode attackMode;
 private:
-	bool isJoining;
-	float joiningTime;
-	bool isLefting;
-	float leftingTime;
 	GatesEngine::Math::Vector3 preLerpPos;
 
-	bool stopFlag;
-	float stopingTime;
+	FlagController decreaseHPFlagController;
+	FlagController joinFlagController;
+	FlagController leftFlagController;
+	FlagController stopFlagController;
+	FlagController chargeFlagController;
+	FlagController chargeAttackFlagController;
 
 	const float MAX_HP;
 	float hp;
-
 	float oldHP;
-	bool decreaseHpTimeFlag;
-	float decreaseHpTime;
-	const float MAX_DECREASE_HP_TIME;
 
 	bool isDead;
 	float scale;
 	float initScale;
 
-	bool chargeFlag;
-	bool chargeAttackFlag;
 	GatesEngine::Math::Vector3 chargeAttackVector;
 	GatesEngine::Math::Vector3 startChargeAttackPos;
-	float chargeAttackTime;
-	float chargeTime;
 	int chargeAttackDrawCount;
 	int chargeAttackFrameCount;
 private:
