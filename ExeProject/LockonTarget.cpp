@@ -77,13 +77,6 @@ void LockonTarget::Draw(GatesEngine::GraphicsDevice* gDevice,const GatesEngine::
 	float addScale = (MAX_LOCKON_TIME - lockonTime) / MAX_LOCKON_TIME;
 	d *= GatesEngine::Math::Easing::EaseOutQuad(addScale) + addDrawSize;
 
-	//GatesEngine::ResourceManager::GetShaderManager()->GetShader("DefaultMeshShader")->Set();
-	//gDevice->GetCBVSRVUAVHeap()->Set();
-	//gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * billBoardData * GatesEngine::Math::Matrix4x4::Translate(target->GetTransform()->position));
-	//gDevice->GetMainCamera()->Set(2);
-	//gDevice->GetCBufferAllocater()->BindAndAttach(3, GatesEngine::B3{ GatesEngine::Math::Vector4(0,0,0,1),GatesEngine::Math::Vector4(0,0,0,1) });
-	//GatesEngine::ResourceManager::GetMeshManager()->GetMesh("Plane")->Draw();
-
 	GatesEngine::ResourceManager::GetShaderManager()->GetShader("Texture")->Set();
 	gDevice->GetCBVSRVUAVHeap()->Set();
 	gDevice->GetCBufferAllocater()->BindAndAttach(0, GatesEngine::Math::Matrix4x4::Scale({ 500 * d }) * GatesEngine::Math::Quaternion::Rotation(rotate) * billBoardData * GatesEngine::Math::Matrix4x4::Translate(target->GetTransform()->position));
