@@ -32,7 +32,17 @@ void PlayerBehaviour::SetVelocity()
 
 void PlayerBehaviour::SetPosition()
 {
-	gameObject->GetTransform()->position += vel;
+	GatesEngine::Math::Vector3 pos = gameObject->GetTransform()->position + vel;
+
+	float range = 5000;
+	if (pos.x >=  range)pos.x =  range;
+	if (pos.x <= -range)pos.x = -range;
+	if (pos.y >=  range)pos.y =  range;
+	if (pos.y <= -range)pos.y = -range;
+	if (pos.z >=  range)pos.z=   range;
+	if (pos.z <= -range)pos.z = -range;
+
+	gameObject->GetTransform()->position = pos;
 }
 
 void PlayerBehaviour::SetRotation()

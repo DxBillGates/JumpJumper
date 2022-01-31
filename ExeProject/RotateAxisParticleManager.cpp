@@ -48,19 +48,23 @@ bool RotateAxisParticleManager::GetIsEndParticles(const GatesEngine::Math::Vecto
 {
 	bool flag = false;
 
+	int particleEmitterCount = (int)particleBehaviours.size();
+	int deadEmitterCount = 0;
 	for (auto& p : particleBehaviours)
 	{
-		flag = false;
+		//flag = false;
 		GatesEngine::Transform* t = p->GetGameObject()->GetTransform();
 		float length = GatesEngine::Math::Vector3::Distance(center, t->position);
 
 		const float MIN_LENGTH = 1000;
 		if (length < MIN_LENGTH)
 		{
-			flag = true;
+			//flag = true;
+			++deadEmitterCount;
 		}
 	}
 
+	flag = (deadEmitterCount >= particleEmitterCount) ? true : false;
 	return flag;
 }
 

@@ -28,6 +28,9 @@ void BossBehaviour::Attack()
 	case BossAttackMode::CHARGE_ATTACK:
 		ChargeAttack();
 		break;
+	case BossAttackMode::BULLET_ATTACK:
+		Shot();
+		break;
 	default:
 		break;
 	}
@@ -37,20 +40,33 @@ void BossBehaviour::EndAttack()
 {
 	attackState = BossAttackState::NONE;
 	attackMode = BossAttackMode::NONE;
+	nextAttackIntervalContrller.Initialize();
+	nextAttackIntervalContrller.SetFlag(true);
 }
 
 void BossBehaviour::SetState()
 {
+	nextAttackIntervalContrller.SetMaxTimeProperty(1);
 	// 攻撃ステート変更
-	if (attackState == BossAttackState::NONE)
+	if (attackState == BossAttackState::NONE && preAttackState == BossAttackState::NONE)
 	{
-
-		const float CHARGE_ATTACK_DISTAMCE = 5000;
-		float targetDistance = CalcTargetDistance();
-
-		if (targetDistance >= CHARGE_ATTACK_DISTAMCE)
+		// 次の攻撃インターバルが既定値を超えた際に攻撃に移る
+		if (nextAttackIntervalContrller.GetOverTimeTrigger())
 		{
-			SetAttackMode(BossAttackMode::CHARGE_ATTACK);
+			const float CHARGE_ATTACK_DISTAMCE = 3000;
+			float targetDistance = CalcTargetDistance();
+
+			// 各種攻撃パターン
+			if (targetDistance >= CHARGE_ATTACK_DISTAMCE)
+			{
+				SetAttackMode(BossAttackMode::CHARGE_ATTACK);
+				chargeFlagController.SetFlag(true);
+			}
+			else
+			{
+				SetAttackMode(BossAttackMode::BULLET_ATTACK);
+				attackState = BossAttackState::ATTACK;
+			}
 		}
 	}
 
@@ -120,14 +136,13 @@ void BossBehaviour::JoinOrLeft(BossState state)
 	// 設定した時間を経過したらステートをもとに戻す
 	if (joinFlagController.IsOverTime() || leftFlagController.IsOverTime())
 	{
+		InitState();
 		if (state == BossState::JOIN)
 		{
 			stopFlagController.SetFlag(true);
+			this->state = BossState::JOINED;
 		}
-		InitState();
 	}
-
-
 }
 
 void BossBehaviour::Stoping()
@@ -143,10 +158,10 @@ void BossBehaviour::Stoping()
 	oldHP = hp;
 	if (stopFlagController.GetTime() >= 1)
 	{
-		state = BossState::NONE;
+		state = BossState::JOINED;
 		stopFlagController.Initialize();
 		hp = MAX_HP;
-		chargeFlagController.SetFlag(true);
+		nextAttackIntervalContrller.SetFlag(true);
 	}
 
 	stopFlagController.SetMaxTimeProperty(MAX_STOPING_TIME);
@@ -201,7 +216,7 @@ void BossBehaviour::ChargeAttack()
 
 	if (chargeAttackFlagController.IsOverTime())
 	{
-		chargeFlagController.SetFlag(true);
+		//chargeFlagController.SetFlag(true);
 		chargeAttackFlagController.Initialize();
 		chargeAttackVector = GatesEngine::Math::Vector3();
 		chargeAttackDrawCount = 0;
@@ -225,6 +240,68 @@ void BossBehaviour::ChargeAttack()
 		}
 	}
 	++chargeAttackFrameCount;
+}
+
+void BossBehaviour::Shot()
+{
+	const float INTERVAL = 0.2f;
+	if (shotInterval > INTERVAL)
+	{
+		shotInterval = 0;
+	}
+	else
+	{
+		shotInterval += 0.016f / 2.0f;
+		return;
+	}
+
+
+	bool isShot = false;
+	for (auto& b : bullets)
+	{
+		if (b.bullet->IsUse())continue;
+
+		if (!isShot)
+		{
+			if (!target)continue;
+			b.bullet->SetTarget(target, 0.1f, GatesEngine::Math::Vector3(0, 1, 0), 5000);
+			isShot = true;
+			++bulletAttackStateShotCount;
+		}
+		else
+		{
+			b.bullet->SetPos(gameObject->GetTransform()->position);
+		}
+	}
+
+	const int MAX_SHOT_COUNT = 5;
+	if (bulletAttackStateShotCount >= MAX_SHOT_COUNT)
+	{
+		EndAttack();
+		bulletAttackStateShotCount = 0;
+	}
+}
+
+void BossBehaviour::FixBulletPos()
+{
+	int bulltesSize = (int)bullets.size();
+	// 使っていない弾の位置を補正
+	for (auto& b : bullets)
+	{
+		if (b.bullet->IsUse())continue;
+
+		// 登録されているインデックス情報からボスの周囲に配置
+		GatesEngine::Math::Vector3 setPos;
+		const float RADIUS = 1000;
+		setPos.x = RADIUS * sinf((2 * GatesEngine::Math::PI / bulltesSize) * (b.index + rotateBulletsValue)) / 2;
+		setPos.y = 0;
+		setPos.z = RADIUS * cosf((2 * GatesEngine::Math::PI / bulltesSize) * (b.index + rotateBulletsValue)) / 2;
+		b.bullet->SetPos(gameObject->GetTransform()->position + setPos);
+	}
+
+	const float PER_FRAME = 1.0f / 60.0f;
+	const float ROTATE_SPEED = 5;
+	rotateBulletsValue += PER_FRAME * ROTATE_SPEED;
 }
 
 BossBehaviour::BossBehaviour()
@@ -257,15 +334,18 @@ void BossBehaviour::Start()
 	chargeFlagController.Initialize();
 	chargeAttackFlagController.Initialize();
 	chargeAttackVector = {};
+	nextAttackIntervalContrller.Initialize();
 }
 
 void BossBehaviour::Update()
 {
+	preAttackState = attackState;
+
 	if (joinFlagController.GetFlag())JoinOrLeft(BossState::JOIN);
 	else if (leftFlagController.GetFlag())JoinOrLeft(BossState::LEFT);
 
 	// ボスのステートがJOINからNONEに変わりstopFlag(回復モード)になったフレームに画面揺れを発生させる(着地時)
-	if (state == BossState::NONE && stopFlagController.GetFlag())
+	if (state == BossState::JOINED && stopFlagController.GetFlag())
 	{
 		PlayerCamera* mainCamera = dynamic_cast<PlayerCamera*>(gameObject->GetGraphicsDevice()->GetMainCamera());
 
@@ -292,10 +372,10 @@ void BossBehaviour::Update()
 		if (attackState == BossAttackState::PRE)PreAttack();
 		else if (attackState == BossAttackState::ATTACK)Attack();
 
-
-		SetState();
-		//PreChargeAttack();
-		//ChargeAttack();
+		if (state == BossState::JOINED && state != BossState::DEAD)
+		{
+			SetState();
+		}
 	}
 
 
@@ -319,8 +399,15 @@ void BossBehaviour::Update()
 	joinFlagController.Update(PER_FRAME);
 	leftFlagController.Update(PER_FRAME);
 	stopFlagController.Update(PER_FRAME);
-	chargeFlagController.Update(PER_FRAME);
-	chargeAttackFlagController.Update(PER_FRAME);
+
+	if (state == BossState::JOINED && state != BossState::DEAD)
+	{
+		chargeFlagController.Update(PER_FRAME);
+		chargeAttackFlagController.Update(PER_FRAME);
+		nextAttackIntervalContrller.Update(PER_FRAME);
+	}
+
+	FixBulletPos();
 }
 
 void BossBehaviour::OnDraw()
@@ -355,7 +442,7 @@ void BossBehaviour::OnLateDraw()
 	graphicsDevice->GetCBufferAllocater()->BindAndAttach(2, GatesEngine::Math::Matrix4x4::GetOrthographMatrix({ 1920,1080 }));
 	GatesEngine::ResourceManager::GetMeshManager()->GetMesh("2DPlane")->Draw();
 
-	if (attackMode == BossAttackMode::CHARGE_ATTACK)
+	if (attackMode == BossAttackMode::CHARGE_ATTACK && !isDead)
 	{
 		const int MAX_DRAW_CHARGE_OBJECT = 30;
 		float objectDistance = chargeAttackVector.Length() / MAX_DRAW_CHARGE_OBJECT;
@@ -399,6 +486,7 @@ void BossBehaviour::OnCollision(GatesEngine::Collider* otherCollider)
 		if (hp <= 0)
 		{
 			isDead = true;
+			state = BossState::DEAD;
 		}
 	}
 }
@@ -460,4 +548,10 @@ bool BossBehaviour::GetIsDead()
 void BossBehaviour::SetTarget(GatesEngine::GameObject* targetObject)
 {
 	target = targetObject;
+}
+
+void BossBehaviour::AddBullet(Bullet* addBullet)
+{
+	bullets.push_back({ addBullet, nextBulletIndex });
+	++nextBulletIndex;
 }

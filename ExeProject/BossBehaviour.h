@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "Header/Math/Vector3.h"
 #include "FlagController.h"
+#include "PlayerBullet.h"
 
 enum class BossState
 {
@@ -10,6 +11,8 @@ enum class BossState
 	JOIN,
 	HEALING,
 	LEFT,
+	JOINED,
+	DEAD,
 };
 
 enum class BossMoveState
@@ -37,15 +40,24 @@ enum class BossAttackMode
 	NONE,
 	// 突進攻撃
 	CHARGE_ATTACK,
+	// バレット攻撃
+	BULLET_ATTACK,
 };
 
 class BossBehaviour : public GatesEngine::Behaviour
 {
 private:
+	struct BulletInfo
+	{
+		Bullet* bullet;
+		int index;
+	};
+private:
 	GatesEngine::GameObject* target;
 
 	BossState state;
 	BossMoveState moveState;
+	BossAttackState preAttackState;
 	BossAttackState attackState;
 	BossAttackMode attackMode;
 private:
@@ -70,6 +82,15 @@ private:
 	GatesEngine::Math::Vector3 startChargeAttackPos;
 	int chargeAttackDrawCount;
 	int chargeAttackFrameCount;
+
+	FlagController nextAttackIntervalContrller;
+
+	int bulletAttackStateShotCount;
+	float shotInterval;
+
+	int nextBulletIndex;
+	float rotateBulletsValue;
+	std::vector<BulletInfo> bullets;
 private:
 	void PreAttack();
 	void Attack();
@@ -84,6 +105,8 @@ private:
 	void Stoping();
 	void PreChargeAttack();
 	void ChargeAttack();
+	void Shot();
+	void FixBulletPos();
 public:
 	BossBehaviour();
 	~BossBehaviour();
@@ -99,5 +122,6 @@ public:
 	void SetInitScale(float value);
 	bool GetIsDead();
 	void SetTarget(GatesEngine::GameObject* targetObject);
+	void AddBullet(Bullet* addBullet);
 };
 

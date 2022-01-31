@@ -129,10 +129,29 @@ Stage1Scene::Stage1Scene(const char* sceneName, GatesEngine::Application* app)
 	b->SetTag("Boss");
 	boss = b;
 	bossBehaviour->SetTarget(playerBehaviour->GetGameObject());
+	for (int i = 0; i < 10; ++i)
+	{
+		auto* bullet = gameObjectManager.Add(new GameObject());
+		bullet->SetGraphicsDevice(graphicsDevice);
+		auto* bulletBehaviour = bullet->AddBehavior<BulletBehaviour>();
+		auto* gParticleEmitter = bullet->AddBehavior<GPUParticleEmitterBehaviour>();
+		bulletBehaviour->SetGPUParticleEmitter(gParticleEmitter);
+		gParticleEmitter->CreateParticleEmitter(gpuParticleManager, 256);
+		gParticleEmitter->SetComputeShader(testCS);
+		gParticleEmitter->SetInitializeShader(testInitializeCS);
+		stage.GetCollisionManager()->AddCollider(collisionManager.AddColliderComponent(bullet->AddComponent<Collider>()), GColliderType::ENEMY_BULLET);
+		bullet->SetCollider();
+		bullet->GetCollider()->SetType(GatesEngine::ColliderType::CUBE);
+		bullet->GetCollider()->SetSize({ 1 });
+		bullet->GetTransform()->scale = 10;
+		bullet->SetTag("enemyBullet");
+		bullet->SetName("enemyBullet");
+
+		bossBehaviour->AddBullet(bulletBehaviour);
+	}
+
 
 	GatesEngine::GameObject* g = nullptr;
-
-
 	g = gameObjectManager.Add(new GameObject());
 	g->SetGraphicsDevice(graphicsDevice);
 	g->AddComponent<BlockBehaviour>();
