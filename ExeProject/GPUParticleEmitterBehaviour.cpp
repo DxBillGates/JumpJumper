@@ -60,3 +60,8 @@ void GPUParticleEmitterBehaviour::ExternalUpdate()
 {
 	gParticleEmitter->Update();
 }
+
+GatesEngine::EmitterData* GPUParticleEmitterBehaviour::GetEmitterData()
+{
+	return gParticleEmitter->GetAddData();
+}

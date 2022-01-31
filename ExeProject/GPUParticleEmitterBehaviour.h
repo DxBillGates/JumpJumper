@@ -20,5 +20,6 @@ public:
 	void SetInitializeShader(GatesEngine::ComputePipeline* setShader);
 	void DispatchInitializeShader();
 	void ExternalUpdate();
+	GatesEngine::EmitterData* GetEmitterData();
 };
 

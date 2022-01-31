@@ -53,7 +53,7 @@ void BossBehaviour::SetState()
 		// 次の攻撃インターバルが既定値を超えた際に攻撃に移る
 		if (nextAttackIntervalContrller.GetOverTimeTrigger())
 		{
-			const float CHARGE_ATTACK_DISTAMCE = 3000;
+			const float CHARGE_ATTACK_DISTAMCE = 8000;
 			float targetDistance = CalcTargetDistance();
 
 			// 各種攻撃パターン
